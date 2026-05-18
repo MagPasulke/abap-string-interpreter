@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<abapGit version="v1.0.0" serializer="LCL_OBJECT_PINF" serializer_version="v1.0.0">
+ <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
+  <asx:values>
+   <PINF>
+    <ATTRIBUTES>
+     <INTF_NAME>ZASIS_UTILS</INTF_NAME>
+     <DESCRIPT>ABAP String Interpreter Service - Utils Public IF</DESCRIPT>
+    </ATTRIBUTES>
+    <ELEMENTS>
+     <SCOMELDTLN>
+      <INTF_NAME>ZASIS_UTILS</INTF_NAME>
+      <ELEM_TYPE>CLAS</ELEM_TYPE>
+      <ELEM_KEY>ZASIS_CL_GET_DOMAIN_FIX_VALUES</ELEM_KEY>
+     </SCOMELDTLN>
+     <SCOMELDTLN>
+      <INTF_NAME>ZASIS_UTILS</INTF_NAME>
+      <ELEM_TYPE>CLAS</ELEM_TYPE>
+      <ELEM_KEY>ZASIS_CONSTANTS</ELEM_KEY>
+     </SCOMELDTLN>
+     <SCOMELDTLN>
+      <INTF_NAME>ZASIS_UTILS</INTF_NAME>
+      <ELEM_TYPE>CLAS</ELEM_TYPE>
+      <ELEM_KEY>ZASIS_CX_EXC</ELEM_KEY>
+     </SCOMELDTLN>
+    </ELEMENTS>
+   </PINF>
+  </asx:values>
+ </asx:abap>
+</abapGit>

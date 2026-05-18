@@ -1,0 +1,11 @@
+@EndUserText.label: 'ABAP String Interpreter Service - CDS-AC RuSetHeader'
+@MappingRole: true
+define role ZASIS_AC_RULESETHEADER {
+    grant 
+        select
+            on
+                ZASIS_I_RULESETHEADER
+                    where
+                        (RuleSetId) = aspect pfcg_auth(ZASIS_GRL,  ZASIS_RULE, ACTVT = '03');
+                        
+}

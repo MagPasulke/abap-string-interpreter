@@ -1,0 +1,10 @@
+{
+  "BASEINFO": {
+    "FROM": [
+      "ZASIS_I_RULESETHEADER"
+    ],
+    "ASSOCIATED": [
+      "ZASIS_I_RULESETITEM"
+    ]
+  }
+}

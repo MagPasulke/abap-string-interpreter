@@ -1,0 +1,5 @@
+@EndUserText.label: 'Service Def. for RuleSet Management'
+define service ZASIS_UI_RULESET {
+  expose ZASIS_C_RULESET as RuleSet;
+  expose ZASIS_C_RULESETITEM as RuleSetItem;
+}

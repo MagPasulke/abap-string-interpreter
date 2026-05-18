@@ -1,0 +1,15 @@
+{
+    "$schema": "https://opencode.ai/config.json",
+    // Theme configuration
+    "autoupdate": true,
+    "mcp": {
+        "abap-mcp": {
+            "url": "https://mcp-abap.marianzeis.de/mcp",
+            "type": "remote"
+        },
+        "sap-released-objects": {
+            "type": "remote",
+            "url": "https://sap-released-objects-server-production.up.railway.app/mcp"
+        }
+    }
+}

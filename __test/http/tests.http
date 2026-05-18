@@ -1,0 +1,89 @@
+### GET RuleSet Definition - MySample
+GET {{baseUrl}}/ruleSet/MySample?sap-client={{client}}
+Authorization: Basic {{auth_b64}}
+Accept: application/json
+
+{% 
+  test('status is 200', () => expect(response.status).toBe(200));
+  test('returns MySample header', () => {
+    const body = JSON.parse(response.body);
+    expect(body.HEADER.RULESETID).toBe('MySample');
+  });
+  test('has at least one item', () => {
+    const body = JSON.parse(response.body);
+    expect(body.ITEMS.length).toBeGreaterThan(0);
+  });
+%}
+
+
+### GET RuleSet Definition - Unknown RuleSet (expect error)
+GET {{baseUrl}}/ruleSet/UNKNOWN_RULESET?sap-client={{client}}
+Authorization: Basic {{auth_b64}}
+Accept: application/json
+
+{%
+  test('status is 400', () => expect(response.status).toBe(400));
+%}
+
+
+### Execute RuleSet - MySample (barcode with MaterialNo and DeliveryNote)
+POST {{baseUrl}}/ruleSetExecution/MySample?sap-client={{client}}
+Authorization: Basic {{auth_b64}}
+Content-Type: application/json
+Accept: application/json
+
+{
+  "string_to_be_interpreted": "<Start><A7X>MyMaterialNumber<B52H>MyDeliveryNote<End>"
+}
+
+{%
+  test('status is 200', () => expect(response.status).toBe(200));
+  test('MaterialNo is extracted', () => {
+    const body = JSON.parse(response.body);
+    const mat = body.find(r => r.TARGETFIELD === 'MaterialNo');
+    expect(mat.INTERPRETATIONRESULT).toBe('MyMaterialNumber');
+  });
+%}
+
+
+### Execute RuleSet - MySample (no match in string)
+POST {{baseUrl}}/ruleSetExecution/MySample?sap-client={{client}}
+Authorization: Basic {{auth_b64}}
+Content-Type: application/json
+Accept: application/json
+
+{
+  "string_to_be_interpreted": "<Start><NO_KNOWN_TAG>SomeValue<End>"
+}
+
+{%
+  test('status is 200', () => expect(response.status).toBe(200));
+  test('result is no match', () => {
+    const body = JSON.parse(response.body);
+    expect(body.every(r => r.INTERPRETATIONRESULT === 'no match')).toBe(true);
+  });
+%}
+
+
+### Execute RuleSet - Unknown RuleSet (expect error)
+POST {{baseUrl}}/ruleSetExecution/UNKNOWN_RULESET?sap-client={{client}}
+Authorization: Basic {{auth_b64}}
+Content-Type: application/json
+Accept: application/json
+
+{
+  "string_to_be_interpreted": "<Start><A7X>MyMaterialNumber<End>"
+}
+
+{%
+  test('status is 400', () => expect(response.status).toBe(400));
+%}
+
+
+### GET RuleSet - without auth (expect 401/403)
+GET {{baseUrl}}/ruleSet/MySample?sap-client={{client}}
+Accept: application/json
+
+{%
+  test('status is 401', () => expect(response.status).toBe(401));
+%}

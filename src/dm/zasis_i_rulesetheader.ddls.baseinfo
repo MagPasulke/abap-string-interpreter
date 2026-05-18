@@ -1,0 +1,7 @@
+{
+  "BASEINFO": {
+    "FROM": [
+      "ZASIS_RULESETHD"
+    ]
+  }
+}

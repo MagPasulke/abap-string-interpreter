@@ -1,0 +1,53 @@
+@Metadata.layer: #CUSTOMER
+@UI.headerInfo: {
+    typeName: 'RuleSetItem',
+    typeNamePlural: 'Items',
+    typeImageUrl: 'sap-icon://detail-view',
+    description.value: '_Header.RuleSetId'
+}
+annotate entity ZASIS_C_RULESETITEM with
+{
+
+  @UI.facet: [{
+                id: 'RuleSetItem',
+                purpose: #STANDARD,
+                type: #IDENTIFICATION_REFERENCE,
+                label: 'Single Rule',
+                position: 10
+              }]
+
+  @UI.hidden: true
+  RuleSetUUID;
+ @UI.hidden: true
+  InterpretationItem;
+  @UI.lineItem: [{ position: 20 }]
+  @UI.selectionField: [{ position: 10 }]
+  @UI.identification: [{ position: 20 }]
+  IntpretationTarget;
+  @UI.lineItem: [{ position: 30 }]
+  @UI.identification: [{ position: 30 }]
+  InterpretationRule;
+  @UI.lineItem: [{ position: 40 }]
+  @UI.identification: [{ position: 40 }]
+
+  @Consumption.valueHelpDefinition:
+  [{ entity: { name : 'ZASIS_I_DOMAIN_FIX_VALUES' , element: 'low' } ,
+     additionalBinding: [{ element: 'domain_name',
+                           localConstant: 'ZASIS_RULEITEM_TYPE', usage: #FILTER }]
+                           , distinctValues: true
+                           }]
+  InterpretationType;
+  @UI.lineItem: [{ position: 50 }]
+  @UI.identification: [{ position: 50 }]
+  OffsetPre;
+  @UI.lineItem: [{ position: 60 }]
+  @UI.identification: [{ position: 60 }]
+  OffsetPost;
+  @UI.lineItem: [{ position: 70 }]
+  @UI.identification: [{ position: 70 }]
+  ReplacementString;
+  @UI.lineItem: [{ position: 80 }]
+  @UI.identification: [{ position: 80 }]
+  CustomLogic;
+
+}

@@ -1,0 +1,40 @@
+@Metadata.layer: #CUSTOMER
+
+@UI.headerInfo: {
+    typeName: 'RuleSet',
+    typeNamePlural: 'RuleSets',
+    typeImageUrl: 'sap-icon://disconnected',
+    description.value: 'RuleSetId'
+}
+annotate entity ZASIS_C_RULESET with
+{
+  @UI.facet: [{
+                id: 'RuleSet',
+                purpose: #STANDARD,
+                type: #IDENTIFICATION_REFERENCE,
+                label: 'RuleSet',
+                position: 10
+              },
+              {
+                id: 'RuleSetItem',
+                purpose: #STANDARD,
+                type: #LINEITEM_REFERENCE,
+                label: 'RuleSet Items',
+                position: 20,
+                targetElement: '_Items'
+              }]
+
+  @UI.hidden: true
+  RuleSetUUID;
+  @UI.selectionField: [{ position: 10 }]
+  @UI.lineItem: [{ position: 10 }]
+  @UI.identification: [{ position: 10 },
+                       { type: #FOR_ACTION, dataAction: 'testRuleSet', label: 'Test RuleSet', position: 90 }]
+  RuleSetId;
+
+  @EndUserText.label: 'Attachment'
+  @UI.lineItem: [{ position: 20 }]
+  @UI.identification: [{ position: 20 }]
+  Attachment;
+
+}

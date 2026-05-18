@@ -1,0 +1,85 @@
+{
+  "global": {
+    "files": "/src/**/*.*"
+  },
+  "dependencies": [
+    {
+      "url": "https://github.com/abaplint/deps",
+      "folder": "/deps",
+      "files": "/src/**/*.*"
+    }
+  ],
+  "syntax": {
+    "version": "v757",
+    "errorNamespace": "^(Z|Y|LCL_|TY_|LIF_)"
+  },
+  "rules": {
+    "method_implemented_twice": true,
+    "method_length": {
+      "exclude": [],
+      "severity": "Error",
+      "statements": 100,
+      "errorWhenEmpty": false,
+      "ignoreTestClasses": false,
+      "checkForms": true
+    },
+    "definitions_top" : {
+      "exclude": [],
+      "severity": "Error"
+    },
+    "use_line_exists": true,
+    "use_new": true,
+    "when_others_last": true,
+    "whitespace_end": false,
+    "xml_consistency": true,
+    "use_bool_expression": true,
+    "use_class_based_exceptions": {
+      "exclude": []
+    },
+    "unnecessary_return": true,
+    "unreachable_code": true,
+    "unused_ddic": {
+      "exclude": ["zasisdr_rusthd.tabl.xml", "zasisdr_rustit.tabl.xml"]
+    },
+    "unused_methods": {
+      "exclude": ["zasis_cl_interpreter.clas.testclasses.abap"]
+    },
+    "unused_types": {
+      "exclude": []
+    },
+    "unused_variables": {
+      "exclude": ["zasis_cl_interpreter.clas.testclasses.abap", "zasis_cl_get_domain_fix_values.clas.abap"],
+      "skipAbstract": true
+    },
+    "try_without_catch": true,
+    "type_form_parameters": true,
+    "types_naming": {
+      "exclude": [
+        "/json/"
+      ],
+      "pattern": "^TY_.+$"
+    },
+    "sicf_consistency": true,
+    "sy_modification": true,
+    "tabl_enhancement_category": true,
+    "superclass_final": false,
+    "superfluous_value": true,
+    "static_call_via_instance": true,
+    "sql_escape_host_variables": true,
+    "slow_parameter_passing": true,
+    "smim_consistency": true,
+    "space_before_colon": true,
+    "space_before_dot": {
+      "ignoreExceptions": true,
+      "ignoreGlobalDefinition": true,
+      "exclude": ["zasis_conf_maint.fugr.lzasis_conf_maintf00.abap",
+                  "zasis_conf_maint.fugr.saplzasis_conf_maint.abap",
+                  "zasis_conf_maint.fugr.lzasis_conf_mainttop.abap",
+                  "zasis_conf_maint.fugr.tableframe_zasis_conf_maint.abap",
+                  "zasis_conf_maint.fugr.tableproc_zasis_conf_maint.abap",
+                  "zasis_conf_maint.fugr.lzasis_conf_mainti00.abap",
+                  "zasis_conf_maint.fugr.lzasis_conf_maintt00.abap"
+      ]
+    }
+  }
+}

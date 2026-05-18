@@ -1,0 +1,31 @@
+# dotenv environment variable files
+.env
+.env.*
+!.env.example
+.vscode
+
+# REST Client private env (credentials)
+http-client.private.env.json
+
+# ABAP backend specific files
+*.iwsv.xml
+*.iwmo.xml
+*.iwvb.xml
+*.srvb.xml
+*.sush.*
+
+# Artefacts
+node_modules/
+zabapgit.abap
+lint_deps
+output
+ci/*.abap
+allure-report
+coverage
+Heap.*
+list.txt
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+.DS_Store

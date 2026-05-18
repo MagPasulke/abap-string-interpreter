@@ -1,0 +1,11 @@
+@EndUserText.label: 'ABAP String Interpreter Service - CDS-AC C RuSetItm'
+@MappingRole: true
+define role ZASIS_AC_C_RULESETITM {
+    grant
+        select
+            on
+                ZASIS_C_RULESETITEM
+                    where
+                        inheriting conditions from entity ZASIS_I_RULESETITEM;
+                        
+}

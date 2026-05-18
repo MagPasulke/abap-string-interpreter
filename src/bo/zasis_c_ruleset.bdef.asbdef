@@ -1,0 +1,21 @@
+projection;
+use draft;
+
+define behavior for ZASIS_C_RULESET alias RuleSet
+{
+  use create;
+  use update;
+  use delete;
+
+  use action testRuleSet;
+
+  use association _Items { create; with draft; }
+}
+
+define behavior for ZASIS_C_RULESETITEM alias RuleSetItem
+{
+  use update;
+  use delete;
+
+  use association _Header { with draft; }
+}

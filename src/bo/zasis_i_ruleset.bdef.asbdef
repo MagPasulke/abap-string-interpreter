@@ -1,0 +1,74 @@
+managed implementation in class zbp_asis_i_ruleset unique;
+with draft;
+
+define behavior for ZASIS_I_RULESET alias RuleSet
+persistent table zasis_rulesethd
+draft table zasisdr_rusthd
+lock master
+total etag LastChangedAt
+authorization master ( global )
+etag master LocalLastChangedAt
+{
+
+  create;
+  update;
+  delete;
+  association _Items { create; with draft; }
+
+  action testRuleSet parameter zasis_a_testruleset;
+
+  validation checkUniqueRuleSetId on save { field RuleSetId; create; }
+
+  field ( numbering : managed, readonly ) RuleSetUUID;
+  field ( mandatory ) RuleSetId;
+
+  mapping for zasis_rulesethd
+  {
+    RuleSetUUID = rulesetuuid;
+    RuleSetId = rulesetid;
+    Attachment = attachment;
+    MimeType = mimetype;
+    FileName = filename;
+    LastChangedBy = last_changed_by;
+    LastChangedAt = last_changed_at;
+    LocalLastChangedAt = local_last_changed_at;
+  }
+}
+
+define behavior for ZASIS_I_RULESETITEM alias RuleSetItem
+persistent table zasis_rulesetitm
+draft table zasisdr_rustit
+lock dependent by _Header
+authorization dependent by _Header
+etag master LocalLastChangedAt
+{
+  update ( precheck );
+  delete;
+  field ( readonly ) RuleSetUUID;
+  association _Header { with draft; }
+
+  field ( numbering : managed, readonly ) InterpretationItem;
+
+  validation checkIsValidRegex on save { field InterpretationRule; create; update; }
+  validation checkEventProducer on save { field EventProducer; create; update; }
+
+  mapping for ZASIS_RULESETITM
+  {
+
+    RuleSetUUID = rulesetuuid;
+    InterpretationItem = interpretationitm;
+    Intpretationtarget = intpretationTarget;
+    InterpretationRule = interpretationrule;
+    InterpretationType = interpretation_type;
+    OffsetPre = offset_pre;
+    OffsetPost = offset_post;
+    ReplacementString = replacement_string;
+    CustomLogic = custom_logic;
+    EventProducer = event_producer;
+    LastChangedBy = last_changed_by;
+    LastChangedAt = last_changed_at;
+    LocalLastChangedAt = local_last_changed_at;
+
+  }
+
+}
