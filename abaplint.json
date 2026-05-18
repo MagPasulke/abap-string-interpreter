@@ -42,7 +42,6 @@
       "exclude": ["zasisdr_rusthd.tabl.xml", "zasisdr_rustit.tabl.xml"]
     },
     "unused_methods": {
-      "exclude": ["zasis_cl_interpreter.clas.testclasses.abap"]
     },
     "unused_types": {
       "exclude": []
@@ -71,15 +70,7 @@
     "space_before_colon": true,
     "space_before_dot": {
       "ignoreExceptions": true,
-      "ignoreGlobalDefinition": true,
-      "exclude": ["zasis_conf_maint.fugr.lzasis_conf_maintf00.abap",
-                  "zasis_conf_maint.fugr.saplzasis_conf_maint.abap",
-                  "zasis_conf_maint.fugr.lzasis_conf_mainttop.abap",
-                  "zasis_conf_maint.fugr.tableframe_zasis_conf_maint.abap",
-                  "zasis_conf_maint.fugr.tableproc_zasis_conf_maint.abap",
-                  "zasis_conf_maint.fugr.lzasis_conf_mainti00.abap",
-                  "zasis_conf_maint.fugr.lzasis_conf_maintt00.abap"
-      ]
+      "ignoreGlobalDefinition": true
     }
   }
 }
