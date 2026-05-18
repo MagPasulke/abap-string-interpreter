@@ -13,10 +13,7 @@
     "zbp_",
     "zasis_cl_interprettypetext",
     "zasis_cx_ruleset_ui",
-    "zasis_cl_http_handler",
-    "zasis_cl_get_domain_fix_values",
-
-    "zasis_cl_ruleset_factory"
+    "zasis_cl_get_domain_fix_values"
   ],
   "output_folder": "output",
   "libs": [
