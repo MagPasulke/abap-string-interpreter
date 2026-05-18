@@ -113,7 +113,7 @@ When implementing a new feature, **always use the `grill-me` skill first** to in
 
 ### Token Efficiency
 
-**The `caveman` skill should be used by default** to minimize token consumption. It cuts token usage ~75% while keeping full technical accuracy. Supports intensity levels: `lite`, `full` (default), `ultra`, plus `wenyan` variants for classical Chinese compression. Only disable when the user explicitly requests verbose/normal output ("stop caveman", "normal mode").
+**The `caveman` skill should be used by default** to minimize token consumption. It cuts token usage while keeping full technical accuracy. Supports intensity levels: `lite`, `full` (default), `ultra`, plus `wenyan` variants for classical Chinese compression. Only disable when the user explicitly requests verbose/normal output ("stop caveman", "normal mode").
 
 ---
 
@@ -130,7 +130,7 @@ The project has multiple test layers. See `package.json` for npm scripts:
 
 ### Important Testing Notes
 
-- **ABAP Transpile Tests** (`npm run unit`): These tests currently need fixes before they can run successfully. Do not rely on them as the sole validation.
+- **ABAP Transpile Tests** (`npm run unit`): Runs unit tests of the project via abap transpile.
 - **HTTP Integration Tests** (`npm run http-test`): Require the SAP ABAP server to be running and accessible. Environment variables (`baseUrl`, `client`, `auth_b64`) must be configured in `.vscode/settings.json` under `rest-client.environmentVariables.local`.
 - **ABAP Unit Tests**: The authoritative test suite runs on the ABAP system itself. **After making changes, always ask the user to sync the project to the ABAP system via abapGit, run the ABAP Unit tests there, and confirm the results before considering the change complete.**
 
@@ -138,4 +138,4 @@ The project has multiple test layers. See `package.json` for npm scripts:
 
 ## Session Tracking
 
-<!-- At the end of each session (when PR is merged), append a row to docs/session-summaries.md with the OpenCode session ID, date, and a short summary of what was done. -->
+At the end of each session (when PR is merged), append a row to docs/session-summaries.md with the OpenCode session ID, date, and a short summary of what was done.
