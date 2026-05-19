@@ -177,7 +177,7 @@ Enforced in both the RAP behavior layer (UI) and the runtime API/HTTP layer.
 1. Install repository into SAP system via [abapGit](https://docs.abapgit.org/user-guide/projects/online/install.html).
 2. Create service binding `ZASIS_UI_RULESET_O4` (for service definition `ZASIS_UI_RULESET`) and publish it to enable the Fiori maintenance UI.
 3. To expose HTTP API, create and activate SICF service node:
-   - Transaction `SICF` → create node under `default_host` (recommended) or `default_host/zasis`
+   - Transaction `SICF` → create node under `default_host` or `default_host/zasis`
    - Create node name `zasis_ext_api` (or adapt consistently to your namespace/path)
    - Assign handler class `ZASIS_CL_HTTP_HANDLER`
 
