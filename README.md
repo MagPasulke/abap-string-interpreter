@@ -177,8 +177,8 @@ Enforced in both the RAP behavior layer (UI) and the runtime API/HTTP layer.
 1. Install repository into SAP system via [abapGit](https://docs.abapgit.org/user-guide/projects/online/install.html).
 2. Create service binding `ZASIS_UI_RULESET_O4` (for service definition `ZASIS_UI_RULESET`) and publish it to enable the Fiori maintenance UI.
 3. To expose HTTP API, create and activate SICF service node:
-   - Transaction `SICF` → path `default_host/sap`
-   - Create subnode `zasis_ext_api`
+   - Transaction `SICF` → create node under `default_host` (recommended) or `default_host/zasis`
+   - Create node name `zasis_ext_api` (or adapt consistently to your namespace/path)
    - Assign handler class `ZASIS_CL_HTTP_HANDLER`
 
 ### Error Handling
@@ -203,6 +203,8 @@ In the RAP UI, invalid regex patterns and non-existent custom logic classes are 
 | `npm run http-test` | `httpyac` | HTTP integration tests |
 
 `http-test` requires a running SAP system instance. Connection details must be maintained in `.vscode/settings.json`:
+
+> If SICF node path differs from `/zasis_ext_api`, adapt `baseUrl` in test environment accordingly.
 
 ```jsonc
 {
