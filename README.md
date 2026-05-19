@@ -65,10 +65,11 @@ ZASIS lets you define a **RuleSet** once and reuse it everywhere. A RuleSet is a
 
 #### Fiori UI
 
-1. Publish service binding `ZASIS_UI_RULESET_O4` (OData V4).
-2. Open the Fiori Elements preview for entity **RuleSet**.
-3. Create/maintain RuleSet header and items.
-4. Click **Test RuleSet** to execute against a sample string.
+1. Create service binding `ZASIS_UI_RULESET_O4` (OData V4) for service definition `ZASIS_UI_RULESET`.
+2. Publish service binding `ZASIS_UI_RULESET_O4`.
+3. Open the Fiori Elements preview for entity **RuleSet**.
+4. Create/maintain RuleSet header and items.
+5. Click **Test RuleSet** to execute against a sample string.
 
 #### ABAP API
 
@@ -117,7 +118,6 @@ src/
 ├── app/      Fiori / UI placeholders
 ├── auth/     Authorization checks (ZASIS_IF_AUTH_CHECKER, ZASIS_CL_AUTH_CHECKER)
 ├── bo/       Business objects — interpreter, RuleSet, RAP behavior, service definition
-├── config/   Configuration & eventing
 ├── dm/       Data model — tables, domains, data elements, CDS views
 ├── srv/      HTTP service handler
 └── utils/    Constants, exceptions, helpers
@@ -175,8 +175,11 @@ Enforced in both the RAP behavior layer (UI) and the runtime API/HTTP layer.
 ### Installation
 
 1. Install repository into SAP system via [abapGit](https://docs.abapgit.org/user-guide/projects/online/install.html).
-2. Publish service binding `ZASIS_UI_RULESET_O4` to enable the Fiori maintenance UI.
-3. To expose the HTTP API, create an ICF node and assign handler class `ZASIS_CL_HTTP_HANDLER`.
+2. Create service binding `ZASIS_UI_RULESET_O4` (for service definition `ZASIS_UI_RULESET`) and publish it to enable the Fiori maintenance UI.
+3. To expose HTTP API, create and activate SICF service node:
+   - Transaction `SICF` → path `default_host/sap`
+   - Create subnode `zasis_ext_api`
+   - Assign handler class `ZASIS_CL_HTTP_HANDLER`
 
 ### Error Handling
 
