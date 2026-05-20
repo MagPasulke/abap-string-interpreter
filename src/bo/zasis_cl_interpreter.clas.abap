@@ -11,12 +11,14 @@ CLASS zasis_cl_interpreter DEFINITION
     METHODS constructor
       IMPORTING
         auth_checker           TYPE REF TO zasis_if_auth_checker OPTIONAL
-        event_producer_resolver TYPE REF TO zasis_if_ev_producer_resolver OPTIONAL.
+        event_producer_resolver TYPE REF TO zasis_if_ev_producer_resolver OPTIONAL
+        customlogic_resolver   TYPE REF TO zasis_if_customlogic_resolver OPTIONAL.
 
   PROTECTED SECTION.
   PRIVATE SECTION.
     DATA auth_checker TYPE REF TO zasis_if_auth_checker.
     DATA event_producer_resolver TYPE REF TO zasis_if_ev_producer_resolver.
+    DATA customlogic_resolver TYPE REF TO zasis_if_customlogic_resolver.
 
     METHODS call_custom_logic
       IMPORTING
@@ -55,6 +57,12 @@ CLASS zasis_cl_interpreter IMPLEMENTATION.
       me->event_producer_resolver = event_producer_resolver.
     ELSE.
       me->event_producer_resolver = NEW zasis_cl_ev_producer_resolver( ).
+    ENDIF.
+
+    IF customlogic_resolver IS BOUND.
+      me->customlogic_resolver = customlogic_resolver.
+    ELSE.
+      me->customlogic_resolver = NEW zasis_cl_customlogic_resolver( ).
     ENDIF.
   ENDMETHOD.
 
@@ -146,44 +154,13 @@ CLASS zasis_cl_interpreter IMPLEMENTATION.
 
   METHOD call_custom_logic.
 
-    DATA(method) = 'EXECUTE'.
-    DATA(class) = to_upper( custom_logic_class ).
+    DATA(instance) = me->customlogic_resolver->resolve( custom_logic_class ).
 
-    TRY.
-
-        cl_abap_typedescr=>describe_by_name( EXPORTING  p_name         = custom_logic_class
-                                             RECEIVING  p_descr_ref    = DATA(type_descr)
-                                             EXCEPTIONS type_not_found = 1
-                                                        OTHERS         = 2 ).
-
-        IF sy-subrc NE 0 OR type_descr IS NOT BOUND.
-          RAISE EXCEPTION NEW zasis_cx_exc( textid = zasis_cx_exc=>error_custom_log_processing ).
-        ENDIF.
-
-        DATA(descr_ref) = CAST cl_abap_objectdescr( type_descr ).
-
-        DATA(interfaces) = descr_ref->interfaces.
-
-        IF NOT line_exists( interfaces[ name = zasis_constants=>ruleset_execution-custom_log_if_name ] ).
-
-          RAISE EXCEPTION NEW zasis_cx_exc( textid = zasis_cx_exc=>custom_logic_no_intf ).
-
-        ENDIF.
-
-        CALL METHOD (class)=>(method)
-          EXPORTING
-            string_to_be_interpretet = string_to_be_interpreted
-            ruleset                  = ruleset_ref
-            current_rule_item        = current_rule_item
-            context                  = context
-          RECEIVING
-            interpretation_result    = interpretation_result.
-
-      CATCH cx_sy_dyn_call_illegal_class.
-
-        RAISE EXCEPTION NEW zasis_cx_exc( textid = zasis_cx_exc=>error_custom_log_processing ).
-
-    ENDTRY.
+    interpretation_result = instance->execute(
+      string_to_be_interpretet = string_to_be_interpreted
+      ruleset                  = ruleset_ref
+      current_rule_item        = current_rule_item
+      context                  = context ).
 
   ENDMETHOD.
 

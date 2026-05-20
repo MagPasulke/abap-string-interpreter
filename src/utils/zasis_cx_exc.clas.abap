@@ -52,23 +52,23 @@ CLASS zasis_cx_exc DEFINITION
                  attr4 TYPE scx_attrname VALUE '',
                END OF error_custom_log_processing.
 
-    CONSTANTS: BEGIN OF custom_logic_no_intf,
+    CONSTANTS: BEGIN OF class_no_intf,
                  msgid TYPE symsgid      VALUE 'ZASIS_MSGS',
                  msgno TYPE symsgno      VALUE '003',
                  attr1 TYPE scx_attrname VALUE '',
                  attr2 TYPE scx_attrname VALUE '',
                  attr3 TYPE scx_attrname VALUE '',
                  attr4 TYPE scx_attrname VALUE '',
-               END OF custom_logic_no_intf.
+               END OF class_no_intf.
 
-    CONSTANTS: BEGIN OF custom_logic_not_exist,
+    CONSTANTS: BEGIN OF class_not_exist,
                  msgid TYPE symsgid      VALUE 'ZASIS_MSGS',
                  msgno TYPE symsgno      VALUE '004',
-                 attr1 TYPE scx_attrname VALUE 'CLASSNAME',
+                 attr1 TYPE scx_attrname VALUE '',
                  attr2 TYPE scx_attrname VALUE '',
                  attr3 TYPE scx_attrname VALUE '',
                  attr4 TYPE scx_attrname VALUE '',
-               END OF custom_logic_not_exist.
+               END OF class_not_exist.
 
     METHODS constructor
       IMPORTING textid    LIKE if_t100_message=>t100key OPTIONAL

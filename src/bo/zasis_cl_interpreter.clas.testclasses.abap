@@ -65,6 +65,48 @@ CLASS ltcl_ev_producer_resolver_mock IMPLEMENTATION.
 ENDCLASS.
 
 
+CLASS ltcl_customlogic_mock DEFINITION FOR TESTING.
+  PUBLIC SECTION.
+    INTERFACES zasis_if_customlogic.
+    DATA called TYPE abap_bool.
+    DATA received_string TYPE string.
+    DATA received_context TYPE zasis_tt_interpret_context.
+    DATA return_value TYPE string.
+    DATA raise_exception TYPE abap_bool.
+ENDCLASS.
+
+CLASS ltcl_customlogic_mock IMPLEMENTATION.
+  METHOD zasis_if_customlogic~execute.
+    IF raise_exception = abap_true.
+      RAISE EXCEPTION NEW zasis_cx_exc( textid = zasis_cx_exc=>error_custom_log_processing ).
+    ENDIF.
+    called = abap_true.
+    received_string = string_to_be_interpretet.
+    received_context = context.
+    interpretation_result = return_value.
+  ENDMETHOD.
+ENDCLASS.
+
+
+CLASS ltcl_customlogic_resolver_mock DEFINITION FOR TESTING.
+  PUBLIC SECTION.
+    INTERFACES zasis_if_customlogic_resolver.
+    DATA mock_instance TYPE REF TO ltcl_customlogic_mock.
+    DATA raise_exception TYPE abap_bool.
+ENDCLASS.
+
+CLASS ltcl_customlogic_resolver_mock IMPLEMENTATION.
+  METHOD zasis_if_customlogic_resolver~resolve.
+    IF raise_exception = abap_true.
+      RAISE EXCEPTION NEW zasis_cx_exc( textid = zasis_cx_exc=>class_not_exist ).
+    ENDIF.
+    IF mock_instance IS BOUND.
+      result = mock_instance.
+    ENDIF.
+  ENDMETHOD.
+ENDCLASS.
+
+
 CLASS ltcl_zasis_cl_interpreter DEFINITION FOR TESTING
   DURATION SHORT
   RISK LEVEL HARMLESS FINAL.
@@ -73,6 +115,8 @@ CLASS ltcl_zasis_cl_interpreter DEFINITION FOR TESTING
     DATA auth_mock TYPE REF TO ltcl_auth_checker_mock.
     DATA ev_producer_mock TYPE REF TO ltcl_event_producer_mock.
     DATA ev_resolver_mock TYPE REF TO ltcl_ev_producer_resolver_mock.
+    DATA cl_mock TYPE REF TO ltcl_customlogic_mock.
+    DATA cl_resolver_mock TYPE REF TO ltcl_customlogic_resolver_mock.
 
     METHODS setup.
     METHODS:
@@ -89,7 +133,9 @@ CLASS ltcl_zasis_cl_interpreter DEFINITION FOR TESTING
       test_ev_prod_correct_params FOR TESTING,
       test_ev_prod_error_no_break FOR TESTING,
       test_ctx_forwarded_to_ev_prod FOR TESTING,
-      test_ctx_forwarded_to_cust_log FOR TESTING,
+      test_customlogic_positive FOR TESTING,
+      test_customlogic_not_found FOR TESTING,
+      test_customlogic_ctx_forward FOR TESTING,
       test_no_ctx_ev_prod_empty FOR TESTING,
       test_ctx_multi_items_all_calls FOR TESTING.
 ENDCLASS.
@@ -101,6 +147,9 @@ CLASS ltcl_zasis_cl_interpreter IMPLEMENTATION.
     ev_producer_mock = NEW #( ).
     ev_resolver_mock = NEW #( ).
     ev_resolver_mock->mock_producer = ev_producer_mock.
+    cl_mock = NEW #( ).
+    cl_resolver_mock = NEW #( ).
+    cl_resolver_mock->mock_instance = cl_mock.
   ENDMETHOD.
 
   METHOD test_execute_success.
@@ -445,17 +494,37 @@ CLASS ltcl_zasis_cl_interpreter IMPLEMENTATION.
     cl_abap_unit_assert=>assert_equals( act = ev_producer_mock->received_context[ 2 ]-value exp = 'scanner_01' ).
   ENDMETHOD.
 
-  METHOD test_ctx_forwarded_to_cust_log.
-    " Note: custom logic uses dynamic CALL METHOD, which cannot be easily
-    " unit-tested without a real class in the system. This test verifies
-    " that the interpreter does NOT raise an exception when context is passed
-    " to a custom logic item (the call_custom_logic method receives context).
-    " Full integration testing of custom logic context requires ABAP system.
+  METHOD test_customlogic_positive.
+    " Given - custom logic resolver returns mock that produces a result
+    cl_mock->return_value = |CustomResult|.
 
-    " Given - item with custom_logic set to non-existent class
-    DATA(context) = VALUE zasis_tt_interpret_context(
-      ( ctx_key = 'warehouse' value = 'WH01' )
+    DATA(ruleset) = NEW zasis_cl_ruleset(
+      header = VALUE #( rulesetuuid = '9808AFDDDA' rulesetid = 'UnitTest' )
+      items  = VALUE #( ( interpretationitm = 1 intpretationtarget = 'Field1'
+                           interpretationrule = '<TAG>([^<]*)' interpretation_type = 1
+                           offset_pre = 5 offset_post = 0
+                           custom_logic = 'ZCL_MY_CUSTOM_LOGIC' ) )
     ).
+
+    DATA(cut) = NEW zasis_cl_interpreter( auth_checker         = auth_mock
+                                           event_producer_resolver = ev_resolver_mock
+                                           customlogic_resolver = cl_resolver_mock ).
+
+    " When
+    DATA(result) = cut->execute(
+      string_to_be_interpreted = |<TAG>Value1|
+      ruleset                  = ruleset
+    ).
+
+    " Then
+    cl_abap_unit_assert=>assert_true( act = cl_mock->called ).
+    cl_abap_unit_assert=>assert_equals( act = result[ 1 ]-interpretationresult exp = |CustomResult| ).
+    cl_abap_unit_assert=>assert_equals( act = result[ 1 ]-targetfield exp = |Field1| ).
+  ENDMETHOD.
+
+  METHOD test_customlogic_not_found.
+    " Given - resolver raises exception (class not found)
+    cl_resolver_mock->raise_exception = abap_true.
 
     DATA(ruleset) = NEW zasis_cl_ruleset(
       header = VALUE #( rulesetuuid = '9808AFDDDA' rulesetid = 'UnitTest' )
@@ -465,24 +534,57 @@ CLASS ltcl_zasis_cl_interpreter IMPLEMENTATION.
                            custom_logic = 'ZCL_NONEXISTENT_LOGIC' ) )
     ).
 
-    DATA(cut) = NEW zasis_cl_interpreter( auth_checker = auth_mock
-                                           event_producer_resolver = ev_resolver_mock ).
+    DATA(cut) = NEW zasis_cl_interpreter( auth_checker         = auth_mock
+                                           event_producer_resolver = ev_resolver_mock
+                                           customlogic_resolver = cl_resolver_mock ).
 
-    " When / Then - should raise custom logic processing error (class not found)
-    " but context parameter does not cause any additional issues
+    " When / Then - should raise zasis_cx_exc
     TRY.
         cut->execute(
-          EXPORTING
-            string_to_be_interpreted = |<TAG>Value1|
-            ruleset                  = ruleset
-            context                  = context
-          RECEIVING
-            interpretation_result    = DATA(result)
+          string_to_be_interpreted = |<TAG>Value1|
+          ruleset                  = ruleset
         ).
         cl_abap_unit_assert=>fail( msg = |Expected zasis_cx_exc for missing custom logic class| ).
       CATCH zasis_cx_exc.
-        " expected - class doesn't exist, but context param didn't break anything
+        " expected
     ENDTRY.
+  ENDMETHOD.
+
+  METHOD test_customlogic_ctx_forward.
+    " Given - context is forwarded to custom logic
+    cl_mock->return_value = |CtxResult|.
+
+    DATA(context) = VALUE zasis_tt_interpret_context(
+      ( ctx_key = 'warehouse' value = 'WH01' )
+    ).
+
+    DATA(ruleset) = NEW zasis_cl_ruleset(
+      header = VALUE #( rulesetuuid = '9808AFDDDA' rulesetid = 'UnitTest' )
+      items  = VALUE #( ( interpretationitm = 1 intpretationtarget = 'Field1'
+                           interpretationrule = '<TAG>([^<]*)' interpretation_type = 1
+                           offset_pre = 5 offset_post = 0
+                           custom_logic = 'ZCL_MY_CUSTOM_LOGIC' ) )
+    ).
+
+    DATA(cut) = NEW zasis_cl_interpreter( auth_checker         = auth_mock
+                                           event_producer_resolver = ev_resolver_mock
+                                           customlogic_resolver = cl_resolver_mock ).
+
+    " When
+    cut->execute(
+      EXPORTING
+        string_to_be_interpreted = |<TAG>Value1|
+        ruleset                  = ruleset
+        context                  = context
+      RECEIVING
+        interpretation_result    = DATA(result)
+    ).
+
+    " Then - custom logic received context
+    cl_abap_unit_assert=>assert_equals( act = lines( cl_mock->received_context ) exp = 1 ).
+    cl_abap_unit_assert=>assert_equals( act = cl_mock->received_context[ 1 ]-value exp = 'WH01' ).
+    " And received the input string
+    cl_abap_unit_assert=>assert_equals( act = cl_mock->received_string exp = |<TAG>Value1| ).
   ENDMETHOD.
 
   METHOD test_no_ctx_ev_prod_empty.

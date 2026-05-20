@@ -56,32 +56,24 @@ CLASS lhc_rulesetitem IMPLEMENTATION.
         CONTINUE.
       ENDIF.
 
-      cl_abap_typedescr=>describe_by_name( EXPORTING  p_name         = rulesetitem-EventProducer
-                                           RECEIVING  p_descr_ref    = DATA(type_descr)
-                                           EXCEPTIONS type_not_found = 1
-                                                      OTHERS         = 2 ).
+      TRY.
+          zasis_cl_class_validator=>check_implements(
+            class_name     = CONV string( rulesetitem-EventProducer )
+            interface_name = zasis_constants=>ruleset_execution-event_producer_if_name ).
 
-      IF sy-subrc <> 0 OR type_descr IS NOT BOUND.
-        APPEND VALUE #( %tky = rulesetitem-%tky ) TO failed-rulesetitem.
-        APPEND VALUE #( %tky = rulesetitem-%tky
-                        %msg = NEW zasis_cx_ruleset_ui( textid    = zasis_cx_ruleset_ui=>event_producer_not_exist
-                                                        severity  = if_abap_behv_message=>severity-error
-                                                        classname = rulesetitem-EventProducer ) )
-               TO reported-rulesetitem.
-        CONTINUE.
-      ENDIF.
+        CATCH zasis_cx_exc INTO DATA(exc).
+          APPEND VALUE #( %tky = rulesetitem-%tky ) TO failed-rulesetitem.
 
-      DATA(descr_ref) = CAST cl_abap_objectdescr( type_descr ).
-      DATA(interfaces) = descr_ref->interfaces.
+          DATA(textid) = COND #( WHEN exc->if_t100_message~t100key-msgno = zasis_cx_exc=>class_not_exist-msgno
+                                 THEN zasis_cx_ruleset_ui=>event_producer_not_exist
+                                 ELSE zasis_cx_ruleset_ui=>event_producer_no_intf ).
 
-      IF NOT line_exists( interfaces[ name = zasis_constants=>ruleset_execution-event_producer_if_name ] ).
-        APPEND VALUE #( %tky = rulesetitem-%tky ) TO failed-rulesetitem.
-        APPEND VALUE #( %tky = rulesetitem-%tky
-                        %msg = NEW zasis_cx_ruleset_ui( textid    = zasis_cx_ruleset_ui=>event_producer_no_intf
-                                                        severity  = if_abap_behv_message=>severity-error
-                                                        classname = rulesetitem-EventProducer ) )
-               TO reported-rulesetitem.
-      ENDIF.
+          APPEND VALUE #( %tky = rulesetitem-%tky
+                          %msg = NEW zasis_cx_ruleset_ui( textid    = textid
+                                                          severity  = if_abap_behv_message=>severity-error
+                                                          classname = rulesetitem-EventProducer ) )
+                 TO reported-rulesetitem.
+      ENDTRY.
 
     ENDLOOP.
   ENDMETHOD.
@@ -111,38 +103,27 @@ CLASS lhc_rulesetitem IMPLEMENTATION.
 
       IF entity-%control-CustomLogic EQ '01' OR entity-CustomLogic IS NOT INITIAL. " was updated or deleted.
 
-        cl_abap_typedescr=>describe_by_name( EXPORTING  p_name         = entity-CustomLogic
-                                             RECEIVING  p_descr_ref    = DATA(type_descr)
-                                             EXCEPTIONS type_not_found = 1
-                                                        OTHERS         = 2 ).
-        IF sy-subrc <> 0 OR type_descr IS NOT BOUND.
+        TRY.
+            zasis_cl_class_validator=>check_implements(
+              class_name     = CONV string( entity-CustomLogic )
+              interface_name = zasis_constants=>ruleset_execution-custom_log_if_name ).
 
-          APPEND VALUE #( %tky = entity-%tky ) TO failed-rulesetitem.
+          CATCH zasis_cx_exc INTO DATA(cl_exc).
 
-          APPEND VALUE #( %tky = entity-%tky
-                          %msg = NEW zasis_cx_ruleset_ui( textid   = zasis_cx_ruleset_ui=>custom_logic_not_exist
-                                                          severity = if_abap_behv_message=>severity-error ) )
-                 TO reported-rulesetitem.
+            APPEND VALUE #( %tky = entity-%tky ) TO failed-rulesetitem.
 
-          RETURN.
-        ENDIF.
+            DATA(cl_textid) = COND #( WHEN cl_exc->if_t100_message~t100key-msgno = zasis_cx_exc=>class_not_exist-msgno
+                                      THEN zasis_cx_ruleset_ui=>custom_logic_not_exist
+                                      ELSE zasis_cx_ruleset_ui=>custom_logic_no_intf ).
 
-        DATA(descr_ref) = CAST cl_abap_objectdescr( type_descr ).
+            APPEND VALUE #( %tky = entity-%tky
+                            %msg = NEW zasis_cx_ruleset_ui( textid   = cl_textid
+                                                            severity = if_abap_behv_message=>severity-error ) )
+                   TO reported-rulesetitem.
 
-        DATA(interfaces) = descr_ref->interfaces.
+            RETURN.
 
-        IF NOT line_exists( interfaces[ name = zasis_constants=>ruleset_execution-custom_log_if_name ] ).
-
-          APPEND VALUE #( %tky = entity-%tky ) TO failed-rulesetitem.
-
-          APPEND VALUE #( %tky = entity-%tky
-                          %msg = NEW zasis_cx_ruleset_ui( textid   = zasis_cx_ruleset_ui=>custom_logic_no_intf
-                                                          severity = if_abap_behv_message=>severity-error ) )
-                 TO reported-rulesetitem.
-
-          RETURN.
-
-        ENDIF.
+        ENDTRY.
 
       ENDIF.
 
