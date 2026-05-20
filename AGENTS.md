@@ -15,7 +15,7 @@ ZASIS is an ABAP-based String Interpreter that allows configuring RuleSets to ex
 **NEVER commit or push directly to `main`.** Always follow this workflow:
 
 1. Create a feature branch (e.g., `feat/my-feature`, `fix/my-bugfix`)
-2. Commit changes to the feature branch
+2. Commit changes to the feature branch, **always use the `conventional-commit` skill**
 3. Push the feature branch to the remote
 4. Create a Pull Request (PR) against `main`
 5. Merge the PR (squash preferred)

@@ -23,7 +23,7 @@
       "ignoreTestClasses": false,
       "checkForms": true
     },
-    "definitions_top" : {
+    "definitions_top": {
       "exclude": [],
       "severity": "Error"
     },
@@ -39,17 +39,23 @@
     "unnecessary_return": true,
     "unreachable_code": true,
     "unused_ddic": {
-      "exclude": ["zasisdr_rusthd.tabl.xml", "zasisdr_rustit.tabl.xml"]
+      "exclude": [
+        "zasisdr_rusthd.tabl.xml",
+        "zasisdr_rustit.tabl.xml"
+      ]
     },
-    "unused_methods": {
-    },
+    "unused_methods": {},
     "unused_types": {
       "exclude": []
     },
     "unused_variables": {
-      "exclude": ["zasis_cl_interpreter.clas.testclasses.abap", "zasis_cl_get_domain_fix_values.clas.abap"],
+      "exclude": [
+        "zasis_cl_interpreter.clas.testclasses.abap",
+        "zasis_cl_get_domain_fix_values.clas.abap"
+      ],
       "skipAbstract": true
     },
+    "uncaught_exception": true,
     "try_without_catch": true,
     "type_form_parameters": true,
     "types_naming": {
@@ -71,6 +77,16 @@
     "space_before_dot": {
       "ignoreExceptions": true,
       "ignoreGlobalDefinition": true
-    }
+    },
+    "local_variable_names": {
+  "exclude": [],
+  "severity": "Error",
+  "patternKind": "required",
+  "ignoreNames": [],
+  "ignorePatterns": [],
+  "expectedData": "^(?!(lv_|lt_|ls_|lo_|lr_|lx_|iv_|it_|is_|io_|ir_|ev_|et_|es_|eo_|er_|cv_|ct_|cs_|co_|cr_|mv_|mt_|ms_|mo_|mr_|mx_|gv_|gt_|gs_|go_|gr_))[a-z][a-zA-Z0-9_]*$",
+  "expectedConstant": "^LC_[A-Z0-9_]+$",
+  "expectedFS": "^<[a-z][a-zA-Z0-9_]*>$"
+}
   }
 }
