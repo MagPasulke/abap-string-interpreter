@@ -35,7 +35,7 @@ ENDCLASS.
 CLASS ltcl_event_producer_mock IMPLEMENTATION.
   METHOD zasis_if_event_producer~on_item_interpreted.
     IF raise_exception = abap_true.
-      RAISE EXCEPTION TYPE cx_sy_zerodivide.
+      RAISE EXCEPTION NEW zasis_cx_exc( textid = zasis_cx_exc=>error_custom_log_processing ).
     ENDIF.
     called = abap_true.
     call_count = call_count + 1.
@@ -164,13 +164,17 @@ CLASS ltcl_zasis_cl_interpreter IMPLEMENTATION.
     DATA(cut) = NEW zasis_cl_interpreter( auth_checker = auth_mock ).
 
     " When
-    cut->execute(
-      EXPORTING
-        string_to_be_interpreted = |<Start><A7X>MyMaterialNumber<B52H>MyDeliveryNote<End>|
-        ruleset                  = ruleset
-      RECEIVING
-        interpretation_result    = DATA(result)
-    ).
+    TRY.
+        cut->execute(
+          EXPORTING
+            string_to_be_interpreted = |<Start><A7X>MyMaterialNumber<B52H>MyDeliveryNote<End>|
+            ruleset                  = ruleset
+          RECEIVING
+            interpretation_result    = DATA(result)
+        ).
+      CATCH zasis_cx_exc zasis_cx_no_auth INTO DATA(exc).
+        cl_abap_unit_assert=>fail( msg = |Unexpected exception: { exc->get_text( ) }| ).
+    ENDTRY.
 
     " Then
     cl_abap_unit_assert=>assert_equals(
@@ -195,14 +199,19 @@ CLASS ltcl_zasis_cl_interpreter IMPLEMENTATION.
     DATA(cut) = NEW zasis_cl_interpreter( auth_checker = auth_mock ).
 
     " When
-    DATA(result) = cut->execute(
-      string_to_be_interpreted = |<Start><NO_KNOWN_TAG>SomeValue<End>|
-      ruleset                  = ruleset
-    ).
+    DATA result_nm TYPE zasis_tt_interpretationresult.
+    TRY.
+        result_nm = cut->execute(
+          string_to_be_interpreted = |<Start><NO_KNOWN_TAG>SomeValue<End>|
+          ruleset                  = ruleset
+        ).
+      CATCH zasis_cx_exc zasis_cx_no_auth INTO DATA(exc).
+        cl_abap_unit_assert=>fail( msg = |Unexpected exception: { exc->get_text( ) }| ).
+    ENDTRY.
 
     " Then
     cl_abap_unit_assert=>assert_equals(
-      act = result[ 1 ]-interpretationresult
+      act = result_nm[ 1 ]-interpretationresult
       exp = |no match|
     ).
   ENDMETHOD.
@@ -228,6 +237,8 @@ CLASS ltcl_zasis_cl_interpreter IMPLEMENTATION.
         cl_abap_unit_assert=>fail( msg = |Expected zasis_cx_no_auth| ).
       CATCH zasis_cx_no_auth.
         " expected
+      CATCH zasis_cx_exc INTO DATA(exc).
+        cl_abap_unit_assert=>fail( msg = |Unexpected zasis_cx_exc: { exc->get_text( ) }| ).
     ENDTRY.
 
   ENDMETHOD.
@@ -243,14 +254,19 @@ CLASS ltcl_zasis_cl_interpreter IMPLEMENTATION.
     DATA(cut) = NEW zasis_cl_interpreter( auth_checker = auth_mock ).
 
     " When
-    DATA(result) = cut->execute(
-      string_to_be_interpreted = |<TAG>Hello|
-      ruleset                  = ruleset
-    ).
+    DATA result_rt TYPE zasis_tt_interpretationresult.
+    TRY.
+        result_rt = cut->execute(
+          string_to_be_interpreted = |<TAG>Hello|
+          ruleset                  = ruleset
+        ).
+      CATCH zasis_cx_exc zasis_cx_no_auth INTO DATA(exc).
+        cl_abap_unit_assert=>fail( msg = |Unexpected exception: { exc->get_text( ) }| ).
+    ENDTRY.
 
     " Then
     cl_abap_unit_assert=>assert_equals(
-      act = result[ 1 ]-interpretationresult
+      act = result_rt[ 1 ]-interpretationresult
       exp = |Hello|
     ).
   ENDMETHOD.
@@ -274,6 +290,8 @@ CLASS ltcl_zasis_cl_interpreter IMPLEMENTATION.
         cl_abap_unit_assert=>fail( msg = |Expected zasis_cx_exc for invalid type| ).
       CATCH zasis_cx_exc.
         " expected
+      CATCH zasis_cx_no_auth INTO DATA(exc).
+        cl_abap_unit_assert=>fail( msg = |Unexpected zasis_cx_no_auth: { exc->get_text( ) }| ).
     ENDTRY.
   ENDMETHOD.
 
@@ -290,21 +308,26 @@ CLASS ltcl_zasis_cl_interpreter IMPLEMENTATION.
     DATA(cut) = NEW zasis_cl_interpreter( auth_checker = auth_mock ).
 
     " When
-    DATA(result) = cut->execute(
-      string_to_be_interpreted = |<Start><A7X>MyMaterialNumber<B52H>MyDeliveryNote<End>|
-      ruleset                  = ruleset
-    ).
+    DATA result_mi TYPE zasis_tt_interpretationresult.
+    TRY.
+        result_mi = cut->execute(
+          string_to_be_interpreted = |<Start><A7X>MyMaterialNumber<B52H>MyDeliveryNote<End>|
+          ruleset                  = ruleset
+        ).
+      CATCH zasis_cx_exc zasis_cx_no_auth INTO DATA(exc).
+        cl_abap_unit_assert=>fail( msg = |Unexpected exception: { exc->get_text( ) }| ).
+    ENDTRY.
 
     " Then
-    cl_abap_unit_assert=>assert_equals( act = lines( result ) exp = 2 ).
+    cl_abap_unit_assert=>assert_equals( act = lines( result_mi ) exp = 2 ).
 
     cl_abap_unit_assert=>assert_equals(
-      act = result[ 1 ]-interpretationresult
+      act = result_mi[ 1 ]-interpretationresult
       exp = |MyMaterialNumber|
     ).
 
     cl_abap_unit_assert=>assert_equals(
-      act = result[ 2 ]-interpretationresult
+      act = result_mi[ 2 ]-interpretationresult
       exp = |MyDeliveryNote|
     ).
   ENDMETHOD.
@@ -320,14 +343,19 @@ CLASS ltcl_zasis_cl_interpreter IMPLEMENTATION.
     DATA(cut) = NEW zasis_cl_interpreter( auth_checker = auth_mock ).
 
     " When
-    DATA(result) = cut->execute(
-      string_to_be_interpreted = |<Start><B52H>MyDeliveryNote<End>|
-      ruleset                  = ruleset
-    ).
+    DATA result_op TYPE zasis_tt_interpretationresult.
+    TRY.
+        result_op = cut->execute(
+          string_to_be_interpreted = |<Start><B52H>MyDeliveryNote<End>|
+          ruleset                  = ruleset
+        ).
+      CATCH zasis_cx_exc zasis_cx_no_auth INTO DATA(exc).
+        cl_abap_unit_assert=>fail( msg = |Unexpected exception: { exc->get_text( ) }| ).
+    ENDTRY.
 
     " Then
     cl_abap_unit_assert=>assert_equals(
-      act = result[ 1 ]-interpretationresult
+      act = result_op[ 1 ]-interpretationresult
       exp = |MyDeliveryNote|
     ).
   ENDMETHOD.
@@ -345,13 +373,17 @@ CLASS ltcl_zasis_cl_interpreter IMPLEMENTATION.
                                            event_producer_resolver = ev_resolver_mock ).
 
     " When
-    cut->execute(
-      EXPORTING
-        string_to_be_interpreted = |<TAG>Value1|
-        ruleset                  = ruleset
-      RECEIVING
-        interpretation_result    = DATA(result)
-    ).
+    TRY.
+        cut->execute(
+          EXPORTING
+            string_to_be_interpreted = |<TAG>Value1|
+            ruleset                  = ruleset
+          RECEIVING
+            interpretation_result    = DATA(result)
+        ).
+      CATCH zasis_cx_exc zasis_cx_no_auth INTO DATA(exc).
+        cl_abap_unit_assert=>fail( msg = |Unexpected exception: { exc->get_text( ) }| ).
+    ENDTRY.
 
     " Then
     cl_abap_unit_assert=>assert_true( act = ev_producer_mock->called ).
@@ -370,13 +402,17 @@ CLASS ltcl_zasis_cl_interpreter IMPLEMENTATION.
                                            event_producer_resolver = ev_resolver_mock ).
 
     " When
-    cut->execute(
-      EXPORTING
-        string_to_be_interpreted = |<TAG>Value1|
-        ruleset                  = ruleset
-      RECEIVING
-        interpretation_result    = DATA(result)
-    ).
+    TRY.
+        cut->execute(
+          EXPORTING
+            string_to_be_interpreted = |<TAG>Value1|
+            ruleset                  = ruleset
+          RECEIVING
+            interpretation_result    = DATA(result)
+        ).
+      CATCH zasis_cx_exc zasis_cx_no_auth INTO DATA(exc).
+        cl_abap_unit_assert=>fail( msg = |Unexpected exception: { exc->get_text( ) }| ).
+    ENDTRY.
 
     " Then
     cl_abap_unit_assert=>assert_false( act = ev_producer_mock->called ).
@@ -395,13 +431,17 @@ CLASS ltcl_zasis_cl_interpreter IMPLEMENTATION.
                                            event_producer_resolver = ev_resolver_mock ).
 
     " When
-    cut->execute(
-      EXPORTING
-        string_to_be_interpreted = |<TAG>Value1|
-        ruleset                  = ruleset
-      RECEIVING
-        interpretation_result    = DATA(result)
-    ).
+    TRY.
+        cut->execute(
+          EXPORTING
+            string_to_be_interpreted = |<TAG>Value1|
+            ruleset                  = ruleset
+          RECEIVING
+            interpretation_result    = DATA(result)
+        ).
+      CATCH zasis_cx_exc zasis_cx_no_auth INTO DATA(exc).
+        cl_abap_unit_assert=>fail( msg = |Unexpected exception: { exc->get_text( ) }| ).
+    ENDTRY.
 
     " Then
     cl_abap_unit_assert=>assert_false( act = ev_producer_mock->called ).
@@ -420,13 +460,17 @@ CLASS ltcl_zasis_cl_interpreter IMPLEMENTATION.
                                            event_producer_resolver = ev_resolver_mock ).
 
     " When
-    cut->execute(
-      EXPORTING
-        string_to_be_interpreted = |<B>ResultValue|
-        ruleset                  = ruleset
-      RECEIVING
-        interpretation_result    = DATA(result)
-    ).
+    TRY.
+        cut->execute(
+          EXPORTING
+            string_to_be_interpreted = |<B>ResultValue|
+            ruleset                  = ruleset
+          RECEIVING
+            interpretation_result    = DATA(result)
+        ).
+      CATCH zasis_cx_exc zasis_cx_no_auth INTO DATA(exc).
+        cl_abap_unit_assert=>fail( msg = |Unexpected exception: { exc->get_text( ) }| ).
+    ENDTRY.
 
     " Then
     cl_abap_unit_assert=>assert_equals( act = ev_producer_mock->received_itm exp = CONV zasis_ruleset_item( 42 ) ).
@@ -449,13 +493,17 @@ CLASS ltcl_zasis_cl_interpreter IMPLEMENTATION.
                                            event_producer_resolver = ev_resolver_mock ).
 
     " When - should NOT raise, exception is swallowed
-    cut->execute(
-      EXPORTING
-        string_to_be_interpreted = |<TAG>Value1|
-        ruleset                  = ruleset
-      RECEIVING
-        interpretation_result    = DATA(result)
-    ).
+    TRY.
+        cut->execute(
+          EXPORTING
+            string_to_be_interpreted = |<TAG>Value1|
+            ruleset                  = ruleset
+          RECEIVING
+            interpretation_result    = DATA(result)
+        ).
+      CATCH zasis_cx_exc zasis_cx_no_auth INTO DATA(exc).
+        cl_abap_unit_assert=>fail( msg = |Unexpected exception: { exc->get_text( ) }| ).
+    ENDTRY.
 
     " Then - result is still produced despite event producer failure
     cl_abap_unit_assert=>assert_equals( act = result[ 1 ]-interpretationresult exp = |Value1| ).
@@ -479,14 +527,18 @@ CLASS ltcl_zasis_cl_interpreter IMPLEMENTATION.
                                            event_producer_resolver = ev_resolver_mock ).
 
     " When
-    cut->execute(
-      EXPORTING
-        string_to_be_interpreted = |<TAG>Value1|
-        ruleset                  = ruleset
-        context                  = context
-      RECEIVING
-        interpretation_result    = DATA(result)
-    ).
+    TRY.
+        cut->execute(
+          EXPORTING
+            string_to_be_interpreted = |<TAG>Value1|
+            ruleset                  = ruleset
+            context                  = context
+          RECEIVING
+            interpretation_result    = DATA(result)
+        ).
+      CATCH zasis_cx_exc zasis_cx_no_auth INTO DATA(exc).
+        cl_abap_unit_assert=>fail( msg = |Unexpected exception: { exc->get_text( ) }| ).
+    ENDTRY.
 
     " Then - event producer received the full context
     cl_abap_unit_assert=>assert_equals( act = lines( ev_producer_mock->received_context ) exp = 2 ).
@@ -511,15 +563,22 @@ CLASS ltcl_zasis_cl_interpreter IMPLEMENTATION.
                                            customlogic_resolver = cl_resolver_mock ).
 
     " When
-    DATA(result) = cut->execute(
-      string_to_be_interpreted = |<TAG>Value1|
-      ruleset                  = ruleset
-    ).
+    TRY.
+        cut->execute(
+          EXPORTING
+            string_to_be_interpreted = |<TAG>Value1|
+            ruleset                  = ruleset
+          RECEIVING
+            interpretation_result    = DATA(result_cl)
+        ).
+      CATCH zasis_cx_exc zasis_cx_no_auth INTO DATA(exc).
+        cl_abap_unit_assert=>fail( msg = |Unexpected exception: { exc->get_text( ) }| ).
+    ENDTRY.
 
     " Then
     cl_abap_unit_assert=>assert_true( act = cl_mock->called ).
-    cl_abap_unit_assert=>assert_equals( act = result[ 1 ]-interpretationresult exp = |CustomResult| ).
-    cl_abap_unit_assert=>assert_equals( act = result[ 1 ]-targetfield exp = |Field1| ).
+    cl_abap_unit_assert=>assert_equals( act = result_cl[ 1 ]-interpretationresult exp = |CustomResult| ).
+    cl_abap_unit_assert=>assert_equals( act = result_cl[ 1 ]-targetfield exp = |Field1| ).
   ENDMETHOD.
 
   METHOD test_customlogic_not_found.
@@ -547,6 +606,8 @@ CLASS ltcl_zasis_cl_interpreter IMPLEMENTATION.
         cl_abap_unit_assert=>fail( msg = |Expected zasis_cx_exc for missing custom logic class| ).
       CATCH zasis_cx_exc.
         " expected
+      CATCH zasis_cx_no_auth INTO DATA(exc).
+        cl_abap_unit_assert=>fail( msg = |Unexpected zasis_cx_no_auth: { exc->get_text( ) }| ).
     ENDTRY.
   ENDMETHOD.
 
@@ -571,14 +632,18 @@ CLASS ltcl_zasis_cl_interpreter IMPLEMENTATION.
                                            customlogic_resolver = cl_resolver_mock ).
 
     " When
-    cut->execute(
-      EXPORTING
-        string_to_be_interpreted = |<TAG>Value1|
-        ruleset                  = ruleset
-        context                  = context
-      RECEIVING
-        interpretation_result    = DATA(result)
-    ).
+    TRY.
+        cut->execute(
+          EXPORTING
+            string_to_be_interpreted = |<TAG>Value1|
+            ruleset                  = ruleset
+            context                  = context
+          RECEIVING
+            interpretation_result    = DATA(result)
+        ).
+      CATCH zasis_cx_exc zasis_cx_no_auth INTO DATA(exc).
+        cl_abap_unit_assert=>fail( msg = |Unexpected exception: { exc->get_text( ) }| ).
+    ENDTRY.
 
     " Then - custom logic received context
     cl_abap_unit_assert=>assert_equals( act = lines( cl_mock->received_context ) exp = 1 ).
@@ -600,13 +665,17 @@ CLASS ltcl_zasis_cl_interpreter IMPLEMENTATION.
                                            event_producer_resolver = ev_resolver_mock ).
 
     " When - no context parameter passed
-    cut->execute(
-      EXPORTING
-        string_to_be_interpreted = |<TAG>Value1|
-        ruleset                  = ruleset
-      RECEIVING
-        interpretation_result    = DATA(result)
-    ).
+    TRY.
+        cut->execute(
+          EXPORTING
+            string_to_be_interpreted = |<TAG>Value1|
+            ruleset                  = ruleset
+          RECEIVING
+            interpretation_result    = DATA(result)
+        ).
+      CATCH zasis_cx_exc zasis_cx_no_auth INTO DATA(exc).
+        cl_abap_unit_assert=>fail( msg = |Unexpected exception: { exc->get_text( ) }| ).
+    ENDTRY.
 
     " Then - event producer receives empty context table
     cl_abap_unit_assert=>assert_true( act = ev_producer_mock->called ).
@@ -635,14 +704,18 @@ CLASS ltcl_zasis_cl_interpreter IMPLEMENTATION.
                                            event_producer_resolver = ev_resolver_mock ).
 
     " When
-    cut->execute(
-      EXPORTING
-        string_to_be_interpreted = |<A>Val1<B>Val2|
-        ruleset                  = ruleset
-        context                  = context
-      RECEIVING
-        interpretation_result    = DATA(result)
-    ).
+    TRY.
+        cut->execute(
+          EXPORTING
+            string_to_be_interpreted = |<A>Val1<B>Val2|
+            ruleset                  = ruleset
+            context                  = context
+          RECEIVING
+            interpretation_result    = DATA(result)
+        ).
+      CATCH zasis_cx_exc zasis_cx_no_auth INTO DATA(exc).
+        cl_abap_unit_assert=>fail( msg = |Unexpected exception: { exc->get_text( ) }| ).
+    ENDTRY.
 
     " Then - event producer called twice, last call has context
     cl_abap_unit_assert=>assert_equals( act = ev_producer_mock->call_count exp = 2 ).

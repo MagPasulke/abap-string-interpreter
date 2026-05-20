@@ -180,7 +180,7 @@ CLASS zasis_cl_interpreter IMPLEMENTATION.
           interpretation_result = interpretation_result
           context               = context ).
 
-      CATCH cx_root.
+      CATCH zasis_cx_exc.
         "event producer errors should not break interpretation
         RETURN.
     ENDTRY.

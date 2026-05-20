@@ -6,6 +6,8 @@ INTERFACE zasis_if_event_producer
       ruleset               TYPE REF TO zasis_if_ruleset
       interpretation_itm    TYPE zasis_ruleset_item
       interpretation_result TYPE zasis_interpret_result_line
-      context               TYPE zasis_tt_interpret_context OPTIONAL.
+      context               TYPE zasis_tt_interpret_context OPTIONAL
+    RAISING
+      zasis_cx_exc.
 
 ENDINTERFACE.

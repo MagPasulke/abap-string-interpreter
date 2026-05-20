@@ -37,9 +37,13 @@ CLASS zasis_cl_get_domain_fix_values IMPLEMENTATION.
         IF filter_condition_domain_name IS NOT INITIAL.
           domain_name = filter_condition_domain_name-range[ 1 ]-low.
         ELSE.
-          "do some exception handling
-          io_response->set_total_number_of_records( lines( business_data ) ).
-          io_response->set_data( business_data ).
+          "domain name filter not provided — return empty result
+          TRY.
+              io_response->set_total_number_of_records( lines( business_data ) ).
+              io_response->set_data( business_data ).
+            CATCH cx_rap_query_response_set_twic.
+              "response already set — ignore
+          ENDTRY.
           EXIT.
 
         ENDIF.
@@ -57,9 +61,13 @@ CLASS zasis_cl_get_domain_fix_values IMPLEMENTATION.
             OTHERS         = 3 ).
 
         IF sy-subrc > 0.
-          "do some exception handling
-          io_response->set_total_number_of_records( lines( business_data ) ).
-          io_response->set_data( business_data ).
+          "domain not found or not a DDIC type — return empty result
+          TRY.
+              io_response->set_total_number_of_records( lines( business_data ) ).
+              io_response->set_data( business_data ).
+            CATCH cx_rap_query_response_set_twic.
+              "response already set — ignore
+          ENDTRY.
           EXIT.
         ENDIF.
 
@@ -90,6 +98,8 @@ CLASS zasis_cl_get_domain_fix_values IMPLEMENTATION.
         io_response->set_total_number_of_records( lines( business_data ) ).
         io_response->set_data( business_data ).
 
+      CATCH cx_rap_query_response_set_twic.
+        "response already set — ignore
       CATCH cx_root INTO DATA(exception).
         DATA(exception_message) = cl_message_helper=>get_latest_t100_exception( exception )->if_message~get_longtext( ).
 
