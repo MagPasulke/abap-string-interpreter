@@ -1020,10 +1020,8 @@ CLASS ltcl_zasis_cl_interpreter IMPLEMENTATION.
 
   METHOD test_replace_no_match_exp_nm.
     " Given - REPLACE with regex that does NOT match input
-    " ABAP replace() returns original string when no match — current behavior produces a result
-    " This test documents the EXPECTED behavior: no match → "no match" entry
-    " TODO: This test INTENTIONALLY FAILS — known bug tracked in issue #21.
-    "       Do NOT fix here. Fix lands when issue #21 is resolved and this test will then pass.
+    " ABAP replace() returns original string when no match
+    " Fix: compare result to input to detect actual replacement (issue #21)
     DATA(ruleset) = NEW zasis_cl_ruleset(
       header = VALUE #( rulesetuuid = '9808AFDDDA' rulesetid = 'UnitTest' )
       items  = VALUE #( ( intpretationtarget = 'Cleaned'
@@ -1046,7 +1044,7 @@ CLASS ltcl_zasis_cl_interpreter IMPLEMENTATION.
         cl_abap_unit_assert=>fail( msg = |Unexpected exception: { exc->get_text( ) }| ).
     ENDTRY.
 
-    " Then - REPLACE with no match should produce "no match" (currently fails — bug to fix separately)
+    " Then - REPLACE with no match should produce "no match"
     cl_abap_unit_assert=>assert_equals( act = result[ 1 ]-interpretationresult exp = |no match| ).
   ENDMETHOD.
 

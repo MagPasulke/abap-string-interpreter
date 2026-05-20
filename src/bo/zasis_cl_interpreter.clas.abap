@@ -112,7 +112,14 @@ CLASS zasis_cl_interpreter IMPLEMENTATION.
                                             regex = condense( rulesetitem-interpretationrule )
                                             with  = rulesetitem-replacement_string ).
 
-            single_interpret_result = result_replace.
+            " replace() returns the original string when regex doesn't match (not empty).
+            " Example: replace( val = 'ABC' regex = 'X' with = '' ) => 'ABC'
+            " So if result = original, we treat it as no-match.
+            " Known limitation: if the replacement produces the same string as input
+            " (e.g. regex = 'A' with = 'A' on 'ABC'), this is falsely treated as no-match.
+            IF result_replace NE string_to_be_interpreted.
+              single_interpret_result = result_replace.
+            ENDIF.
 
           WHEN OTHERS.
 
