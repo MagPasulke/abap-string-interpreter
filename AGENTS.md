@@ -23,9 +23,9 @@ ZASIS is an ABAP-based String Interpreter that allows configuring RuleSets to ex
 
 This applies to ALL changes — code, documentation, skills, configuration. No exceptions.
 
-**PR merging is the user's responsibility.** Agents must:
+**PR merging is the user's responsibility by default.** Agents must:
 - **Ask the user** before creating a PR (do not create PRs autonomously)
-- **Never merge PRs** — only the user merges
+- **Never merge PRs** unless the user explicitly instructs the agent to merge
 - Wait for the user's explicit confirmation before creating or merging
 
 **Clean commit history on feature branches.** Agents must:
@@ -144,4 +144,4 @@ The project has multiple test layers. See `package.json` for npm scripts:
 
 ## Session Tracking
 
-At the end of each session (when PR is merged), append a row to docs/session-summaries.md with the OpenCode session ID, date, and a short summary of what was done.
+At the end of each session — **before merging the PR** — create a session summary using the `session-summary` skill. Session summaries are stored as individual files in `docs/sessions/` with the session ID as filename. The summary must be committed to the feature branch before merge.
