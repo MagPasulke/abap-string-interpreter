@@ -28,6 +28,12 @@ This applies to ALL changes — code, documentation, skills, configuration. No e
 - **Never merge PRs** — only the user merges
 - Wait for the user's explicit confirmation before creating or merging
 
+**Clean commit history on feature branches.** Agents must:
+- **Never amend commits** — each change gets its own commit
+- **Never force-push** (`--force`, `--force-with-lease`) — history must remain linear and traceable
+- If a fix is needed after a commit, create a new commit with a clear message (e.g., `fix: resolve duplicate attribute in zasis_cx_exc`)
+- The commit history should tell the story of what happened, including fixes
+
 ---
 
 ## Architecture & Package Structure
