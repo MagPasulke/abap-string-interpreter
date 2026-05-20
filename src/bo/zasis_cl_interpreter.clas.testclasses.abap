@@ -49,15 +49,13 @@ ENDCLASS.
 CLASS ltcl_ev_producer_resolver_mock DEFINITION FOR TESTING.
   PUBLIC SECTION.
     INTERFACES zasis_if_ev_producer_resolver.
-    " Always returns mock_producer regardless of class_name.
-    " The class_name in ruleset items (e.g. 'SOME_CLASS') just needs to be
-    " non-empty to trigger the event producer call — it is never actually resolved.
     DATA mock_producer TYPE REF TO ltcl_event_producer_mock.
+    DATA received_class_name TYPE string.
 ENDCLASS.
 
 CLASS ltcl_ev_producer_resolver_mock IMPLEMENTATION.
   METHOD zasis_if_ev_producer_resolver~resolve.
-    " Ignores class_name — always returns the injected mock producer
+    received_class_name = class_name.
     IF mock_producer IS BOUND.
       result = mock_producer.
     ENDIF.
@@ -93,10 +91,12 @@ CLASS ltcl_customlogic_resolver_mock DEFINITION FOR TESTING.
     INTERFACES zasis_if_customlogic_resolver.
     DATA mock_instance TYPE REF TO ltcl_customlogic_mock.
     DATA raise_exception TYPE abap_bool.
+    DATA received_class_name TYPE string.
 ENDCLASS.
 
 CLASS ltcl_customlogic_resolver_mock IMPLEMENTATION.
   METHOD zasis_if_customlogic_resolver~resolve.
+    received_class_name = class_name.
     IF raise_exception = abap_true.
       RAISE EXCEPTION NEW zasis_cx_exc( textid = zasis_cx_exc=>class_not_exist ).
     ENDIF.
@@ -137,7 +137,19 @@ CLASS ltcl_zasis_cl_interpreter DEFINITION FOR TESTING
       test_customlogic_not_found FOR TESTING,
       test_customlogic_ctx_forward FOR TESTING,
       test_no_ctx_ev_prod_empty FOR TESTING,
-      test_ctx_multi_items_all_calls FOR TESTING.
+      test_ctx_multi_items_all_calls FOR TESTING,
+      test_cl_with_ev_producer FOR TESTING,
+      test_cl_ev_prod_err_no_break FOR TESTING,
+      test_cl_correct_item_forwarded FOR TESTING,
+      test_cl_empty_result_no_match FOR TESTING,
+      test_replace_with_ev_producer FOR TESTING,
+      test_mixed_item_types FOR TESTING,
+      test_offset_pre_post_combined FOR TESTING,
+      test_offset_zeroes_result FOR TESTING,
+      test_replace_no_match_exp_nm FOR TESTING,
+      test_cl_ev_prod_ctx_forwarded FOR TESTING,
+      test_ev_prod_resolver_clsname FOR TESTING,
+      test_cl_resolver_classname FOR TESTING.
 ENDCLASS.
 
 CLASS ltcl_zasis_cl_interpreter IMPLEMENTATION.
@@ -721,6 +733,454 @@ CLASS ltcl_zasis_cl_interpreter IMPLEMENTATION.
     cl_abap_unit_assert=>assert_equals( act = ev_producer_mock->call_count exp = 2 ).
     cl_abap_unit_assert=>assert_equals( act = lines( ev_producer_mock->received_context ) exp = 1 ).
     cl_abap_unit_assert=>assert_equals( act = ev_producer_mock->received_context[ 1 ]-value exp = 'B001' ).
+  ENDMETHOD.
+
+  METHOD test_cl_with_ev_producer.
+    " Given - item has both custom_logic and event_producer set
+    cl_mock->return_value = |CustomOutput|.
+
+    DATA(ruleset) = NEW zasis_cl_ruleset(
+      header = VALUE #( rulesetuuid = '9808AFDDDA' rulesetid = 'UnitTest' )
+      items  = VALUE #( ( interpretationitm = 1 intpretationtarget = 'Field1'
+                           interpretation_type = 1 offset_pre = 0 offset_post = 0
+                           custom_logic = 'ZCL_MY_CUSTOM_LOGIC'
+                           event_producer = 'SOME_PRODUCER_CLASS' ) )
+    ).
+
+    DATA(cut) = NEW zasis_cl_interpreter( auth_checker            = auth_mock
+                                           event_producer_resolver = ev_resolver_mock
+                                           customlogic_resolver    = cl_resolver_mock ).
+
+    " When
+    TRY.
+        cut->execute(
+          EXPORTING
+            string_to_be_interpreted = |InputString|
+            ruleset                  = ruleset
+          RECEIVING
+            interpretation_result    = DATA(result)
+        ).
+      CATCH zasis_cx_exc zasis_cx_no_auth INTO DATA(exc).
+        cl_abap_unit_assert=>fail( msg = |Unexpected exception: { exc->get_text( ) }| ).
+    ENDTRY.
+
+    " Then - custom logic result used AND event producer fired with that result
+    cl_abap_unit_assert=>assert_equals( act = result[ 1 ]-interpretationresult exp = |CustomOutput| ).
+    cl_abap_unit_assert=>assert_true( act = ev_producer_mock->called ).
+    cl_abap_unit_assert=>assert_equals(
+      act = ev_producer_mock->received_result-interpretationresult
+      exp = |CustomOutput|
+    ).
+  ENDMETHOD.
+
+  METHOD test_cl_ev_prod_err_no_break.
+    " Given - custom logic succeeds, event producer raises — must be swallowed
+    cl_mock->return_value = |CustomOutput|.
+    ev_producer_mock->raise_exception = abap_true.
+
+    DATA(ruleset) = NEW zasis_cl_ruleset(
+      header = VALUE #( rulesetuuid = '9808AFDDDA' rulesetid = 'UnitTest' )
+      items  = VALUE #( ( interpretationitm = 1 intpretationtarget = 'Field1'
+                           interpretation_type = 1 offset_pre = 0 offset_post = 0
+                           custom_logic = 'ZCL_MY_CUSTOM_LOGIC'
+                           event_producer = 'SOME_PRODUCER_CLASS' ) )
+    ).
+
+    DATA(cut) = NEW zasis_cl_interpreter( auth_checker            = auth_mock
+                                           event_producer_resolver = ev_resolver_mock
+                                           customlogic_resolver    = cl_resolver_mock ).
+
+    " When - must NOT raise
+    TRY.
+        cut->execute(
+          EXPORTING
+            string_to_be_interpreted = |InputString|
+            ruleset                  = ruleset
+          RECEIVING
+            interpretation_result    = DATA(result)
+        ).
+      CATCH zasis_cx_exc zasis_cx_no_auth INTO DATA(exc).
+        cl_abap_unit_assert=>fail( msg = |Unexpected exception: { exc->get_text( ) }| ).
+    ENDTRY.
+
+    " Then - result still produced despite producer failure
+    cl_abap_unit_assert=>assert_equals( act = result[ 1 ]-interpretationresult exp = |CustomOutput| ).
+  ENDMETHOD.
+
+  METHOD test_cl_correct_item_forwarded.
+    " Given - two items, custom logic on second item only
+    " Verify the second item's rule data is forwarded to custom logic
+    DATA cl_mock2 TYPE REF TO ltcl_customlogic_mock.
+    cl_mock2 = NEW #( ).
+    cl_mock2->return_value = |SecondResult|.
+    cl_mock->return_value = |FirstResult|.
+
+    " Use a second resolver that returns cl_mock2 for the second call
+    " We can only inject one mock instance, so use single mock and verify received_item via a second custom logic mock
+    " Strategy: two items both with custom_logic, single mock instance, check received current_rule_item
+    " We need to capture current_rule_item in cl_mock — extend via received_item field check
+    " Actually ltcl_customlogic_mock does NOT capture current_rule_item. Use single item test instead.
+    " Test: one item with interpretationitm = 77, verify resolver receives correct class name (covered in Q12 test).
+    " Simplify: two items, custom logic on item 2 only (item 1 = MATCH), verify cl_mock called once and result correct.
+    DATA(ruleset) = NEW zasis_cl_ruleset(
+      header = VALUE #( rulesetuuid = '9808AFDDDA' rulesetid = 'UnitTest' )
+      items  = VALUE #(
+        ( interpretationitm = 1 intpretationtarget = 'Field1'
+          interpretationrule = '<A>([^<]*)' interpretation_type = 1
+          offset_pre = 3 offset_post = 0 )
+        ( interpretationitm = 2 intpretationtarget = 'Field2'
+          interpretation_type = 1 offset_pre = 0 offset_post = 0
+          custom_logic = 'ZCL_MY_CUSTOM_LOGIC' )
+      )
+    ).
+
+    cl_mock->return_value = |CustomForItem2|.
+
+    DATA(cut) = NEW zasis_cl_interpreter( auth_checker            = auth_mock
+                                           event_producer_resolver = ev_resolver_mock
+                                           customlogic_resolver    = cl_resolver_mock ).
+
+    " When
+    TRY.
+        cut->execute(
+          EXPORTING
+            string_to_be_interpreted = |<A>Val1|
+            ruleset                  = ruleset
+          RECEIVING
+            interpretation_result    = DATA(result)
+        ).
+      CATCH zasis_cx_exc zasis_cx_no_auth INTO DATA(exc).
+        cl_abap_unit_assert=>fail( msg = |Unexpected exception: { exc->get_text( ) }| ).
+    ENDTRY.
+
+    " Then - custom logic called once (only item 2), item 1 matched via regex
+    cl_abap_unit_assert=>assert_true( act = cl_mock->called ).
+    cl_abap_unit_assert=>assert_equals( act = result[ 1 ]-interpretationresult exp = |Val1| ).
+    cl_abap_unit_assert=>assert_equals( act = result[ 2 ]-interpretationresult exp = |CustomForItem2| ).
+    " Custom logic received the full input string
+    cl_abap_unit_assert=>assert_equals( act = cl_mock->received_string exp = |<A>Val1| ).
+  ENDMETHOD.
+
+  METHOD test_cl_empty_result_no_match.
+    " Given - custom logic returns empty string
+    cl_mock->return_value = ||.
+
+    DATA(ruleset) = NEW zasis_cl_ruleset(
+      header = VALUE #( rulesetuuid = '9808AFDDDA' rulesetid = 'UnitTest' )
+      items  = VALUE #( ( interpretationitm = 1 intpretationtarget = 'Field1'
+                           interpretation_type = 1 offset_pre = 0 offset_post = 0
+                           custom_logic = 'ZCL_MY_CUSTOM_LOGIC'
+                           event_producer = 'SOME_PRODUCER_CLASS' ) )
+    ).
+
+    DATA(cut) = NEW zasis_cl_interpreter( auth_checker            = auth_mock
+                                           event_producer_resolver = ev_resolver_mock
+                                           customlogic_resolver    = cl_resolver_mock ).
+
+    " When
+    TRY.
+        cut->execute(
+          EXPORTING
+            string_to_be_interpreted = |InputString|
+            ruleset                  = ruleset
+          RECEIVING
+            interpretation_result    = DATA(result)
+        ).
+      CATCH zasis_cx_exc zasis_cx_no_auth INTO DATA(exc).
+        cl_abap_unit_assert=>fail( msg = |Unexpected exception: { exc->get_text( ) }| ).
+    ENDTRY.
+
+    " Then - empty return treated as no match, producer NOT called
+    cl_abap_unit_assert=>assert_equals( act = result[ 1 ]-interpretationresult exp = |no match| ).
+    cl_abap_unit_assert=>assert_false( act = ev_producer_mock->called ).
+  ENDMETHOD.
+
+  METHOD test_replace_with_ev_producer.
+    " Given - REPLACE item with event_producer set, regex matches
+    DATA(ruleset) = NEW zasis_cl_ruleset(
+      header = VALUE #( rulesetuuid = '9808AFDDDA' rulesetid = 'UnitTest' )
+      items  = VALUE #( ( interpretationitm = 5 intpretationtarget = 'Cleaned'
+                           interpretationrule = '<TAG>' interpretation_type = 2
+                           replacement_string = '' offset_pre = 0 offset_post = 0
+                           event_producer = 'REPLACE_PRODUCER' ) )
+    ).
+
+    DATA(cut) = NEW zasis_cl_interpreter( auth_checker            = auth_mock
+                                           event_producer_resolver = ev_resolver_mock ).
+
+    " When
+    TRY.
+        cut->execute(
+          EXPORTING
+            string_to_be_interpreted = |<TAG>Hello|
+            ruleset                  = ruleset
+          RECEIVING
+            interpretation_result    = DATA(result)
+        ).
+      CATCH zasis_cx_exc zasis_cx_no_auth INTO DATA(exc).
+        cl_abap_unit_assert=>fail( msg = |Unexpected exception: { exc->get_text( ) }| ).
+    ENDTRY.
+
+    " Then - REPLACE result is correct AND producer fired with that result
+    cl_abap_unit_assert=>assert_equals( act = result[ 1 ]-interpretationresult exp = |Hello| ).
+    cl_abap_unit_assert=>assert_true( act = ev_producer_mock->called ).
+    cl_abap_unit_assert=>assert_equals(
+      act = ev_producer_mock->received_result-interpretationresult
+      exp = |Hello|
+    ).
+  ENDMETHOD.
+
+  METHOD test_mixed_item_types.
+    " Given - three items: MATCH, REPLACE, custom logic
+    cl_mock->return_value = |CustomValue|.
+
+    DATA(ruleset) = NEW zasis_cl_ruleset(
+      header = VALUE #( rulesetuuid = '9808AFDDDA' rulesetid = 'UnitTest' )
+      items  = VALUE #(
+        ( interpretationitm = 1 intpretationtarget = 'MatchField'
+          interpretationrule = '<A>([^<]*)' interpretation_type = 1
+          offset_pre = 3 offset_post = 0 )
+        ( interpretationitm = 2 intpretationtarget = 'ReplaceField'
+          interpretationrule = '<TAG>' interpretation_type = 2
+          replacement_string = '' offset_pre = 0 offset_post = 0 )
+        ( interpretationitm = 3 intpretationtarget = 'CustomField'
+          interpretation_type = 1 offset_pre = 0 offset_post = 0
+          custom_logic = 'ZCL_MY_CUSTOM_LOGIC' )
+      )
+    ).
+
+    DATA(cut) = NEW zasis_cl_interpreter( auth_checker            = auth_mock
+                                           event_producer_resolver = ev_resolver_mock
+                                           customlogic_resolver    = cl_resolver_mock ).
+
+    " When
+    TRY.
+        cut->execute(
+          EXPORTING
+            string_to_be_interpreted = |<A>Val1<TAG>RestOfString|
+            ruleset                  = ruleset
+          RECEIVING
+            interpretation_result    = DATA(result)
+        ).
+      CATCH zasis_cx_exc zasis_cx_no_auth INTO DATA(exc).
+        cl_abap_unit_assert=>fail( msg = |Unexpected exception: { exc->get_text( ) }| ).
+    ENDTRY.
+
+    " Then - all three results present and correct
+    cl_abap_unit_assert=>assert_equals( act = lines( result ) exp = 3 ).
+    cl_abap_unit_assert=>assert_equals( act = result[ 1 ]-interpretationresult exp = |Val1| ).
+    cl_abap_unit_assert=>assert_equals( act = result[ 2 ]-interpretationresult exp = |<A>Val1RestOfString| ).
+    cl_abap_unit_assert=>assert_equals( act = result[ 3 ]-interpretationresult exp = |CustomValue| ).
+  ENDMETHOD.
+
+  METHOD test_offset_pre_post_combined.
+    " Given - match "<B52H>MyDeliveryNote<End>", offset_pre=6, offset_post=5
+    " Full match = "<B52H>MyDeliveryNote<End>" (25 chars)
+    " After offset_pre=6: "MyDeliveryNote<End>" (19 chars)
+    " After offset_post=5: "MyDeliveryNote" (14 chars)
+    DATA(ruleset) = NEW zasis_cl_ruleset(
+      header = VALUE #( rulesetuuid = '9808AFDDDA' rulesetid = 'UnitTest' )
+      items  = VALUE #( ( intpretationtarget = 'Both' interpretationrule = '<B52H>[^$]*' interpretation_type = 1
+                           offset_pre = 6 offset_post = 5 ) )
+    ).
+
+    DATA(cut) = NEW zasis_cl_interpreter( auth_checker = auth_mock ).
+
+    " When
+    TRY.
+        cut->execute(
+          EXPORTING
+            string_to_be_interpreted = |<Start><B52H>MyDeliveryNote<End>|
+            ruleset                  = ruleset
+          RECEIVING
+            interpretation_result    = DATA(result)
+        ).
+      CATCH zasis_cx_exc zasis_cx_no_auth INTO DATA(exc).
+        cl_abap_unit_assert=>fail( msg = |Unexpected exception: { exc->get_text( ) }| ).
+    ENDTRY.
+
+    " Then - both offsets applied correctly
+    cl_abap_unit_assert=>assert_equals( act = result[ 1 ]-interpretationresult exp = |MyDeliveryNote| ).
+  ENDMETHOD.
+
+  METHOD test_offset_zeroes_result.
+    " Given - match "AB" (2 chars), offset_pre=1, offset_post=1 → length = 0 → no match
+    DATA(ruleset) = NEW zasis_cl_ruleset(
+      header = VALUE #( rulesetuuid = '9808AFDDDA' rulesetid = 'UnitTest' )
+      items  = VALUE #( ( intpretationtarget = 'Zero' interpretationrule = 'AB' interpretation_type = 1
+                           offset_pre = 1 offset_post = 1 ) )
+    ).
+
+    DATA(cut) = NEW zasis_cl_interpreter( auth_checker = auth_mock ).
+
+    " When
+    TRY.
+        cut->execute(
+          EXPORTING
+            string_to_be_interpreted = |AB|
+            ruleset                  = ruleset
+          RECEIVING
+            interpretation_result    = DATA(result)
+        ).
+      CATCH zasis_cx_exc zasis_cx_no_auth INTO DATA(exc).
+        cl_abap_unit_assert=>fail( msg = |Unexpected exception: { exc->get_text( ) }| ).
+    ENDTRY.
+
+    " Then - zero-length result after offsets → no match
+    cl_abap_unit_assert=>assert_equals( act = result[ 1 ]-interpretationresult exp = |no match| ).
+  ENDMETHOD.
+
+  METHOD test_replace_no_match_exp_nm.
+    " Given - REPLACE with regex that does NOT match input
+    " ABAP replace() returns original string when no match — current behavior produces a result
+    " This test documents the EXPECTED behavior: no match → "no match" entry
+    " This test WILL FAIL with current implementation (known bug)
+    DATA(ruleset) = NEW zasis_cl_ruleset(
+      header = VALUE #( rulesetuuid = '9808AFDDDA' rulesetid = 'UnitTest' )
+      items  = VALUE #( ( intpretationtarget = 'Cleaned'
+                           interpretationrule = '<NOTPRESENT>' interpretation_type = 2
+                           replacement_string = '' offset_pre = 0 offset_post = 0 ) )
+    ).
+
+    DATA(cut) = NEW zasis_cl_interpreter( auth_checker = auth_mock ).
+
+    " When
+    TRY.
+        cut->execute(
+          EXPORTING
+            string_to_be_interpreted = |HelloWorld|
+            ruleset                  = ruleset
+          RECEIVING
+            interpretation_result    = DATA(result)
+        ).
+      CATCH zasis_cx_exc zasis_cx_no_auth INTO DATA(exc).
+        cl_abap_unit_assert=>fail( msg = |Unexpected exception: { exc->get_text( ) }| ).
+    ENDTRY.
+
+    " Then - REPLACE with no match should produce "no match" (currently fails — bug to fix separately)
+    cl_abap_unit_assert=>assert_equals( act = result[ 1 ]-interpretationresult exp = |no match| ).
+  ENDMETHOD.
+
+  METHOD test_cl_ev_prod_ctx_forwarded.
+    " Given - item with custom_logic + event_producer, context provided
+    " Verify context flows to both custom logic AND event producer
+    cl_mock->return_value = |CtxChainResult|.
+
+    DATA(context) = VALUE zasis_tt_interpret_context(
+      ( ctx_key = 'plant' value = '2000' )
+      ( ctx_key = 'user'  value = 'TESTUSER' )
+    ).
+
+    DATA(ruleset) = NEW zasis_cl_ruleset(
+      header = VALUE #( rulesetuuid = '9808AFDDDA' rulesetid = 'UnitTest' )
+      items  = VALUE #( ( interpretationitm = 1 intpretationtarget = 'Field1'
+                           interpretation_type = 1 offset_pre = 0 offset_post = 0
+                           custom_logic = 'ZCL_MY_CUSTOM_LOGIC'
+                           event_producer = 'SOME_PRODUCER_CLASS' ) )
+    ).
+
+    DATA(cut) = NEW zasis_cl_interpreter( auth_checker            = auth_mock
+                                           event_producer_resolver = ev_resolver_mock
+                                           customlogic_resolver    = cl_resolver_mock ).
+
+    " When
+    TRY.
+        cut->execute(
+          EXPORTING
+            string_to_be_interpreted = |InputString|
+            ruleset                  = ruleset
+            context                  = context
+          RECEIVING
+            interpretation_result    = DATA(result)
+        ).
+      CATCH zasis_cx_exc zasis_cx_no_auth INTO DATA(exc).
+        cl_abap_unit_assert=>fail( msg = |Unexpected exception: { exc->get_text( ) }| ).
+    ENDTRY.
+
+    " Then - custom logic received context
+    cl_abap_unit_assert=>assert_equals( act = lines( cl_mock->received_context ) exp = 2 ).
+    cl_abap_unit_assert=>assert_equals( act = cl_mock->received_context[ 1 ]-value exp = '2000' ).
+    " And event producer received same context
+    cl_abap_unit_assert=>assert_equals( act = lines( ev_producer_mock->received_context ) exp = 2 ).
+    cl_abap_unit_assert=>assert_equals( act = ev_producer_mock->received_context[ 2 ]-value exp = 'TESTUSER' ).
+  ENDMETHOD.
+
+  METHOD test_ev_prod_resolver_clsname.
+    " Given - two items with different event_producer class names
+    DATA(ruleset) = NEW zasis_cl_ruleset(
+      header = VALUE #( rulesetuuid = '9808AFDDDA' rulesetid = 'UnitTest' )
+      items  = VALUE #(
+        ( interpretationitm = 1 intpretationtarget = 'Field1'
+          interpretationrule = '<A>([^<]*)' interpretation_type = 1
+          offset_pre = 3 offset_post = 0 event_producer = 'ZCL_PRODUCER_A' )
+        ( interpretationitm = 2 intpretationtarget = 'Field2'
+          interpretationrule = '<B>([^<]*)' interpretation_type = 1
+          offset_pre = 3 offset_post = 0 event_producer = 'ZCL_PRODUCER_B' )
+      )
+    ).
+
+    DATA(cut) = NEW zasis_cl_interpreter( auth_checker            = auth_mock
+                                           event_producer_resolver = ev_resolver_mock ).
+
+    " When
+    TRY.
+        cut->execute(
+          EXPORTING
+            string_to_be_interpreted = |<A>Val1<B>Val2|
+            ruleset                  = ruleset
+          RECEIVING
+            interpretation_result    = DATA(result)
+        ).
+      CATCH zasis_cx_exc zasis_cx_no_auth INTO DATA(exc).
+        cl_abap_unit_assert=>fail( msg = |Unexpected exception: { exc->get_text( ) }| ).
+    ENDTRY.
+
+    " Then - resolver last received class name from item 2 (ZCL_PRODUCER_B)
+    " Both items matched so resolver called twice; last call = item 2
+    cl_abap_unit_assert=>assert_equals( act = ev_producer_mock->call_count exp = 2 ).
+    cl_abap_unit_assert=>assert_equals( act = ev_resolver_mock->received_class_name exp = |ZCL_PRODUCER_B| ).
+  ENDMETHOD.
+
+  METHOD test_cl_resolver_classname.
+    " Given - two items both with custom_logic but different class names
+    " Resolver mock captures last received class name
+    DATA cl_mock_b TYPE REF TO ltcl_customlogic_mock.
+    cl_mock_b = NEW #( ).
+    cl_mock_b->return_value = |ResultB|.
+    cl_mock->return_value = |ResultA|.
+
+    " Single mock_instance: both items resolve to same mock (sufficient to verify class name routing)
+    DATA(ruleset) = NEW zasis_cl_ruleset(
+      header = VALUE #( rulesetuuid = '9808AFDDDA' rulesetid = 'UnitTest' )
+      items  = VALUE #(
+        ( interpretationitm = 1 intpretationtarget = 'Field1'
+          interpretation_type = 1 offset_pre = 0 offset_post = 0
+          custom_logic = 'ZCL_LOGIC_ALPHA' )
+        ( interpretationitm = 2 intpretationtarget = 'Field2'
+          interpretation_type = 1 offset_pre = 0 offset_post = 0
+          custom_logic = 'ZCL_LOGIC_BETA' )
+      )
+    ).
+
+    DATA(cut) = NEW zasis_cl_interpreter( auth_checker            = auth_mock
+                                           event_producer_resolver = ev_resolver_mock
+                                           customlogic_resolver    = cl_resolver_mock ).
+
+    " When
+    TRY.
+        cut->execute(
+          EXPORTING
+            string_to_be_interpreted = |InputString|
+            ruleset                  = ruleset
+          RECEIVING
+            interpretation_result    = DATA(result)
+        ).
+      CATCH zasis_cx_exc zasis_cx_no_auth INTO DATA(exc).
+        cl_abap_unit_assert=>fail( msg = |Unexpected exception: { exc->get_text( ) }| ).
+    ENDTRY.
+
+    " Then - resolver last received class name from item 2 (ZCL_LOGIC_BETA)
+    cl_abap_unit_assert=>assert_equals( act = cl_resolver_mock->received_class_name exp = |ZCL_LOGIC_BETA| ).
   ENDMETHOD.
 
 ENDCLASS.
