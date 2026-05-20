@@ -54,6 +54,24 @@ CLASS zasis_cx_ruleset_ui DEFINITION
                  attr4 TYPE scx_attrname VALUE '',
                END OF event_producer_no_intf.
 
+    CONSTANTS: BEGIN OF custom_logic_not_exist,
+                 msgid TYPE symsgid      VALUE 'ZASIS_MSGS',
+                 msgno TYPE symsgno      VALUE '013',
+                 attr1 TYPE scx_attrname VALUE 'CLASSNAME',
+                 attr2 TYPE scx_attrname VALUE '',
+                 attr3 TYPE scx_attrname VALUE '',
+                 attr4 TYPE scx_attrname VALUE '',
+               END OF custom_logic_not_exist.
+
+    CONSTANTS: BEGIN OF custom_logic_no_intf,
+                 msgid TYPE symsgid      VALUE 'ZASIS_MSGS',
+                 msgno TYPE symsgno      VALUE '014',
+                 attr1 TYPE scx_attrname VALUE 'CLASSNAME',
+                 attr2 TYPE scx_attrname VALUE '',
+                 attr3 TYPE scx_attrname VALUE '',
+                 attr4 TYPE scx_attrname VALUE '',
+               END OF custom_logic_no_intf.
+
     METHODS constructor
       IMPORTING severity  TYPE if_abap_behv_message=>t_severity DEFAULT if_abap_behv_message=>severity-error
                 textid    LIKE if_t100_message=>t100key         OPTIONAL
