@@ -68,6 +68,30 @@
      <MSGNR>010</MSGNR>
      <TEXT>Missing Authorization for &amp;1</TEXT>
     </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZASIS_MSGS</ARBGB>
+     <MSGNR>011</MSGNR>
+     <TEXT>Event producer class &amp;1 does not exist</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZASIS_MSGS</ARBGB>
+     <MSGNR>012</MSGNR>
+     <TEXT>Event producer class &amp;1 must implement interface zasis_if_event_producer</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZASIS_MSGS</ARBGB>
+     <MSGNR>013</MSGNR>
+     <TEXT>Custom logic class &amp;1 does not exist</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZASIS_MSGS</ARBGB>
+     <MSGNR>014</MSGNR>
+     <TEXT>Custom logic class &amp;1 must implement interface zasis_if_customlogic</TEXT>
+    </T100>
    </T100>
   </asx:values>
  </asx:abap>

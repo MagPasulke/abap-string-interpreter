@@ -13,6 +13,7 @@
     "zbp_",
     "zasis_cl_interprettypetext",
     "zasis_cx_ruleset_ui",
+    "zasis_cx_exc.clas.testclasses",
     "zasis_cl_get_domain_fix_values"
   ],
   "output_folder": "output",
