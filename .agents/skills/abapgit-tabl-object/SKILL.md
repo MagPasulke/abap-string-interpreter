@@ -169,6 +169,21 @@ A TABL object consists of a single file:
 | `DATATYPE`+`LENG` | Direct type (when no ROLLNAME) |
 | `COMPTYPE` | `E` = data element, `S` = structure, `R` = reference |
 
+## Important: STRING/RAWSTRING fields
+For fields with `DATATYPE` = `STRG` (string) or `RSTR` (rawstring/xstring), **omit the `<LENG>` element entirely**. SAP's serializer does not include `<LENG>` for these types since their length is implicitly unlimited. Including `<LENG>000000</LENG>` will cause a diff mismatch when abapGit re-serializes the object from the SAP system.
+
+Example — STRING field (correct):
+```xml
+<DD03P>
+ <FIELDNAME>DESCRIPTION</FIELDNAME>
+ <ADMINFIELD>0</ADMINFIELD>
+ <INTTYPE>g</INTTYPE>
+ <INTLEN>000008</INTLEN>
+ <DATATYPE>STRG</DATATYPE>
+ <MASK>  STRG</MASK>
+</DD03P>
+```
+
 ## Creation workflow
 1. Take the table/structure name and target package path from the user/request.
 2. Create `<name>.tabl.xml` in the appropriate `src/` subfolder.

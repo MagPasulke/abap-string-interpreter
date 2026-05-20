@@ -24,6 +24,7 @@ CLASS zasis_cl_interpreter DEFINITION
         ruleset_ref                  TYPE REF TO zasis_if_ruleset
         current_rule_item            TYPE zasis_rulesetitm
         string_to_be_interpreted     TYPE string
+        context                      TYPE zasis_tt_interpret_context OPTIONAL
       RETURNING
         VALUE(interpretation_result) TYPE string
       RAISING
@@ -34,7 +35,8 @@ CLASS zasis_cl_interpreter DEFINITION
         event_producer_class  TYPE zasis_event_producer
         ruleset_ref           TYPE REF TO zasis_if_ruleset
         interpretation_itm    TYPE zasis_ruleset_item
-        interpretation_result TYPE zasis_interpret_result_line.
+        interpretation_result TYPE zasis_interpret_result_line
+        context               TYPE zasis_tt_interpret_context OPTIONAL.
 ENDCLASS.
 
 
@@ -73,7 +75,8 @@ CLASS zasis_cl_interpreter IMPLEMENTATION.
         single_interpret_result = me->call_custom_logic(  custom_logic_class       = rulesetitem-custom_logic
                                                           ruleset_ref             = ruleset
                                                           current_rule_item       = rulesetitem
-                                                          string_to_be_interpreted = string_to_be_interpreted ).
+                                                          string_to_be_interpreted = string_to_be_interpreted
+                                                          context                 = context ).
 
       ELSE.
 
@@ -123,7 +126,8 @@ CLASS zasis_cl_interpreter IMPLEMENTATION.
           me->call_event_producer( event_producer_class  = rulesetitem-event_producer
                                    ruleset_ref           = ruleset
                                    interpretation_itm    = rulesetitem-interpretationitm
-                                   interpretation_result = <result_line> ).
+                                   interpretation_result = <result_line>
+                                   context               = context ).
         ENDIF.
 
       ELSE.
@@ -171,6 +175,7 @@ CLASS zasis_cl_interpreter IMPLEMENTATION.
             string_to_be_interpretet = string_to_be_interpreted
             ruleset                  = ruleset_ref
             current_rule_item        = current_rule_item
+            context                  = context
           RECEIVING
             interpretation_result    = interpretation_result.
 
@@ -195,7 +200,8 @@ CLASS zasis_cl_interpreter IMPLEMENTATION.
         producer->on_item_interpreted(
           ruleset               = ruleset_ref
           interpretation_itm    = interpretation_itm
-          interpretation_result = interpretation_result ).
+          interpretation_result = interpretation_result
+          context               = context ).
 
       CATCH cx_root.
         "event producer errors should not break interpretation

@@ -25,8 +25,10 @@ CLASS ltcl_event_producer_mock DEFINITION FOR TESTING.
   PUBLIC SECTION.
     INTERFACES zasis_if_event_producer.
     DATA called TYPE abap_bool.
+    DATA call_count TYPE i.
     DATA received_itm TYPE zasis_ruleset_item.
     DATA received_result TYPE zasis_interpret_result_line.
+    DATA received_context TYPE zasis_tt_interpret_context.
     DATA raise_exception TYPE abap_bool.
 ENDCLASS.
 
@@ -36,8 +38,10 @@ CLASS ltcl_event_producer_mock IMPLEMENTATION.
       RAISE EXCEPTION TYPE cx_sy_zerodivide.
     ENDIF.
     called = abap_true.
+    call_count = call_count + 1.
     received_itm = interpretation_itm.
     received_result = interpretation_result.
+    received_context = context.
   ENDMETHOD.
 ENDCLASS.
 
@@ -83,7 +87,11 @@ CLASS ltcl_zasis_cl_interpreter DEFINITION FOR TESTING
       test_ev_prod_not_on_no_match FOR TESTING,
       test_ev_prod_not_when_empty FOR TESTING,
       test_ev_prod_correct_params FOR TESTING,
-      test_ev_prod_error_no_break FOR TESTING.
+      test_ev_prod_error_no_break FOR TESTING,
+      test_ctx_forwarded_to_ev_prod FOR TESTING,
+      test_ctx_forwarded_to_cust_log FOR TESTING,
+      test_no_ctx_ev_prod_empty FOR TESTING,
+      test_ctx_multi_items_all_calls FOR TESTING.
 ENDCLASS.
 
 CLASS ltcl_zasis_cl_interpreter IMPLEMENTATION.
@@ -402,6 +410,142 @@ CLASS ltcl_zasis_cl_interpreter IMPLEMENTATION.
 
     " Then - result is still produced despite event producer failure
     cl_abap_unit_assert=>assert_equals( act = result[ 1 ]-interpretationresult exp = |Value1| ).
+  ENDMETHOD.
+
+  METHOD test_ctx_forwarded_to_ev_prod.
+    " Given - context with multiple pairs, event producer item
+    DATA(context) = VALUE zasis_tt_interpret_context(
+      ( ctx_key = 'plant' value = '1000' )
+      ( ctx_key = 'source' value = 'scanner_01' )
+    ).
+
+    DATA(ruleset) = NEW zasis_cl_ruleset(
+      header = VALUE #( rulesetuuid = '9808AFDDDA' rulesetid = 'UnitTest' )
+      items  = VALUE #( ( interpretationitm = 1 intpretationtarget = 'Field1'
+                           interpretationrule = '<TAG>([^<]*)' interpretation_type = 1
+                           offset_pre = 5 offset_post = 0 event_producer = 'SOME_CLASS' ) )
+    ).
+
+    DATA(cut) = NEW zasis_cl_interpreter( auth_checker = auth_mock
+                                           event_producer_resolver = ev_resolver_mock ).
+
+    " When
+    cut->execute(
+      EXPORTING
+        string_to_be_interpreted = |<TAG>Value1|
+        ruleset                  = ruleset
+        context                  = context
+      RECEIVING
+        interpretation_result    = DATA(result)
+    ).
+
+    " Then - event producer received the full context
+    cl_abap_unit_assert=>assert_equals( act = lines( ev_producer_mock->received_context ) exp = 2 ).
+    cl_abap_unit_assert=>assert_equals( act = ev_producer_mock->received_context[ 1 ]-value exp = '1000' ).
+    cl_abap_unit_assert=>assert_equals( act = ev_producer_mock->received_context[ 2 ]-value exp = 'scanner_01' ).
+  ENDMETHOD.
+
+  METHOD test_ctx_forwarded_to_cust_log.
+    " Note: custom logic uses dynamic CALL METHOD, which cannot be easily
+    " unit-tested without a real class in the system. This test verifies
+    " that the interpreter does NOT raise an exception when context is passed
+    " to a custom logic item (the call_custom_logic method receives context).
+    " Full integration testing of custom logic context requires ABAP system.
+
+    " Given - item with custom_logic set to non-existent class
+    DATA(context) = VALUE zasis_tt_interpret_context(
+      ( ctx_key = 'warehouse' value = 'WH01' )
+    ).
+
+    DATA(ruleset) = NEW zasis_cl_ruleset(
+      header = VALUE #( rulesetuuid = '9808AFDDDA' rulesetid = 'UnitTest' )
+      items  = VALUE #( ( interpretationitm = 1 intpretationtarget = 'Field1'
+                           interpretationrule = '<TAG>([^<]*)' interpretation_type = 1
+                           offset_pre = 5 offset_post = 0
+                           custom_logic = 'ZCL_NONEXISTENT_LOGIC' ) )
+    ).
+
+    DATA(cut) = NEW zasis_cl_interpreter( auth_checker = auth_mock
+                                           event_producer_resolver = ev_resolver_mock ).
+
+    " When / Then - should raise custom logic processing error (class not found)
+    " but context parameter does not cause any additional issues
+    TRY.
+        cut->execute(
+          EXPORTING
+            string_to_be_interpreted = |<TAG>Value1|
+            ruleset                  = ruleset
+            context                  = context
+          RECEIVING
+            interpretation_result    = DATA(result)
+        ).
+        cl_abap_unit_assert=>fail( msg = |Expected zasis_cx_exc for missing custom logic class| ).
+      CATCH zasis_cx_exc.
+        " expected - class doesn't exist, but context param didn't break anything
+    ENDTRY.
+  ENDMETHOD.
+
+  METHOD test_no_ctx_ev_prod_empty.
+    " Given - NO context passed, event producer item
+    DATA(ruleset) = NEW zasis_cl_ruleset(
+      header = VALUE #( rulesetuuid = '9808AFDDDA' rulesetid = 'UnitTest' )
+      items  = VALUE #( ( interpretationitm = 1 intpretationtarget = 'Field1'
+                           interpretationrule = '<TAG>([^<]*)' interpretation_type = 1
+                           offset_pre = 5 offset_post = 0 event_producer = 'SOME_CLASS' ) )
+    ).
+
+    DATA(cut) = NEW zasis_cl_interpreter( auth_checker = auth_mock
+                                           event_producer_resolver = ev_resolver_mock ).
+
+    " When - no context parameter passed
+    cut->execute(
+      EXPORTING
+        string_to_be_interpreted = |<TAG>Value1|
+        ruleset                  = ruleset
+      RECEIVING
+        interpretation_result    = DATA(result)
+    ).
+
+    " Then - event producer receives empty context table
+    cl_abap_unit_assert=>assert_true( act = ev_producer_mock->called ).
+    cl_abap_unit_assert=>assert_equals( act = lines( ev_producer_mock->received_context ) exp = 0 ).
+  ENDMETHOD.
+
+  METHOD test_ctx_multi_items_all_calls.
+    " Given - context + multiple items with event_producer
+    DATA(context) = VALUE zasis_tt_interpret_context(
+      ( ctx_key = 'batch' value = 'B001' )
+    ).
+
+    DATA(ruleset) = NEW zasis_cl_ruleset(
+      header = VALUE #( rulesetuuid = '9808AFDDDA' rulesetid = 'UnitTest' )
+      items  = VALUE #(
+        ( interpretationitm = 1 intpretationtarget = 'Field1'
+          interpretationrule = '<A>([^<]*)' interpretation_type = 1
+          offset_pre = 3 offset_post = 0 event_producer = 'SOME_CLASS' )
+        ( interpretationitm = 2 intpretationtarget = 'Field2'
+          interpretationrule = '<B>([^<]*)' interpretation_type = 1
+          offset_pre = 3 offset_post = 0 event_producer = 'SOME_CLASS' )
+      )
+    ).
+
+    DATA(cut) = NEW zasis_cl_interpreter( auth_checker = auth_mock
+                                           event_producer_resolver = ev_resolver_mock ).
+
+    " When
+    cut->execute(
+      EXPORTING
+        string_to_be_interpreted = |<A>Val1<B>Val2|
+        ruleset                  = ruleset
+        context                  = context
+      RECEIVING
+        interpretation_result    = DATA(result)
+    ).
+
+    " Then - event producer called twice, last call has context
+    cl_abap_unit_assert=>assert_equals( act = ev_producer_mock->call_count exp = 2 ).
+    cl_abap_unit_assert=>assert_equals( act = lines( ev_producer_mock->received_context ) exp = 1 ).
+    cl_abap_unit_assert=>assert_equals( act = ev_producer_mock->received_context[ 1 ]-value exp = 'B001' ).
   ENDMETHOD.
 
 ENDCLASS.
