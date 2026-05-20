@@ -808,20 +808,8 @@ CLASS ltcl_zasis_cl_interpreter IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD test_cl_correct_item_forwarded.
-    " Given - two items, custom logic on second item only
-    " Verify the second item's rule data is forwarded to custom logic
-    DATA cl_mock2 TYPE REF TO ltcl_customlogic_mock.
-    cl_mock2 = NEW #( ).
-    cl_mock2->return_value = |SecondResult|.
-    cl_mock->return_value = |FirstResult|.
-
-    " Use a second resolver that returns cl_mock2 for the second call
-    " We can only inject one mock instance, so use single mock and verify received_item via a second custom logic mock
-    " Strategy: two items both with custom_logic, single mock instance, check received current_rule_item
-    " We need to capture current_rule_item in cl_mock — extend via received_item field check
-    " Actually ltcl_customlogic_mock does NOT capture current_rule_item. Use single item test instead.
-    " Test: one item with interpretationitm = 77, verify resolver receives correct class name (covered in Q12 test).
-    " Simplify: two items, custom logic on item 2 only (item 1 = MATCH), verify cl_mock called once and result correct.
+    " Given - two items, custom logic on second item only (item 1 = MATCH type)
+    " Verifies custom logic called for correct item and receives full input string
     DATA(ruleset) = NEW zasis_cl_ruleset(
       header = VALUE #( rulesetuuid = '9808AFDDDA' rulesetid = 'UnitTest' )
       items  = VALUE #(
@@ -1034,7 +1022,8 @@ CLASS ltcl_zasis_cl_interpreter IMPLEMENTATION.
     " Given - REPLACE with regex that does NOT match input
     " ABAP replace() returns original string when no match — current behavior produces a result
     " This test documents the EXPECTED behavior: no match → "no match" entry
-    " This test WILL FAIL with current implementation (known bug)
+    " TODO: This test INTENTIONALLY FAILS — known bug tracked in issue #21.
+    "       Do NOT fix here. Fix lands when issue #21 is resolved and this test will then pass.
     DATA(ruleset) = NEW zasis_cl_ruleset(
       header = VALUE #( rulesetuuid = '9808AFDDDA' rulesetid = 'UnitTest' )
       items  = VALUE #( ( intpretationtarget = 'Cleaned'
@@ -1142,11 +1131,8 @@ CLASS ltcl_zasis_cl_interpreter IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD test_cl_resolver_classname.
-    " Given - two items both with custom_logic but different class names
-    " Resolver mock captures last received class name
-    DATA cl_mock_b TYPE REF TO ltcl_customlogic_mock.
-    cl_mock_b = NEW #( ).
-    cl_mock_b->return_value = |ResultB|.
+    " Given - two items with different custom_logic class names
+    " Resolver mock captures last received class name; verify correct name forwarded per item
     cl_mock->return_value = |ResultA|.
 
     " Single mock_instance: both items resolve to same mock (sufficient to verify class name routing)
