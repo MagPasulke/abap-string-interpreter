@@ -52,8 +52,9 @@ CLASS zasis_cl_ruleset_factory IMPLEMENTATION.
       ).
     ENDIF.
 
-    SELECT * FROM zasis_rulesetitm
+    SELECT * FROM zasis_rulesetitm "#EC SELECT_PERFORMANCE
       WHERE rulesetuuid = @rulesetheader-rulesetuuid
+      ORDER BY interpretationitm
       INTO CORRESPONDING FIELDS OF TABLE @rulesetitems.
 
     IF sy-subrc <> 0.

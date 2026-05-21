@@ -71,6 +71,21 @@
     "superfluous_value": true,
     "static_call_via_instance": true,
     "sql_escape_host_variables": true,
+    "select_add_order_by": {
+      "skipForAllEntries": false,
+      "exclude": [
+        "zasis_cl_get_domain_fix_values.clas.abap"
+      ]
+    },
+    "select_performance": {
+      "endSelect": true,
+      "selectStar": true,
+      "starOkayIfFewColumns": 10,
+      "exclude": [
+        "zasis_cl_get_domain_fix_values.clas.abap"
+      ]
+    },
+    "db_operation_in_loop": true,
     "slow_parameter_passing": true,
     "smim_consistency": true,
     "space_before_colon": true,
