@@ -54,8 +54,8 @@ CLASS zasis_cx_exc DEFINITION
 
     CONSTANTS: BEGIN OF class_no_intf,
                  msgid TYPE symsgid      VALUE 'ZASIS_MSGS',
-                 msgno TYPE symsgno      VALUE '003',
-                 attr1 TYPE scx_attrname VALUE '',
+                 msgno TYPE symsgno      VALUE '014',
+                 attr1 TYPE scx_attrname VALUE 'CLASSNAME',
                  attr2 TYPE scx_attrname VALUE '',
                  attr3 TYPE scx_attrname VALUE '',
                  attr4 TYPE scx_attrname VALUE '',
@@ -64,7 +64,7 @@ CLASS zasis_cx_exc DEFINITION
     CONSTANTS: BEGIN OF class_not_exist,
                  msgid TYPE symsgid      VALUE 'ZASIS_MSGS',
                  msgno TYPE symsgno      VALUE '004',
-                 attr1 TYPE scx_attrname VALUE '',
+                 attr1 TYPE scx_attrname VALUE 'CLASSNAME',
                  attr2 TYPE scx_attrname VALUE '',
                  attr3 TYPE scx_attrname VALUE '',
                  attr4 TYPE scx_attrname VALUE '',
@@ -83,10 +83,12 @@ CLASS zasis_cx_exc DEFINITION
       IMPORTING textid    LIKE if_t100_message=>t100key OPTIONAL
                 !previous LIKE previous                 OPTIONAL
                 !route    TYPE string                   OPTIONAL
-                !ruleset  TYPE zasis_ruleset_id OPTIONAL.
+                !ruleset  TYPE zasis_ruleset_id         OPTIONAL
+                classname TYPE zasis_customlogic        OPTIONAL.
 
-    DATA route TYPE string READ-ONLY.
-    DATA ruleset  TYPE zasis_ruleset_id READ-ONLY.
+    DATA route     TYPE string           READ-ONLY.
+    DATA ruleset   TYPE zasis_ruleset_id  READ-ONLY.
+    DATA classname TYPE zasis_customlogic READ-ONLY.
 
   PROTECTED SECTION.
   PRIVATE SECTION.
@@ -110,6 +112,7 @@ CLASS zasis_cx_exc IMPLEMENTATION.
 
     me->route = route.
     me->ruleset = ruleset.
+    me->classname = classname.
 
   ENDMETHOD.
 ENDCLASS.

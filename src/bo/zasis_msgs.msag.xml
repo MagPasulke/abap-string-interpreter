@@ -20,16 +20,10 @@
      <MSGNR>002</MSGNR>
      <TEXT>Rule &amp;1 does not seem the be valid Regex</TEXT>
     </T100>
-    <T100>
-     <SPRSL>E</SPRSL>
-     <ARBGB>ZASIS_MSGS</ARBGB>
-     <MSGNR>003</MSGNR>
-     <TEXT>Custom logic class must implement interface zasis_if_customlogic</TEXT>
-    </T100>
-    <T100>
-     <SPRSL>E</SPRSL>
-     <ARBGB>ZASIS_MSGS</ARBGB>
-     <MSGNR>004</MSGNR>
+     <T100>
+      <SPRSL>E</SPRSL>
+      <ARBGB>ZASIS_MSGS</ARBGB>
+      <MSGNR>004</MSGNR>
      <TEXT>Class &amp;1 does not exist</TEXT>
     </T100>
     <T100>

@@ -1,6 +1,6 @@
 INTERFACE zasis_if_version
   PUBLIC.
 
-  CONSTANTS version TYPE string VALUE '0.2.0' ##NO_TEXT.
+  CONSTANTS version TYPE string VALUE '0.2.1' ##NO_TEXT.
 
 ENDINTERFACE.
