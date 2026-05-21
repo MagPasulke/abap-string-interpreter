@@ -83,8 +83,7 @@ CLASS zasis_cx_ruleset_ui DEFINITION
 
     DATA rulesetid TYPE zasis_ruleset_id    READ-ONLY.
     DATA regex     TYPE zasis_interpretrule READ-ONLY.
-    DATA classname TYPE zasis_customlogic   READ-ONLY.
-    DATA action    type string reAD-ONLY.
+    DATA action    TYPE string              READ-ONLY.
 
   PROTECTED SECTION.
   PRIVATE SECTION.
@@ -94,7 +93,7 @@ ENDCLASS.
 
 CLASS zasis_cx_ruleset_ui IMPLEMENTATION.
   METHOD constructor ##ADT_SUPPRESS_GENERATION.
-    super->constructor( previous = previous ).
+    super->constructor( previous = previous classname = classname ).
     CLEAR me->textid.
     IF textid IS INITIAL.
       if_t100_message~t100key = if_t100_message=>default_textid.
@@ -105,7 +104,6 @@ CLASS zasis_cx_ruleset_ui IMPLEMENTATION.
     if_abap_behv_message~m_severity = severity.
     me->rulesetid = rulesetid.
     me->regex = regex.
-    me->classname = classname.
     me->action = action.
   ENDMETHOD.
 ENDCLASS.
