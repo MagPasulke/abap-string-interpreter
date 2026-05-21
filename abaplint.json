@@ -72,7 +72,7 @@
     "static_call_via_instance": true,
     "sql_escape_host_variables": true,
     "select_add_order_by": {
-      "skipForAllEntries": false,
+      "skipForAllEntries": true,
       "exclude": [
         "zasis_cl_get_domain_fix_values.clas.abap"
       ]

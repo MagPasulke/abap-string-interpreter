@@ -223,8 +223,7 @@ CLASS lhc_ZASIS_I_RULESET IMPLEMENTATION.
     SELECT rulesetid FROM zasis_rulesethd
       FOR ALL ENTRIES IN @rulesets
       WHERE rulesetid = @rulesets-RuleSetId
-      INTO TABLE @DATA(existing_ids)
-      ORDER BY rulesetid.
+      INTO TABLE @DATA(existing_ids).
 
     IF sy-subrc <> 0.
       RETURN.
