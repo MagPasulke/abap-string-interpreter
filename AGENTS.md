@@ -8,6 +8,15 @@ ZASIS is an ABAP-based String Interpreter that allows configuring RuleSets to ex
 
 **Target System**: ABAP Cloud Trial 2022 SP01 (ABAP Platform 2022 / SAP BASIS 757 SP0004).
 
+### Versioning
+
+The project version is maintained in two places that **must always be kept in sync**:
+
+1. `package.json` — `"version"` field (used by npm scripts and release tooling)
+2. `src/zasis_if_version.intf.abap` — `version` constant (used at ABAP runtime)
+
+When bumping the version, **always update both files** to the same value.
+
 ---
 
 ## Git Workflow

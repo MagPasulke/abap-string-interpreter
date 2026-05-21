@@ -217,3 +217,19 @@ In the RAP UI, invalid regex patterns and non-existent custom logic classes are 
     }
 }
 ```
+
+---
+
+## Part 3 — Developer Setup
+
+### Git Hooks
+
+The repository uses a custom hooks directory (`.githooks/`). After cloning, run once:
+
+```bash
+git config core.hooksPath .githooks
+```
+
+#### Pre-commit: Version Sync Check
+
+A pre-commit hook ensures the version in `package.json` and `src/zasis_if_version.intf.abap` always match. Commits are blocked if the versions diverge.
