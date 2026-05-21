@@ -87,3 +87,99 @@ Accept: application/json
 {%
   test('status is 401', () => expect(response.status).toBe(401));
 %}
+
+
+### Execute RuleSet - MySample with context (expect 200)
+POST {{baseUrl}}/ruleSetExecution/MySample?sap-client={{client}}
+Authorization: Basic {{auth_b64}}
+Content-Type: application/json
+Accept: application/json
+
+{
+  "string_to_be_interpreted": "<Start><A7X>MyMaterialNumber<B52H>MyDeliveryNote<End>",
+  "context": [
+    { "ctx_key": "plant", "value": "1000" },
+    { "ctx_key": "source", "value": "scanner_01" }
+  ]
+}
+
+{%
+  test('status is 200', () => expect(response.status).toBe(200));
+  test('MaterialNo is extracted', () => {
+    const body = JSON.parse(response.body);
+    const mat = body.find(r => r.TARGETFIELD === 'MaterialNo');
+    expect(mat.INTERPRETATIONRESULT).toBe('MyMaterialNumber');
+  });
+%}
+
+
+### Execute RuleSet - MySample with empty context array (expect 200)
+POST {{baseUrl}}/ruleSetExecution/MySample?sap-client={{client}}
+Authorization: Basic {{auth_b64}}
+Content-Type: application/json
+Accept: application/json
+
+{
+  "string_to_be_interpreted": "<Start><A7X>MyMaterialNumber<End>",
+  "context": []
+}
+
+{%
+  test('status is 200', () => expect(response.status).toBe(200));
+%}
+
+
+### Execute RuleSet - empty string_to_be_interpreted (expect 400)
+POST {{baseUrl}}/ruleSetExecution/MySample?sap-client={{client}}
+Authorization: Basic {{auth_b64}}
+Content-Type: application/json
+Accept: application/json
+
+{
+  "string_to_be_interpreted": ""
+}
+
+{%
+  test('status is 400', () => expect(response.status).toBe(400));
+%}
+
+
+### Execute RuleSet - missing string_to_be_interpreted (expect 400)
+POST {{baseUrl}}/ruleSetExecution/MySample?sap-client={{client}}
+Authorization: Basic {{auth_b64}}
+Content-Type: application/json
+Accept: application/json
+
+{}
+
+{%
+  test('status is 400', () => expect(response.status).toBe(400));
+%}
+
+
+### Execute RuleSet - wrong Content-Type (expect 400)
+POST {{baseUrl}}/ruleSetExecution/MySample?sap-client={{client}}
+Authorization: Basic {{auth_b64}}
+Content-Type: text/plain
+Accept: application/json
+
+some plain text
+
+{%
+  test('status is 400', () => expect(response.status).toBe(400));
+%}
+
+
+### Unsupported HTTP method PUT (expect 405)
+PUT {{baseUrl}}/ruleSetExecution/MySample?sap-client={{client}}
+Authorization: Basic {{auth_b64}}
+Content-Type: application/json
+Accept: application/json
+
+{
+  "string_to_be_interpreted": "test"
+}
+
+{%
+  test('status is 405', () => expect(response.status).toBe(405));
+%}

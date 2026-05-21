@@ -149,7 +149,8 @@ CLASS ltcl_zasis_cl_interpreter DEFINITION FOR TESTING
       test_replace_no_match_exp_nm FOR TESTING,
       test_cl_ev_prod_ctx_forwarded FOR TESTING,
       test_ev_prod_resolver_clsname FOR TESTING,
-      test_cl_resolver_classname FOR TESTING.
+      test_cl_resolver_classname FOR TESTING,
+      test_empty_string_raises_exc FOR TESTING.
 ENDCLASS.
 
 CLASS ltcl_zasis_cl_interpreter IMPLEMENTATION.
@@ -1165,6 +1166,35 @@ CLASS ltcl_zasis_cl_interpreter IMPLEMENTATION.
 
     " Then - resolver last received class name from item 2 (ZCL_LOGIC_BETA)
     cl_abap_unit_assert=>assert_equals( act = cl_resolver_mock->received_class_name exp = |ZCL_LOGIC_BETA| ).
+  ENDMETHOD.
+
+  METHOD test_empty_string_raises_exc.
+    " Given - a valid ruleset but empty string
+    DATA(ruleset) = NEW zasis_cl_ruleset(
+      header = VALUE #( rulesetuuid = '9808AFDDDA' rulesetid = 'UnitTest' )
+      items  = VALUE #( ( interpretationitm = 1 intpretationtarget = 'Field1'
+                           interpretationrule = '<TAG>([^<]*)' interpretation_type = 1
+                           offset_pre = 0 offset_post = 0 ) )
+    ).
+
+    DATA(cut) = NEW zasis_cl_interpreter( auth_checker = auth_mock
+                                           event_producer_resolver = ev_resolver_mock ).
+
+    " When / Then
+    TRY.
+        cut->execute(
+          EXPORTING
+            string_to_be_interpreted = ||
+            ruleset                  = ruleset
+          RECEIVING
+            interpretation_result    = DATA(result)
+        ).
+        cl_abap_unit_assert=>fail( msg = |Expected zasis_cx_exc but no exception was raised| ).
+      CATCH zasis_cx_exc INTO DATA(exc).
+        cl_abap_unit_assert=>assert_equals( act = exc->if_t100_message~t100key exp = zasis_cx_exc=>string_to_interpret_empty ).
+      CATCH zasis_cx_no_auth INTO DATA(auth_exc).
+        cl_abap_unit_assert=>fail( msg = |Unexpected auth exception: { auth_exc->get_text( ) }| ).
+    ENDTRY.
   ENDMETHOD.
 
 ENDCLASS.

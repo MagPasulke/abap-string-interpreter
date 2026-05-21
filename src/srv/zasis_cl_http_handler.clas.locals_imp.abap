@@ -121,6 +121,7 @@ CLASS zasis_lcl_http_handler DEFINITION.
 
     TYPES: BEGIN OF ty_abap_body,
              string_to_be_interpreted TYPE string,
+             context TYPE zasis_tt_interpret_context,
            END OF ty_abap_body.
 
     DATA: request_body TYPE ty_abap_body READ-ONLY.
@@ -158,7 +159,8 @@ CLASS zasis_lcl_http_handler IMPLEMENTATION.
     DATA(ruleset) = zasis_cl_ruleset_factory=>get_ruleset_by_rulesetid( ruleset_id ).
 
     DATA(interpretation_result_internal) = NEW zasis_cl_interpreter( )->execute( ruleset = ruleset
-                                                                                 string_to_be_interpreted = request_body-string_to_be_interpreted ).
+                                                                                  string_to_be_interpreted = request_body-string_to_be_interpreted
+                                                                                  context = request_body-context ).
 
     /ui2/cl_json=>serialize(
       EXPORTING

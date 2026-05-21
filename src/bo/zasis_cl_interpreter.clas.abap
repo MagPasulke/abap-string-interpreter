@@ -70,6 +70,10 @@ CLASS zasis_cl_interpreter IMPLEMENTATION.
   METHOD zasis_if_interpreter~execute.
     DATA single_interpret_result TYPE string.
 
+    IF string_to_be_interpreted IS INITIAL.
+      RAISE EXCEPTION NEW zasis_cx_exc( textid = zasis_cx_exc=>string_to_interpret_empty ).
+    ENDIF.
+
     "check auth first
     me->auth_checker->check_execute( ruleset_id = ruleset->header-rulesetid ).
 
