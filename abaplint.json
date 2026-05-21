@@ -14,6 +14,19 @@
     "errorNamespace": "^(Z|Y|LCL_|TY_|LIF_)"
   },
   "rules": {
+    "cyclomatic_complexity": true,
+    "nesting": true,
+    "identical_conditions": true,
+    "identical_contents" : true,
+    "empty_structure" : true,
+    "empty_statement" : true,
+    "description_empty" : true,
+    "empty_event" : true,
+    "index_completely_contained" : true,
+    "commented_code" : true,
+    "empty_line_in_statement" : true,
+    "if_in_if" : true,
+    "check_subrc" : true,
     "method_implemented_twice": true,
     "method_length": {
       "exclude": [],
@@ -94,14 +107,14 @@
       "ignoreGlobalDefinition": true
     },
     "local_variable_names": {
-  "exclude": [],
-  "severity": "Error",
-  "patternKind": "required",
-  "ignoreNames": [],
-  "ignorePatterns": [],
-  "expectedData": "^(?!(lv_|lt_|ls_|lo_|lr_|lx_|iv_|it_|is_|io_|ir_|ev_|et_|es_|eo_|er_|cv_|ct_|cs_|co_|cr_|mv_|mt_|ms_|mo_|mr_|mx_|gv_|gt_|gs_|go_|gr_))[a-z][a-zA-Z0-9_]*$",
-  "expectedConstant": "^LC_[A-Z0-9_]+$",
-  "expectedFS": "^<[a-z][a-zA-Z0-9_]*>$"
-}
+      "exclude": [],
+      "severity": "Error",
+      "patternKind": "required",
+      "ignoreNames": [],
+      "ignorePatterns": [],
+      "expectedData": "^(?!(lv_|lt_|ls_|lo_|lr_|lx_|iv_|it_|is_|io_|ir_|ev_|et_|es_|eo_|er_|cv_|ct_|cs_|co_|cr_|mv_|mt_|ms_|mo_|mr_|mx_|gv_|gt_|gs_|go_|gr_))[a-z][a-zA-Z0-9_]*$",
+      "expectedConstant": "^LC_[A-Z0-9_]+$",
+      "expectedFS": "^<[a-z][a-zA-Z0-9_]*>$"
+    }
   }
 }

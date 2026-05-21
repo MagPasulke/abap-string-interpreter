@@ -34,7 +34,7 @@ CLASS zasis_cl_get_domain_fix_values IMPLEMENTATION.
         READ TABLE filter_condition_ranges WITH KEY name = 'DOMAIN_NAME'
                INTO DATA(filter_condition_domain_name).
 
-        IF filter_condition_domain_name IS NOT INITIAL.
+        IF sy-subrc = 0.
           domain_name = filter_condition_domain_name-range[ 1 ]-low.
         ELSE.
           "domain name filter not provided — return empty result
@@ -90,6 +90,9 @@ CLASS zasis_cl_get_domain_fix_values IMPLEMENTATION.
            WHERE (filter_condition_string)
            INTO TABLE @business_data
            UP TO @max_index ROWS.
+        IF sy-subrc <> 0.
+          CLEAR business_data.
+        ENDIF.
 
         IF skip IS NOT INITIAL.
           DELETE business_data TO skip.

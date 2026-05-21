@@ -7,7 +7,6 @@ CLASS zasis_cx_ruleset_ui DEFINITION
   PUBLIC SECTION.
     INTERFACES if_abap_behv_message.
     INTERFACES if_t100_message.
-    " INTERFACES if_t100_dyn_msg.
 
     CONSTANTS: BEGIN OF duplicate_ruleSetId,
                  msgid TYPE symsgid      VALUE 'ZASIS_MSGS',
