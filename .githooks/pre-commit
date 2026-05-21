@@ -1,0 +1,18 @@
+#!/bin/sh
+# Pre-commit hook: ensure package.json version matches zasis_if_version.intf.abap
+
+PKG_VERSION=$(node -p "require('./package.json').version" 2>/dev/null)
+ABAP_VERSION=$(grep -oP "CONSTANTS version TYPE string VALUE '\K[^']+" src/zasis_if_version.intf.abap 2>/dev/null)
+
+if [ -z "$PKG_VERSION" ] || [ -z "$ABAP_VERSION" ]; then
+  echo "ERROR: Could not read version from package.json or zasis_if_version.intf.abap"
+  exit 1
+fi
+
+if [ "$PKG_VERSION" != "$ABAP_VERSION" ]; then
+  echo "ERROR: Version mismatch!"
+  echo "  package.json:              $PKG_VERSION"
+  echo "  zasis_if_version.intf.abap: $ABAP_VERSION"
+  echo "Please update both files to the same version before committing."
+  exit 1
+fi
