@@ -87,8 +87,8 @@ CLASS zasis_cl_interpreter IMPLEMENTATION.
           WHEN zasis_constants=>ruleitem_type-match.
 
             DATA(regex_trimmed) = condense( rulesetitem-interpretationrule ).
-            DATA(result_before_offset) = match( val   = string_to_be_interpreted
-                                                regex = regex_trimmed ).
+            DATA(result_before_offset) = match( val  = string_to_be_interpreted
+                                                pcre = `(?-x)` && regex_trimmed ).
 
             IF result_before_offset IS NOT INITIAL.
 
@@ -102,9 +102,9 @@ CLASS zasis_cl_interpreter IMPLEMENTATION.
           WHEN zasis_constants=>ruleitem_type-replace.
 
             " no offsets applied to replacements
-            DATA(result_replace) = replace( val   = string_to_be_interpreted
-                                            regex = condense( rulesetitem-interpretationrule )
-                                            with  = rulesetitem-replacement_string ).
+            DATA(result_replace) = replace( val  = string_to_be_interpreted
+                                            pcre = `(?-x)` && condense( rulesetitem-interpretationrule )
+                                            with = rulesetitem-replacement_string ).
 
             " replace() returns the original string when regex doesn't match (not empty).
             " Example: replace( val = 'ABC' regex = 'X' with = '' ) => 'ABC'
