@@ -15,6 +15,7 @@ CLASS ltcl_message_consistency DEFINITION FOR TESTING
     METHODS test_unknown_ruleset FOR TESTING.
     METHODS test_invalid_interpret_type FOR TESTING.
     METHODS test_error_custom_log_proc FOR TESTING.
+    METHODS test_string_to_interpret_empty FOR TESTING.
 ENDCLASS.
 
 CLASS ltcl_message_consistency IMPLEMENTATION.
@@ -53,6 +54,10 @@ CLASS ltcl_message_consistency IMPLEMENTATION.
 
   METHOD test_error_custom_log_proc.
     assert_message_resolves( textid = zasis_cx_exc=>error_custom_log_processing ).
+  ENDMETHOD.
+
+  METHOD test_string_to_interpret_empty.
+    assert_message_resolves( textid = zasis_cx_exc=>string_to_interpret_empty ).
   ENDMETHOD.
 
 ENDCLASS.

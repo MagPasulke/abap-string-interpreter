@@ -70,6 +70,15 @@ CLASS zasis_cx_exc DEFINITION
                  attr4 TYPE scx_attrname VALUE '',
                END OF class_not_exist.
 
+    CONSTANTS: BEGIN OF string_to_interpret_empty,
+                 msgid TYPE symsgid      VALUE 'ZASIS_MSGS',
+                 msgno TYPE symsgno      VALUE '015',
+                 attr1 TYPE scx_attrname VALUE '',
+                 attr2 TYPE scx_attrname VALUE '',
+                 attr3 TYPE scx_attrname VALUE '',
+                 attr4 TYPE scx_attrname VALUE '',
+               END OF string_to_interpret_empty.
+
     METHODS constructor
       IMPORTING textid    LIKE if_t100_message=>t100key OPTIONAL
                 !previous LIKE previous                 OPTIONAL
