@@ -13,7 +13,7 @@ ZASIS is an ABAP-based String Interpreter that allows configuring RuleSets to ex
 The project version is maintained in two places that **must always be kept in sync**:
 
 1. `package.json` — `"version"` field (used by npm scripts and release tooling)
-2. `src/zasis_if_version.intf.abap` — `c_version` constant (used at ABAP runtime)
+2. `src/zasis_if_version.intf.abap` — `version` constant (used at ABAP runtime)
 
 When bumping the version, **always update both files** to the same value.
 
