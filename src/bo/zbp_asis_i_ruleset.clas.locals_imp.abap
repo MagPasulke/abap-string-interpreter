@@ -219,14 +219,20 @@ CLASS lhc_ZASIS_I_RULESET IMPLEMENTATION.
       RETURN.
     ENDIF.
 
-    LOOP AT rulesets INTO DATA(ruleset).
+    " Single DB call to find any already-existing RuleSet IDs among the candidates
+    SELECT rulesetid FROM zasis_rulesethd
+      FOR ALL ENTRIES IN @rulesets
+      WHERE rulesetid = @rulesets-RuleSetId
+      INTO TABLE @DATA(existing_ids).
 
-      SELECT SINGLE FROM zasis_i_ruleset
-        FIELDS @abap_true
-        WHERE ruleSetId = @ruleset-RuleSetId
-        INTO @DATA(exists).
-      IF exists = abap_true.
+    IF sy-subrc <> 0.
+      RETURN.
+    ENDIF.
 
+    LOOP AT existing_ids INTO DATA(existing).
+      READ TABLE rulesets INTO DATA(ruleset)
+        WITH KEY RuleSetId = existing-rulesetid.
+      IF sy-subrc = 0.
         " already taken, throw error
         APPEND VALUE #( %tky = ruleset-%tky ) TO failed-ruleset.
 
@@ -236,7 +242,6 @@ CLASS lhc_ZASIS_I_RULESET IMPLEMENTATION.
                                                         rulesetid = ruleset-RuleSetId ) )
                TO reported-ruleset.
       ENDIF.
-
     ENDLOOP.
 
   ENDMETHOD.

@@ -24,6 +24,7 @@ CLASS zasis_cl_interprettypetext IMPLEMENTATION.
     SELECT domvalue_l, ddtext
       FROM dd07t
       WHERE ddlanguage = @sy-langu AND domname = 'ZASIS_RULEITEM_TYPE'
+      ORDER BY domvalue_l
       INTO TABLE @DATA(domain_values).
 
     IF sy-subrc = 0.
