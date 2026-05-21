@@ -104,6 +104,19 @@ DATA(result_replace) = replace( val  = string_to_be_interpreted
                                 with = rulesetitem-replacement_string ).
 ```
 
+## Local Testing Limitation
+
+The `@abaplint/runtime` (used by `npm run unit`) does **not support the `pcre` parameter** in `match()` and `replace()` built-in functions. It only recognizes `regex`. Passing `pcre` results in:
+
+```
+TypeError: Cannot read properties of undefined (reading 'get')
+    at Object.match (…/builtin/match.js:12:27)
+```
+
+This means the PCRE migration **cannot be verified locally** via the transpiler. Testing must happen on the real ABAP system via abapGit sync + ABAP Unit.
+
+A potential workaround would be to contribute `pcre` support to `@abaplint/runtime`, or to conditionally use `regex` in a test double — but neither is implemented yet.
+
 ## Decision Points
 
 - Should `(?-x)` be applied unconditionally, or should we let users opt-in to extended mode?
