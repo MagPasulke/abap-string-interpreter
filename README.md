@@ -29,7 +29,7 @@ ZASIS lets you define a **RuleSet** once and reuse it everywhere. A RuleSet is a
 | **Regex validation** | Invalid regex patterns are rejected at save time in the UI |
 | **Test from UI** | Execute a RuleSet directly from the Fiori maintenance screen via the `Test RuleSet` action |
 | **Authorization** | Per-RuleSet activity checks (Create, Change, Display, Delete, Execute) via auth object `ZASIS_GRL` |
-| **Three APIs** | Fiori Elements UI · ABAP API · HTTP REST endpoint |
+| **Three Access Points** | Fiori Elements UI · ABAP API · HTTP REST endpoint |
 
 ### Planned Features
 
