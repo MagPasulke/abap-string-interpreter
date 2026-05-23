@@ -14,6 +14,7 @@
     "errorNamespace": "^(Z|Y|LCL_|TY_|LIF_)"
   },
   "rules": {
+    "prefer_inline": true,
     "cyclomatic_complexity": true,
     "nesting": true,
     "identical_conditions": true,

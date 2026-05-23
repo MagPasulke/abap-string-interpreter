@@ -208,7 +208,6 @@ CLASS ltcl_zasis_cl_interpreter IMPLEMENTATION.
 
   METHOD test_no_match.
     " Given
-    DATA result_nm TYPE zasis_tt_interpretationresult.
     TRY.
         DATA(ruleset) = NEW zasis_cl_ruleset(
           header = VALUE #( rulesetuuid = '9808AFDDDA' rulesetid = 'UnitTest' )
@@ -222,7 +221,7 @@ CLASS ltcl_zasis_cl_interpreter IMPLEMENTATION.
 
     " When
     TRY.
-        result_nm = cut->execute(
+        data(result_nm) = cut->execute(
           string_to_be_interpreted = |<Start><NO_KNOWN_TAG>SomeValue<End>|
           ruleset                  = ruleset
         ).
@@ -270,7 +269,6 @@ CLASS ltcl_zasis_cl_interpreter IMPLEMENTATION.
 
   METHOD test_replace_type.
     " Given - replace strips the identifier tag (first occurrence)
-    DATA result_rt TYPE zasis_tt_interpretationresult.
     TRY.
         DATA(ruleset) = NEW zasis_cl_ruleset(
           header = VALUE #( rulesetuuid = '9808AFDDDA' rulesetid = 'UnitTest' )
@@ -285,7 +283,7 @@ CLASS ltcl_zasis_cl_interpreter IMPLEMENTATION.
 
     " When
     TRY.
-        result_rt = cut->execute(
+        DATA(result_rt) = cut->execute(
           string_to_be_interpreted = |<TAG>Hello|
           ruleset                  = ruleset
         ).
@@ -330,7 +328,6 @@ CLASS ltcl_zasis_cl_interpreter IMPLEMENTATION.
 
   METHOD test_multiple_items.
     " Given
-    DATA result_mi TYPE zasis_tt_interpretationresult.
     TRY.
         DATA(ruleset) = NEW zasis_cl_ruleset(
           header = VALUE #( rulesetuuid = '9808AFDDDA' rulesetid = 'UnitTest' )
@@ -347,7 +344,7 @@ CLASS ltcl_zasis_cl_interpreter IMPLEMENTATION.
 
     " When
     TRY.
-        result_mi = cut->execute(
+        DATA(result_mi) = cut->execute(
           string_to_be_interpreted = |<Start><A7X>MyMaterialNumber<B52H>MyDeliveryNote<End>|
           ruleset                  = ruleset
         ).
@@ -371,7 +368,6 @@ CLASS ltcl_zasis_cl_interpreter IMPLEMENTATION.
 
   METHOD test_offset_post.
     " Given - match "<B52H>MyDeliveryNote<End>" then trim 5 from end (<End> = 5 chars)
-    DATA result_op TYPE zasis_tt_interpretationresult.
     TRY.
         DATA(ruleset) = NEW zasis_cl_ruleset(
           header = VALUE #( rulesetuuid = '9808AFDDDA' rulesetid = 'UnitTest' )
@@ -386,7 +382,7 @@ CLASS ltcl_zasis_cl_interpreter IMPLEMENTATION.
 
     " When
     TRY.
-        result_op = cut->execute(
+        DATA(result_op) = cut->execute(
           string_to_be_interpreted = |<Start><B52H>MyDeliveryNote<End>|
           ruleset                  = ruleset
         ).

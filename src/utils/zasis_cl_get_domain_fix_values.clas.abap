@@ -25,7 +25,6 @@ CLASS zasis_cl_get_domain_fix_values IMPLEMENTATION.
     DATA(sort_order)    = io_request->get_sort_elements( ).
 
     DATA domain_name  TYPE sxco_ad_object_name.
-    DATA pos TYPE i.
 
     TRY.
         DATA(filter_condition_string) = io_request->get_filter( )->get_as_sql_string( ).
@@ -71,6 +70,7 @@ CLASS zasis_cl_get_domain_fix_values IMPLEMENTATION.
           EXIT.
         ENDIF.
 
+        DATA(pos) = 0.
         LOOP AT fixed_values INTO DATA(fixed_value).
           pos += 1.
           business_data_line-pos = pos.
