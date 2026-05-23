@@ -1,4 +1,4 @@
-name: qualitychecks
+name: ci
 
 on:
   push:

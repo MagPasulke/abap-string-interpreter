@@ -1,5 +1,7 @@
 # ZASIS — ABAP String Interpreter
 
+[![ci](https://github.com/MagPasulke/abap-string-interpreter/actions/workflows/ci.yml/badge.svg)](https://github.com/MagPasulke/abap-string-interpreter/actions/workflows/ci.yml)
+
 > **⚠️ Pre-release:** Until v1.0.0 is reached, breaking changes may occur without prior notice.
 
 ZASIS extracts structured data from unstructured strings. You configure regex-based RuleSets, pass in a raw string (e.g. a barcode scan), and get back clean key/value pairs — no coding required per use case.
