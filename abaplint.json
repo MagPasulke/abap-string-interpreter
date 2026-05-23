@@ -68,11 +68,7 @@
       ],
       "skipAbstract": true
     },
-    "uncaught_exception": {
-      "exclude": [
-        "zasis_cl_interpreter.clas.testclasses.abap"
-      ]
-    },
+    "uncaught_exception": true,
     "try_without_catch": true,
     "type_form_parameters": true,
     "types_naming": {
