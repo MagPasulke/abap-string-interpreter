@@ -114,6 +114,32 @@
     },
     "reduce_string_templates": true,
     "slow_parameter_passing": true,
+    "sequential_blank": true,
+    "change_if_to_case": true,
+    "catch_and_raise": true,
+    "modify_only_own_db_tables": true,
+    "cyclic_oo": true,
+    "unsecure_fae": true,
+    "call_transaction_authority_check": true,
+    "dangerous_statement": {
+      "exclude": [
+        "zasis_cl_get_domain_fix_values.clas.abap"
+      ],
+      "severity": "Error",
+      "execSQL": true,
+      "kernelCall": true,
+      "systemCall": true,
+      "insertReport": true,
+      "generateDynpro": true,
+      "generateReport": true,
+      "generateSubroutine": true,
+      "deleteReport": true,
+      "deleteTextpool": true,
+      "insertTextpool": true,
+      "deleteDynpro": true,
+      "exportDynpro": true,
+      "dynamicSQL": true
+    },
     "smim_consistency": true,
     "space_before_colon": true,
     "space_before_dot": {
