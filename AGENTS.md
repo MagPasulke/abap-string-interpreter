@@ -23,25 +23,44 @@ When bumping the version, **always update both files** to the same value.
 
 **NEVER commit or push directly to `main`.** Always follow this workflow:
 
-1. Create a feature branch (e.g., `feat/my-feature`, `fix/my-bugfix`)
-2. Commit changes to the feature branch, **always use the `conventional-commit` skill**
-3. Push the feature branch to the remote
-4. Create a Pull Request (PR) against `main`
-5. Merge the PR (squash preferred)
-6. Delete the feature branch (local + remote)
+### When to enter the workflow
+
+Only enter this workflow when the user signals intent to **implement something** (feature, fix, refactor, config change). Do NOT enter for general questions, Q&A, or exploratory discussions.
+
+### Implementation Workflow
+
+1. **Create feature branch** from `main` (infer name from user's request, e.g., `feat/add-empty-regex-validation`)
+2. **Push with empty commit** (`git commit --allow-empty -m "chore: initialize feature branch"` && `git push`)
+3. **Open draft PR** against `main`
+4. **Clarify intent** — use `grill-me` skill for complex/ambiguous tasks (new features, design decisions, multi-file changes). Skip for trivial tasks (typos, renames, small fixes). User can opt in ("grill me") or opt out ("just do it") at any time.
+5. **Implement** the changes
+6. **Run `npm run lint && npm test`**
+   - If pass → commit & push
+   - If fail → attempt one fix cycle; if still failing, report errors to user and wait for guidance
+7. **Repeat steps 5–6** for each logical unit of work (multiple commits are encouraged for traceability)
+8. **Create session summary** as the final commit (using `session-summary` skill)
+9. **Mark PR ready for review**
+   - PR description includes: "⚠️ Please sync to SAP system via abapGit and run ABAP Unit tests before merging."
 
 This applies to ALL changes — code, documentation, skills, configuration. No exceptions.
 
-**PR merging is the user's responsibility by default.** Agents must:
-- **Ask the user** before creating a PR (do not create PRs autonomously)
-- **Never merge PRs** unless the user explicitly instructs the agent to merge
-- Wait for the user's explicit confirmation before creating or merging
+### Commit Rules
 
-**Clean commit history on feature branches.** Agents must:
+- **Always use the `conventional-commit` skill** for every commit
 - **Never amend commits** — each change gets its own commit
 - **Never force-push** (`--force`, `--force-with-lease`) — history must remain linear and traceable
+- **Only commit when tests pass** — never push code that fails `npm run lint && npm test`
 - If a fix is needed after a commit, create a new commit with a clear message (e.g., `fix: resolve duplicate attribute in zasis_cx_exc`)
 - The commit history should tell the story of what happened, including fixes
+
+### Merging
+
+- **Agent never merges autonomously** — user always merges, or explicitly asks agent to merge
+- Before merging, user must sync to SAP system and confirm ABAP Unit tests pass
+- Squash merge preferred (collapses branch commits into one on `main`)
+- Delete feature branch (local + remote) after merge
+
+> **Future note:** This conservative approach (manual on-stack sync & test from feature branch + manual merge) may be replaced with automated pipeline sync and auto-merge on green in the future.
 
 ---
 
@@ -50,9 +69,8 @@ This applies to ALL changes — code, documentation, skills, configuration. No e
 ```
 src/                          Root package (ZASIS)
 ├── app/                      Application / UI layer (placeholder for future UI components)
+├── auth/                     Authorization — auth checks, access control (DCL), auth objects
 ├── bo/                       Business Objects — core domain logic & RAP service
-├── config/                   Configuration management & eventing
-│   └── eventing/             Event producer configuration & maintenance
 ├── dm/                       Data Model — database tables, domains, data elements, CDS views
 ├── srv/                      HTTP Service — REST API handler (GET/POST for RuleSet operations)
 └── utils/                    Shared utilities — constants, exceptions, domain value helpers
@@ -79,6 +97,16 @@ Core domain logic, RAP behavior, and consumption layer:
 - **Service Definition**: `zasis_ui_ruleset.srvd` — OData V4 service exposing RuleSet and RuleSetItem
 - **Interfaces**: `zasis_if_interpreter`, `zasis_if_ruleset`, `zasis_if_customlogic`
 
+### auth (Authorization)
+
+Authorization layer:
+
+- **`zasis_cl_auth_checker`** — Authorization check implementation
+- **`zasis_if_auth_checker`** — Authorization checker interface
+- **`zasis_cx_no_auth`** — Authorization exception
+- **Access Control (DCL)**: `zasis_ac_ruleset`, `zasis_ac_rulesetheader`, `zasis_ac_rulesetitm`, `zasis_ac_c_ruleset`, `zasis_ac_c_rulesetitm`
+- **Auth Objects**: `zasis_grl` (SUSO), `zasis_rule` (AUTH), `zasi` (SUSC)
+
 ### srv (HTTP Service)
 
 REST API for external consumers:
@@ -86,16 +114,12 @@ REST API for external consumers:
 - **`zasis_cl_http_handler`** — Routes GET (retrieve RuleSet) and POST (execute RuleSet) requests
 - Local request validator for path parsing and content-type checks
 
-### config (Configuration & Eventing)
-
-- Event configuration tables and maintenance function group (`zasis_conf_maint`)
-- `zasis_if_event_producer` interface for event-driven extensibility
-
 ### utils (Utilities)
 
 - **`zasis_constants`** — Static constants (rule types, HTTP methods, content types)
 - **`zasis_cx_exc`** — Custom exception class with T100 messages (invalid route, unknown ruleset, etc.)
 - **`zasis_cl_get_domain_fix_values`** — RAP query provider for domain fixed values
+- **`zasis_cl_class_validator`** — Class validation utility
 
 ---
 
@@ -122,10 +146,6 @@ Two MCP servers are configured in `.vscode/mcp.json` to assist development:
 
 For **complex ABAP RESTful RAP features** (e.g. new behavior definitions, validations, determinations, actions, draft handling, side effects, authorization, feature control, event bindings), **always research SAP documentation first** using the MCP tools before writing code. Use `mcp_abap-mcp_sap_community_search`, `mcp_abap-mcp_search`, or `mcp_abap-mcp_sap_get_object_details` to look up the correct patterns, annotations, and syntax. This is not necessary for simple, well-known coding tasks — but RAP has many nuances and version-specific behaviors that require consulting official documentation to get right.
 
-### New Feature Implementation
-
-When implementing a new feature, **always use the `grill-me` skill first** to interview the user about the design and plan before writing any code. This ensures shared understanding of requirements, dependencies, and edge cases before implementation begins.
-
 ### Token Efficiency
 
 **The `caveman` skill should be used by default** to minimize token consumption. It cuts token usage while keeping full technical accuracy. Supports intensity levels: `lite`, `full` (default), `ultra`, plus `wenyan` variants for classical Chinese compression. Only disable when the user explicitly requests verbose/normal output ("stop caveman", "normal mode").
@@ -150,7 +170,3 @@ The project has multiple test layers. See `package.json` for npm scripts:
 - **ABAP Unit Tests**: The authoritative test suite runs on the ABAP system itself. **After making changes, always ask the user to sync the project to the ABAP system via abapGit, run the ABAP Unit tests there, and confirm the results before considering the change complete.**
 
 ---
-
-## Session Tracking
-
-At the end of each session — **before merging the PR** — create a session summary using the `session-summary` skill. Session summaries are stored as individual files in `docs/sessions/` with the session ID as filename. The summary must be committed to the feature branch before merge.
