@@ -79,6 +79,12 @@ CLASS zasis_cx_exc DEFINITION
                  attr4 TYPE scx_attrname VALUE '',
                END OF string_to_interpret_empty.
 
+    "! Creates a general ZASIS exception with a T100 message and optional message variable attributes.
+    "! @parameter textid    | T100 message key identifying the error text; uses the default text if omitted
+    "! @parameter previous  | Previous exception that caused this one, for exception chaining
+    "! @parameter route     | API route used as message variable &1 (e.g. for invalid_api_route message)
+    "! @parameter ruleset   | RuleSet ID used as message variable &1 (e.g. for unknown_ruleset message)
+    "! @parameter classname | Class name used as message variable &1 (e.g. for class_not_exist or class_no_intf message)
     METHODS constructor
       IMPORTING textid    LIKE if_t100_message=>t100key OPTIONAL
                 !previous LIKE previous                 OPTIONAL
