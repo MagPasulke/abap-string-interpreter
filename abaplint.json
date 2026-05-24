@@ -15,6 +15,7 @@
   },
   "rules": {
     "prefer_inline": true,
+    "line_break_multiple_parameters": true,
     "prefer_corresponding": true,
     "prefer_is_not": true,
     "prefer_raise_exception_new": true,

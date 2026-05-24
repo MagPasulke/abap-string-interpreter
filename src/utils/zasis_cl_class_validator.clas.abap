@@ -29,13 +29,17 @@ CLASS zasis_cl_class_validator IMPLEMENTATION.
                                                     OTHERS         = 2 ).
 
     IF sy-subrc <> 0 OR type_descr IS NOT BOUND.
-      RAISE EXCEPTION NEW zasis_cx_exc( textid = zasis_cx_exc=>class_not_exist classname = CONV #( upper_class ) ).
+      RAISE EXCEPTION NEW zasis_cx_exc(
+        textid    = zasis_cx_exc=>class_not_exist
+        classname = CONV #( upper_class ) ).
     ENDIF.
 
     DATA(descr_ref) = CAST cl_abap_objectdescr( type_descr ).
 
     IF NOT line_exists( descr_ref->interfaces[ name = to_upper( interface_name ) ] ).
-      RAISE EXCEPTION NEW zasis_cx_exc( textid = zasis_cx_exc=>class_no_intf classname = CONV #( upper_class ) ).
+      RAISE EXCEPTION NEW zasis_cx_exc(
+        textid    = zasis_cx_exc=>class_no_intf
+        classname = CONV #( upper_class ) ).
     ENDIF.
 
   ENDMETHOD.

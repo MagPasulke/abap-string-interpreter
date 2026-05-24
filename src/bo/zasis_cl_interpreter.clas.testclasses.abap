@@ -353,7 +353,9 @@ CLASS ltcl_zasis_cl_interpreter IMPLEMENTATION.
     ENDTRY.
 
     " Then
-    cl_abap_unit_assert=>assert_equals( act = lines( result_mi ) exp = 2 ).
+    cl_abap_unit_assert=>assert_equals(
+      act = lines( result_mi )
+      exp = 2 ).
 
     cl_abap_unit_assert=>assert_equals(
       act = result_mi[ 1 ]-interpretationresult
@@ -526,9 +528,15 @@ CLASS ltcl_zasis_cl_interpreter IMPLEMENTATION.
     ENDTRY.
 
     " Then
-    cl_abap_unit_assert=>assert_equals( act = ev_producer_mock->received_itm exp = CONV zasis_ruleset_item( 42 ) ).
-    cl_abap_unit_assert=>assert_equals( act = ev_producer_mock->received_result-targetfield exp = 'TargetX' ).
-    cl_abap_unit_assert=>assert_equals( act = ev_producer_mock->received_result-interpretationresult exp = |ResultValue| ).
+    cl_abap_unit_assert=>assert_equals(
+      act = ev_producer_mock->received_itm
+      exp = CONV zasis_ruleset_item( 42 ) ).
+    cl_abap_unit_assert=>assert_equals(
+      act = ev_producer_mock->received_result-targetfield
+      exp = 'TargetX' ).
+    cl_abap_unit_assert=>assert_equals(
+      act = ev_producer_mock->received_result-interpretationresult
+      exp = |ResultValue| ).
   ENDMETHOD.
 
   METHOD test_ev_prod_error_no_break.
@@ -563,7 +571,9 @@ CLASS ltcl_zasis_cl_interpreter IMPLEMENTATION.
     ENDTRY.
 
     " Then - result is still produced despite event producer failure
-    cl_abap_unit_assert=>assert_equals( act = result[ 1 ]-interpretationresult exp = |Value1| ).
+    cl_abap_unit_assert=>assert_equals(
+      act = result[ 1 ]-interpretationresult
+      exp = |Value1| ).
   ENDMETHOD.
 
   METHOD test_ctx_forwarded_to_ev_prod.
@@ -602,9 +612,15 @@ CLASS ltcl_zasis_cl_interpreter IMPLEMENTATION.
     ENDTRY.
 
     " Then - event producer received the full context
-    cl_abap_unit_assert=>assert_equals( act = lines( ev_producer_mock->received_context ) exp = 2 ).
-    cl_abap_unit_assert=>assert_equals( act = ev_producer_mock->received_context[ 1 ]-value exp = '1000' ).
-    cl_abap_unit_assert=>assert_equals( act = ev_producer_mock->received_context[ 2 ]-value exp = 'scanner_01' ).
+    cl_abap_unit_assert=>assert_equals(
+      act = lines( ev_producer_mock->received_context )
+      exp = 2 ).
+    cl_abap_unit_assert=>assert_equals(
+      act = ev_producer_mock->received_context[ 1 ]-value
+      exp = '1000' ).
+    cl_abap_unit_assert=>assert_equals(
+      act = ev_producer_mock->received_context[ 2 ]-value
+      exp = 'scanner_01' ).
   ENDMETHOD.
 
   METHOD test_customlogic_positive.
@@ -642,8 +658,12 @@ CLASS ltcl_zasis_cl_interpreter IMPLEMENTATION.
 
     " Then
     cl_abap_unit_assert=>assert_true( act = cl_mock->called ).
-    cl_abap_unit_assert=>assert_equals( act = result_cl[ 1 ]-interpretationresult exp = |CustomResult| ).
-    cl_abap_unit_assert=>assert_equals( act = result_cl[ 1 ]-targetfield exp = |Field1| ).
+    cl_abap_unit_assert=>assert_equals(
+      act = result_cl[ 1 ]-interpretationresult
+      exp = |CustomResult| ).
+    cl_abap_unit_assert=>assert_equals(
+      act = result_cl[ 1 ]-targetfield
+      exp = |Field1| ).
   ENDMETHOD.
 
   METHOD test_customlogic_not_found.
@@ -719,10 +739,16 @@ CLASS ltcl_zasis_cl_interpreter IMPLEMENTATION.
     ENDTRY.
 
     " Then - custom logic received context
-    cl_abap_unit_assert=>assert_equals( act = lines( cl_mock->received_context ) exp = 1 ).
-    cl_abap_unit_assert=>assert_equals( act = cl_mock->received_context[ 1 ]-value exp = 'WH01' ).
+    cl_abap_unit_assert=>assert_equals(
+      act = lines( cl_mock->received_context )
+      exp = 1 ).
+    cl_abap_unit_assert=>assert_equals(
+      act = cl_mock->received_context[ 1 ]-value
+      exp = 'WH01' ).
     " And received the input string
-    cl_abap_unit_assert=>assert_equals( act = cl_mock->received_string exp = |<TAG>Value1| ).
+    cl_abap_unit_assert=>assert_equals(
+      act = cl_mock->received_string
+      exp = |<TAG>Value1| ).
   ENDMETHOD.
 
   METHOD test_no_ctx_ev_prod_empty.
@@ -756,7 +782,9 @@ CLASS ltcl_zasis_cl_interpreter IMPLEMENTATION.
 
     " Then - event producer receives empty context table
     cl_abap_unit_assert=>assert_true( act = ev_producer_mock->called ).
-    cl_abap_unit_assert=>assert_equals( act = lines( ev_producer_mock->received_context ) exp = 0 ).
+    cl_abap_unit_assert=>assert_equals(
+      act = lines( ev_producer_mock->received_context )
+      exp = 0 ).
   ENDMETHOD.
 
   METHOD test_ctx_multi_items_all_calls.
@@ -799,9 +827,15 @@ CLASS ltcl_zasis_cl_interpreter IMPLEMENTATION.
     ENDTRY.
 
     " Then - event producer called twice, last call has context
-    cl_abap_unit_assert=>assert_equals( act = ev_producer_mock->call_count exp = 2 ).
-    cl_abap_unit_assert=>assert_equals( act = lines( ev_producer_mock->received_context ) exp = 1 ).
-    cl_abap_unit_assert=>assert_equals( act = ev_producer_mock->received_context[ 1 ]-value exp = 'B001' ).
+    cl_abap_unit_assert=>assert_equals(
+      act = ev_producer_mock->call_count
+      exp = 2 ).
+    cl_abap_unit_assert=>assert_equals(
+      act = lines( ev_producer_mock->received_context )
+      exp = 1 ).
+    cl_abap_unit_assert=>assert_equals(
+      act = ev_producer_mock->received_context[ 1 ]-value
+      exp = 'B001' ).
   ENDMETHOD.
 
   METHOD test_cl_with_ev_producer.
@@ -838,7 +872,9 @@ CLASS ltcl_zasis_cl_interpreter IMPLEMENTATION.
     ENDTRY.
 
     " Then - custom logic result used AND event producer fired with that result
-    cl_abap_unit_assert=>assert_equals( act = result[ 1 ]-interpretationresult exp = |CustomOutput| ).
+    cl_abap_unit_assert=>assert_equals(
+      act = result[ 1 ]-interpretationresult
+      exp = |CustomOutput| ).
     cl_abap_unit_assert=>assert_true( act = ev_producer_mock->called ).
     cl_abap_unit_assert=>assert_equals(
       act = ev_producer_mock->received_result-interpretationresult
@@ -881,7 +917,9 @@ CLASS ltcl_zasis_cl_interpreter IMPLEMENTATION.
     ENDTRY.
 
     " Then - result still produced despite producer failure
-    cl_abap_unit_assert=>assert_equals( act = result[ 1 ]-interpretationresult exp = |CustomOutput| ).
+    cl_abap_unit_assert=>assert_equals(
+      act = result[ 1 ]-interpretationresult
+      exp = |CustomOutput| ).
   ENDMETHOD.
 
   METHOD test_cl_correct_item_forwarded.
@@ -924,10 +962,16 @@ CLASS ltcl_zasis_cl_interpreter IMPLEMENTATION.
 
     " Then - custom logic called once (only item 2), item 1 matched via regex
     cl_abap_unit_assert=>assert_true( act = cl_mock->called ).
-    cl_abap_unit_assert=>assert_equals( act = result[ 1 ]-interpretationresult exp = |Val1| ).
-    cl_abap_unit_assert=>assert_equals( act = result[ 2 ]-interpretationresult exp = |CustomForItem2| ).
+    cl_abap_unit_assert=>assert_equals(
+      act = result[ 1 ]-interpretationresult
+      exp = |Val1| ).
+    cl_abap_unit_assert=>assert_equals(
+      act = result[ 2 ]-interpretationresult
+      exp = |CustomForItem2| ).
     " Custom logic received the full input string
-    cl_abap_unit_assert=>assert_equals( act = cl_mock->received_string exp = |<A>Val1| ).
+    cl_abap_unit_assert=>assert_equals(
+      act = cl_mock->received_string
+      exp = |<A>Val1| ).
   ENDMETHOD.
 
   METHOD test_cl_empty_result_no_match.
@@ -964,7 +1008,9 @@ CLASS ltcl_zasis_cl_interpreter IMPLEMENTATION.
     ENDTRY.
 
     " Then - empty return treated as no match, producer NOT called
-    cl_abap_unit_assert=>assert_equals( act = result[ 1 ]-interpretationresult exp = |no match| ).
+    cl_abap_unit_assert=>assert_equals(
+      act = result[ 1 ]-interpretationresult
+      exp = |no match| ).
     cl_abap_unit_assert=>assert_false( act = ev_producer_mock->called ).
   ENDMETHOD.
 
@@ -999,7 +1045,9 @@ CLASS ltcl_zasis_cl_interpreter IMPLEMENTATION.
     ENDTRY.
 
     " Then - REPLACE result is correct AND producer fired with that result
-    cl_abap_unit_assert=>assert_equals( act = result[ 1 ]-interpretationresult exp = |Hello| ).
+    cl_abap_unit_assert=>assert_equals(
+      act = result[ 1 ]-interpretationresult
+      exp = |Hello| ).
     cl_abap_unit_assert=>assert_true( act = ev_producer_mock->called ).
     cl_abap_unit_assert=>assert_equals(
       act = ev_producer_mock->received_result-interpretationresult
@@ -1048,10 +1096,18 @@ CLASS ltcl_zasis_cl_interpreter IMPLEMENTATION.
     ENDTRY.
 
     " Then - all three results present and correct
-    cl_abap_unit_assert=>assert_equals( act = lines( result ) exp = 3 ).
-    cl_abap_unit_assert=>assert_equals( act = result[ 1 ]-interpretationresult exp = |Val1| ).
-    cl_abap_unit_assert=>assert_equals( act = result[ 2 ]-interpretationresult exp = |<A>Val1RestOfString| ).
-    cl_abap_unit_assert=>assert_equals( act = result[ 3 ]-interpretationresult exp = |CustomValue| ).
+    cl_abap_unit_assert=>assert_equals(
+      act = lines( result )
+      exp = 3 ).
+    cl_abap_unit_assert=>assert_equals(
+      act = result[ 1 ]-interpretationresult
+      exp = |Val1| ).
+    cl_abap_unit_assert=>assert_equals(
+      act = result[ 2 ]-interpretationresult
+      exp = |<A>Val1RestOfString| ).
+    cl_abap_unit_assert=>assert_equals(
+      act = result[ 3 ]-interpretationresult
+      exp = |CustomValue| ).
   ENDMETHOD.
 
   METHOD test_offset_pre_post_combined.
@@ -1085,7 +1141,9 @@ CLASS ltcl_zasis_cl_interpreter IMPLEMENTATION.
     ENDTRY.
 
     " Then - both offsets applied correctly
-    cl_abap_unit_assert=>assert_equals( act = result[ 1 ]-interpretationresult exp = |MyDeliveryNote| ).
+    cl_abap_unit_assert=>assert_equals(
+      act = result[ 1 ]-interpretationresult
+      exp = |MyDeliveryNote| ).
   ENDMETHOD.
 
   METHOD test_offset_zeroes_result.
@@ -1116,7 +1174,9 @@ CLASS ltcl_zasis_cl_interpreter IMPLEMENTATION.
     ENDTRY.
 
     " Then - zero-length result after offsets → no match
-    cl_abap_unit_assert=>assert_equals( act = result[ 1 ]-interpretationresult exp = |no match| ).
+    cl_abap_unit_assert=>assert_equals(
+      act = result[ 1 ]-interpretationresult
+      exp = |no match| ).
   ENDMETHOD.
 
   METHOD test_replace_no_match_exp_nm.
@@ -1150,7 +1210,9 @@ CLASS ltcl_zasis_cl_interpreter IMPLEMENTATION.
     ENDTRY.
 
     " Then - REPLACE with no match should produce "no match"
-    cl_abap_unit_assert=>assert_equals( act = result[ 1 ]-interpretationresult exp = |no match| ).
+    cl_abap_unit_assert=>assert_equals(
+      act = result[ 1 ]-interpretationresult
+      exp = |no match| ).
   ENDMETHOD.
 
   METHOD test_cl_ev_prod_ctx_forwarded.
@@ -1194,11 +1256,19 @@ CLASS ltcl_zasis_cl_interpreter IMPLEMENTATION.
     ENDTRY.
 
     " Then - custom logic received context
-    cl_abap_unit_assert=>assert_equals( act = lines( cl_mock->received_context ) exp = 2 ).
-    cl_abap_unit_assert=>assert_equals( act = cl_mock->received_context[ 1 ]-value exp = '2000' ).
+    cl_abap_unit_assert=>assert_equals(
+      act = lines( cl_mock->received_context )
+      exp = 2 ).
+    cl_abap_unit_assert=>assert_equals(
+      act = cl_mock->received_context[ 1 ]-value
+      exp = '2000' ).
     " And event producer received same context
-    cl_abap_unit_assert=>assert_equals( act = lines( ev_producer_mock->received_context ) exp = 2 ).
-    cl_abap_unit_assert=>assert_equals( act = ev_producer_mock->received_context[ 2 ]-value exp = 'TESTUSER' ).
+    cl_abap_unit_assert=>assert_equals(
+      act = lines( ev_producer_mock->received_context )
+      exp = 2 ).
+    cl_abap_unit_assert=>assert_equals(
+      act = ev_producer_mock->received_context[ 2 ]-value
+      exp = 'TESTUSER' ).
   ENDMETHOD.
 
   METHOD test_ev_prod_resolver_clsname.
@@ -1237,8 +1307,12 @@ CLASS ltcl_zasis_cl_interpreter IMPLEMENTATION.
 
     " Then - resolver last received class name from item 2 (ZCL_PRODUCER_B)
     " Both items matched so resolver called twice; last call = item 2
-    cl_abap_unit_assert=>assert_equals( act = ev_producer_mock->call_count exp = 2 ).
-    cl_abap_unit_assert=>assert_equals( act = ev_resolver_mock->received_class_name exp = |ZCL_PRODUCER_B| ).
+    cl_abap_unit_assert=>assert_equals(
+      act = ev_producer_mock->call_count
+      exp = 2 ).
+    cl_abap_unit_assert=>assert_equals(
+      act = ev_resolver_mock->received_class_name
+      exp = |ZCL_PRODUCER_B| ).
   ENDMETHOD.
 
   METHOD test_cl_resolver_classname.
@@ -1281,7 +1355,9 @@ CLASS ltcl_zasis_cl_interpreter IMPLEMENTATION.
     ENDTRY.
 
     " Then - resolver last received class name from item 2 (ZCL_LOGIC_BETA)
-    cl_abap_unit_assert=>assert_equals( act = cl_resolver_mock->received_class_name exp = |ZCL_LOGIC_BETA| ).
+    cl_abap_unit_assert=>assert_equals(
+      act = cl_resolver_mock->received_class_name
+      exp = |ZCL_LOGIC_BETA| ).
   ENDMETHOD.
 
   METHOD test_empty_string_raises_exc.
@@ -1311,7 +1387,9 @@ CLASS ltcl_zasis_cl_interpreter IMPLEMENTATION.
         ).
         cl_abap_unit_assert=>fail( msg = |Expected zasis_cx_exc but no exception was raised| ).
       CATCH zasis_cx_exc INTO DATA(exc).
-        cl_abap_unit_assert=>assert_equals( act = exc->if_t100_message~t100key exp = zasis_cx_exc=>string_to_interpret_empty ).
+        cl_abap_unit_assert=>assert_equals(
+          act = exc->if_t100_message~t100key
+          exp = zasis_cx_exc=>string_to_interpret_empty ).
       CATCH zasis_cx_no_auth INTO DATA(auth_exc).
         cl_abap_unit_assert=>fail( msg = |Unexpected auth exception: { auth_exc->get_text( ) }| ).
     ENDTRY.
