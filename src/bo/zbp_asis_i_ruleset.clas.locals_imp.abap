@@ -121,7 +121,7 @@ CLASS lhc_rulesetitem IMPLEMENTATION.
                                                             severity = if_abap_behv_message=>severity-error ) )
                    TO reported-rulesetitem.
 
-            RETURN.
+            CONTINUE.
 
         ENDTRY.
 

@@ -26,7 +26,7 @@ CLASS zasis_cl_ev_producer_resolver IMPLEMENTATION.
         CREATE OBJECT instance TYPE (class_name).
         result = CAST zasis_if_event_producer( instance ).
 
-      CATCH cx_root.
+      CATCH zasis_cx_exc cx_sy_create_object_error.
         RETURN.
     ENDTRY.
 
