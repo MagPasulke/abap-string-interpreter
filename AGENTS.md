@@ -248,11 +248,6 @@ The project has multiple test layers. See `package.json` for npm scripts:
 - **HTTP Integration Tests** (`npm run http-test`): Require the SAP ABAP server to be running and accessible. Environment variables (`baseUrl`, `client`, `auth_b64`) must be configured in `.vscode/settings.json` under `rest-client.environmentVariables.local`.
 - **ABAP Unit Tests**: The authoritative test suite runs on the ABAP system itself. **After making changes, always ask the user to sync the project to the ABAP system via abapGit, run the ABAP Unit tests there, and confirm the results before considering the change complete.**
 
-### Writing & Maintaining Tests
 
-- **New functionality** must include unit tests that verify the expected behavior
-- **Modified behavior** must have existing tests updated to reflect the changes
-- Tests must pass locally (`npm run unit`) before committing
-- When adding tests for a class, check existing test classes first and extend them rather than creating parallel test structures
 
 ---
