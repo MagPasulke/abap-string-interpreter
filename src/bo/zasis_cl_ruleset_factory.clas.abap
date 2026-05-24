@@ -6,16 +6,22 @@ CLASS zasis_cl_ruleset_factory DEFINITION
   PUBLIC SECTION.
     CLASS-DATA ruleset_refs TYPE zasis_tt_rulesetrefs READ-ONLY.
 
-    "! <p class="shortText">Returns a RuleSet reference by ID, loading from DB if not cached.</p>
+    "! Returns a RuleSet reference by ID, using the in-memory cache if available; reads from DB otherwise.
+    "! @parameter ruleset_id   | ID of the RuleSet to load
+    "! @parameter auth_checker | Authorization checker; defaults to zasis_cl_auth_checker when not provided
+    "! @parameter ruleset_ref  | Reference to the loaded or cached RuleSet instance
+    "! @raising   zasis_cx_exc     | Raised when the RuleSet does not exist or has no items
+    "! @raising   zasis_cx_no_auth | Raised when the user lacks read authorization for the RuleSet
     CLASS-METHODS get_ruleset_by_rulesetid IMPORTING ruleset_id       TYPE zasis_ruleset_id
                                                       auth_checker     TYPE REF TO zasis_if_auth_checker OPTIONAL
                               RETURNING VALUE(ruleset_ref) TYPE REF TO zasis_if_ruleset
                               RAISING   zasis_cx_exc
                                         zasis_cx_no_auth.
 
-    "! <p class="shortText">Removes the cached entry for the given RuleSet ID.</p>
+    "! Removes the cached entry for the given RuleSet ID so the next read reloads from the database.
+    "! @parameter ruleset_id | ID of the RuleSet whose cache entry should be invalidated
     CLASS-METHODS invalidate IMPORTING ruleset_id TYPE zasis_ruleset_id.
-    "! <p class="shortText">Clears the entire in-memory RuleSet cache.</p>
+    "! Clears the entire in-memory RuleSet cache, forcing all subsequent reads to reload from the database.
     CLASS-METHODS clear_cache.
 
   PROTECTED SECTION.

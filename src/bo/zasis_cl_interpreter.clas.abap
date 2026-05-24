@@ -8,7 +8,10 @@ CLASS zasis_cl_interpreter DEFINITION
 
     ALIASES execute FOR zasis_if_interpreter~execute.
 
-    "! <p class="shortText">Creates an interpreter instance with optional injectable dependencies.</p>
+    "! Creates an interpreter instance. All dependencies are optional; defaults are used when omitted.
+    "! @parameter auth_checker            | Authorization checker; defaults to zasis_cl_auth_checker when not provided
+    "! @parameter event_producer_resolver | Resolver for event producer classes; defaults to zasis_cl_ev_producer_resolver
+    "! @parameter customlogic_resolver    | Resolver for custom logic classes; defaults to zasis_cl_customlogic_resolver
     METHODS constructor
       IMPORTING
         auth_checker           TYPE REF TO zasis_if_auth_checker OPTIONAL

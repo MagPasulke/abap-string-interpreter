@@ -71,7 +71,14 @@ CLASS zasis_cx_ruleset_ui DEFINITION
                  attr4 TYPE scx_attrname VALUE '',
                END OF custom_logic_no_intf.
 
-    "! <p class="shortText">Creates a RAP behavior exception with optional severity and message attributes.</p>
+    "! Creates a RAP behavior exception with a T100 message and optional message variable attributes.
+    "! @parameter severity  | Message severity for the Fiori Elements UI (default: error)
+    "! @parameter textid    | T100 message key identifying the error text; uses the default text if omitted
+    "! @parameter previous  | Previous exception that caused this one, for exception chaining
+    "! @parameter rulesetid | RuleSet ID used as message variable (replaces &1 in the message text)
+    "! @parameter regex     | Regex pattern used as message variable (replaces &1 in the message text)
+    "! @parameter classname | Class name used as message variable (replaces &1 in the message text)
+    "! @parameter action    | Action name used as message variable (replaces &1 in the message text)
     METHODS constructor
       IMPORTING severity  TYPE if_abap_behv_message=>t_severity DEFAULT if_abap_behv_message=>severity-error
                 textid    LIKE if_t100_message=>t100key         OPTIONAL

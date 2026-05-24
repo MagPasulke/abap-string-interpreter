@@ -4,7 +4,10 @@ CLASS zasis_cl_class_validator DEFINITION
   CREATE PUBLIC.
 
   PUBLIC SECTION.
-    "! <p class="shortText">Checks that a class exists and implements the given interface.</p>
+    "! Verifies that an ABAP class exists and implements the specified interface; raises an exception otherwise.
+    "! @parameter class_name     | Name of the ABAP class to check (case-insensitive, converted to upper case internally)
+    "! @parameter interface_name | Fully qualified name of the interface the class must implement
+    "! @raising   zasis_cx_exc | Raised with class_not_exist when the class is unknown, or class_no_intf when the interface is not implemented
     CLASS-METHODS check_implements
       IMPORTING
         class_name     TYPE string
