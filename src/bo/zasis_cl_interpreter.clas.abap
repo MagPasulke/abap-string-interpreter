@@ -47,23 +47,9 @@ CLASS zasis_cl_interpreter IMPLEMENTATION.
 
 
   METHOD constructor.
-    IF auth_checker IS BOUND.
-      me->auth_checker = auth_checker.
-    ELSE.
-      me->auth_checker = NEW zasis_cl_auth_checker( ).
-    ENDIF.
-
-    IF event_producer_resolver IS BOUND.
-      me->event_producer_resolver = event_producer_resolver.
-    ELSE.
-      me->event_producer_resolver = NEW zasis_cl_ev_producer_resolver( ).
-    ENDIF.
-
-    IF customlogic_resolver IS BOUND.
-      me->customlogic_resolver = customlogic_resolver.
-    ELSE.
-      me->customlogic_resolver = NEW zasis_cl_customlogic_resolver( ).
-    ENDIF.
+    me->auth_checker = COND #( WHEN auth_checker IS BOUND THEN auth_checker ELSE NEW zasis_cl_auth_checker( ) ).
+    me->event_producer_resolver = COND #( WHEN event_producer_resolver IS BOUND THEN event_producer_resolver ELSE NEW zasis_cl_ev_producer_resolver( ) ).
+    me->customlogic_resolver = COND #( WHEN customlogic_resolver IS BOUND THEN customlogic_resolver ELSE NEW zasis_cl_customlogic_resolver( ) ).
   ENDMETHOD.
 
 

@@ -17,13 +17,12 @@ CLASS zasis_cl_customlogic_resolver IMPLEMENTATION.
   METHOD zasis_if_customlogic_resolver~resolve.
 
     DATA instance TYPE REF TO object.
-    DATA(class) = to_upper( class_name ).
 
     zasis_cl_class_validator=>check_implements(
-      class_name     = class
+      class_name     = CONV string( class_name )
       interface_name = zasis_constants=>ruleset_execution-custom_log_if_name ).
 
-    CREATE OBJECT instance TYPE (class).
+    CREATE OBJECT instance TYPE (class_name).
     result = CAST zasis_if_customlogic( instance ).
 
   ENDMETHOD.

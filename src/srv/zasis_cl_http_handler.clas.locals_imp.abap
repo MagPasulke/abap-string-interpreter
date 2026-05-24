@@ -179,15 +179,15 @@ CLASS zasis_lcl_http_handler IMPLEMENTATION.
 
     IF request->get_method( ) EQ zasis_constants=>http_method-post.
       request_validator->validate_content_type( ).
-    ENDIF.
 
-    /ui2/cl_json=>deserialize(
-      EXPORTING
-        json             = CONV string( request->get_cdata( ) )
-        assoc_arrays     = abap_true
-      CHANGING
-        data             = request_body
-    ).
+      /ui2/cl_json=>deserialize(
+        EXPORTING
+          json             = CONV string( request->get_cdata( ) )
+          assoc_arrays     = abap_true
+        CHANGING
+          data             = request_body
+      ).
+    ENDIF.
 
     me->response = response.
 
