@@ -36,16 +36,17 @@ Only enter this workflow when the user signals intent to **implement something**
 3. **Push with empty commit** (`git commit --allow-empty -m "chore: initialize feature branch"` && `git push`)
 4. **Open draft PR** against `main`
 5. **Implement** the changes
-6. **Run `npm run lint && npm test`**
+6. **Write/enhance unit tests** — Add unit tests for new functionality and update existing tests for modified behavior
+7. **Run `npm run lint && npm test`**
    - If pass → commit & push
    - If fail → attempt one fix cycle; if still failing, report errors to user and wait for guidance
-7. **Repeat steps 5–6** for each logical unit of work (multiple commits are encouraged for traceability)
-8. **Bump version** — suggest patch/minor/major based on the nature of changes, then update both version files in a single commit:
+8. **Repeat steps 5–7** for each logical unit of work (multiple commits are encouraged for traceability)
+9. **Bump version** — suggest patch/minor/major based on the nature of changes, then update both version files in a single commit:
    - `package.json` → `"version"` field
    - `src/zasis_if_version.intf.abap` → `version` constant
    - Guidelines: `patch` for fixes/refactors/style; `minor` for new features or capabilities; `major` for breaking changes
-9. **Create session summary** as the final commit (using `session-summary` skill)
-10. **Mark PR ready for review**
+10. **Create session summary** as the final commit (using `session-summary` skill)
+11. **Mark PR ready for review**
     - PR description includes: "⚠️ Please sync to SAP system via abapGit and run ABAP Unit tests before merging."
 
 This applies to ALL changes — code, documentation, skills, configuration. No exceptions.
@@ -246,5 +247,7 @@ The project has multiple test layers. See `package.json` for npm scripts:
 - **ABAP Transpile Tests** (`npm run unit`): Runs unit tests of the project via abap transpile.
 - **HTTP Integration Tests** (`npm run http-test`): Require the SAP ABAP server to be running and accessible. Environment variables (`baseUrl`, `client`, `auth_b64`) must be configured in `.vscode/settings.json` under `rest-client.environmentVariables.local`.
 - **ABAP Unit Tests**: The authoritative test suite runs on the ABAP system itself. **After making changes, always ask the user to sync the project to the ABAP system via abapGit, run the ABAP Unit tests there, and confirm the results before considering the change complete.**
+
+
 
 ---
