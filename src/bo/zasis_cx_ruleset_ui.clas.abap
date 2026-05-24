@@ -8,7 +8,7 @@ CLASS zasis_cx_ruleset_ui DEFINITION
     INTERFACES if_abap_behv_message.
     INTERFACES if_t100_message.
 
-    CONSTANTS: BEGIN OF duplicate_ruleSetId,
+    CONSTANTS: BEGIN OF duplicate_rulesetid,
                  msgid TYPE symsgid      VALUE 'ZASIS_MSGS',
                  msgno TYPE symsgno      VALUE '001',
                  attr1 TYPE scx_attrname VALUE 'RULESETID',
@@ -33,7 +33,7 @@ CLASS zasis_cx_ruleset_ui DEFINITION
                  attr2 TYPE scx_attrname VALUE '',
                  attr3 TYPE scx_attrname VALUE '',
                  attr4 TYPE scx_attrname VALUE '',
-               END OF no_AUTH.
+                END OF no_auth.
 
     CONSTANTS: BEGIN OF event_producer_not_exist,
                  msgid TYPE symsgid      VALUE 'ZASIS_MSGS',
