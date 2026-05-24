@@ -1,5 +1,5 @@
-interface ZASIS_IF_INTERPRETER
-  public .
+INTERFACE zasis_if_interpreter
+  PUBLIC .
 
   METHODS execute IMPORTING string_to_be_interpreted     TYPE string
                             ruleset                      TYPE REF TO zasis_if_ruleset
@@ -8,4 +8,4 @@ interface ZASIS_IF_INTERPRETER
                   RAISING   zasis_cx_exc
                             zasis_cx_no_auth.
 
-endinterface.
+ENDINTERFACE.

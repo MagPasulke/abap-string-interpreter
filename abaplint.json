@@ -147,6 +147,46 @@
       "ignoreExceptions": true,
       "ignoreGlobalDefinition": true
     },
+    "keyword_case": {
+      "style": "upper",
+      "ignoreExceptions": true,
+      "ignoreLowerClassImplmentationStatement": true,
+      "ignoreGlobalClassDefinition": false,
+      "ignoreGlobalClassBoundaries": false,
+      "ignoreFunctionModuleName": false,
+      "ignoreGlobalInterface": false,
+      "ignoreKeywords": [],
+      "exclude": [
+        "zbp_asis_i_ruleset.clas.locals_imp.abap",
+        "zasis_cl_interprettypetext.clas.abap",
+        "zasis_cl_get_domain_fix_values.clas.abap"
+      ]
+    },
+    "method_parameter_names": {
+      "exclude": [],
+      "severity": "Error",
+      "patternKind": "required",
+      "ignoreNames": [],
+      "ignorePatterns": [],
+      "importing": "^[a-z][a-z0-9_]*$",
+      "exporting": "^[a-z][a-z0-9_]*$",
+      "changing": "^[a-z][a-z0-9_]*$",
+      "returning": "^[a-z][a-z0-9_]*$"
+    },
+    "class_attribute_names": {
+      "exclude": [],
+      "severity": "Error",
+      "patternKind": "required",
+      "ignoreNames": [],
+      "ignorePatterns": [],
+      "instance": "^_?[a-z][a-z0-9_]*$",
+      "statics": "^_?[a-z][a-z0-9_]*$",
+      "constants": "^[A-Z][A-Z0-9_]*$"
+    },
+    "functional_writing": {
+      "ignoreExceptions": true
+    },
+    "exporting": true,
     "local_variable_names": {
       "exclude": [],
       "severity": "Error",

@@ -221,7 +221,7 @@ CLASS ltcl_zasis_cl_interpreter IMPLEMENTATION.
 
     " When
     TRY.
-        data(result_nm) = cut->execute(
+        DATA(result_nm) = cut->execute(
           string_to_be_interpreted = |<Start><NO_KNOWN_TAG>SomeValue<End>|
           ruleset                  = ruleset
         ).

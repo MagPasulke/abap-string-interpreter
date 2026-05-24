@@ -8,7 +8,7 @@ CLASS zasis_lcl_http_requ_validator DEFINITION.
     DATA _request TYPE REF TO if_http_request.
     DATA _path     TYPE string                      READ-ONLY.
     DATA _num_path_elements TYPE i READ-ONLY.
-    DATA _patH_elements TYPE TABLE OF string READ-ONLY.
+    DATA _path_elements TYPE TABLE OF string READ-ONLY.
 
     METHODS constructor IMPORTING request TYPE REF TO if_http_request.
 
