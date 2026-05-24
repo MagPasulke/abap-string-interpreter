@@ -8,6 +8,7 @@ CLASS zasis_cl_interpreter DEFINITION
 
     ALIASES execute FOR zasis_if_interpreter~execute.
 
+    "! <p class="shortText">Creates an interpreter instance with optional injectable dependencies.</p>
     METHODS constructor
       IMPORTING
         auth_checker           TYPE REF TO zasis_if_auth_checker OPTIONAL

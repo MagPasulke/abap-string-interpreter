@@ -9,6 +9,7 @@ CLASS zasis_cl_ruleset DEFINITION
     ALIASES header FOR zasis_if_ruleset~header.
     ALIASES items  FOR zasis_if_ruleset~items.
 
+    "! <p class="shortText">Creates an immutable RuleSet from a header and its items.</p>
     METHODS constructor IMPORTING !header TYPE zasis_rulesethd
                                   items   TYPE zasis_tt_rulesetitm
                        RAISING zasis_cx_exc.

@@ -79,6 +79,7 @@ CLASS zasis_cx_exc DEFINITION
                  attr4 TYPE scx_attrname VALUE '',
                END OF string_to_interpret_empty.
 
+    "! <p class="shortText">Creates a general ZASIS exception with optional message attributes.</p>
     METHODS constructor
       IMPORTING textid    LIKE if_t100_message=>t100key OPTIONAL
                 !previous LIKE previous                 OPTIONAL

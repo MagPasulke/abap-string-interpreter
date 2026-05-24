@@ -1,6 +1,7 @@
 INTERFACE zasis_if_interpreter
   PUBLIC .
 
+  "! <p class="shortText">Interprets a string against a RuleSet and returns all matched results.</p>
   METHODS execute IMPORTING string_to_be_interpreted     TYPE string
                             ruleset                      TYPE REF TO zasis_if_ruleset
                             context                      TYPE zasis_tt_interpret_context OPTIONAL

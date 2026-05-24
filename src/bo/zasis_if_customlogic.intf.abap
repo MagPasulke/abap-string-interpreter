@@ -1,6 +1,7 @@
 INTERFACE zasis_if_customlogic
   PUBLIC.
 
+  "! <p class="shortText">Executes custom interpretation logic and returns the result string.</p>
   METHODS execute
     IMPORTING
       string_to_be_interpretet     TYPE string

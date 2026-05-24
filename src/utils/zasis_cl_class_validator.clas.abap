@@ -4,6 +4,7 @@ CLASS zasis_cl_class_validator DEFINITION
   CREATE PUBLIC.
 
   PUBLIC SECTION.
+    "! <p class="shortText">Checks that a class exists and implements the given interface.</p>
     CLASS-METHODS check_implements
       IMPORTING
         class_name     TYPE string

@@ -6,13 +6,16 @@ CLASS zasis_cl_ruleset_factory DEFINITION
   PUBLIC SECTION.
     CLASS-DATA ruleset_refs TYPE zasis_tt_rulesetrefs READ-ONLY.
 
+    "! <p class="shortText">Returns a RuleSet reference by ID, loading from DB if not cached.</p>
     CLASS-METHODS get_ruleset_by_rulesetid IMPORTING ruleset_id       TYPE zasis_ruleset_id
                                                       auth_checker     TYPE REF TO zasis_if_auth_checker OPTIONAL
                               RETURNING VALUE(ruleset_ref) TYPE REF TO zasis_if_ruleset
                               RAISING   zasis_cx_exc
                                         zasis_cx_no_auth.
 
+    "! <p class="shortText">Removes the cached entry for the given RuleSet ID.</p>
     CLASS-METHODS invalidate IMPORTING ruleset_id TYPE zasis_ruleset_id.
+    "! <p class="shortText">Clears the entire in-memory RuleSet cache.</p>
     CLASS-METHODS clear_cache.
 
   PROTECTED SECTION.

@@ -1,6 +1,7 @@
 INTERFACE zasis_if_event_producer
   PUBLIC .
 
+  "! <p class="shortText">Called after a RuleSet item has been interpreted successfully.</p>
   METHODS on_item_interpreted
     IMPORTING
       ruleset               TYPE REF TO zasis_if_ruleset

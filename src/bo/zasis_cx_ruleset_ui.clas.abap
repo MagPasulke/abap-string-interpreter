@@ -71,6 +71,7 @@ CLASS zasis_cx_ruleset_ui DEFINITION
                  attr4 TYPE scx_attrname VALUE '',
                END OF custom_logic_no_intf.
 
+    "! <p class="shortText">Creates a RAP behavior exception with optional severity and message attributes.</p>
     METHODS constructor
       IMPORTING severity  TYPE if_abap_behv_message=>t_severity DEFAULT if_abap_behv_message=>severity-error
                 textid    LIKE if_t100_message=>t100key         OPTIONAL

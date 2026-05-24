@@ -9,6 +9,7 @@ CLASS zasis_cx_no_auth DEFINITION
     INTERFACES if_t100_message .
     INTERFACES if_t100_dyn_msg .
 
+    "! <p class="shortText">Creates an authorization exception instance.</p>
     METHODS constructor
       IMPORTING
         !textid   LIKE if_t100_message=>t100key OPTIONAL
