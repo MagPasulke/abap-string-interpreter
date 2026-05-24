@@ -66,7 +66,7 @@ CLASS zasis_cl_http_handler IMPLEMENTATION.
       CATCH zasis_cx_no_auth INTO auth_exception.
 
         server->response->set_status( code          = '403'
-                                      reason        = |Forbidden - Missing Authorizaton|
+                                      reason        = |Forbidden - Missing Authorization|
                                       detailed_info = auth_exception->get_text( ) ).
 
         RETURN.

@@ -89,10 +89,7 @@ CLASS zasis_cl_get_domain_fix_values IMPLEMENTATION.
         SELECT * FROM @business_data AS data_source_fields
            WHERE (filter_condition_string)
            INTO TABLE @business_data
-           UP TO @max_index ROWS.
-        IF sy-subrc <> 0.
-          CLEAR business_data.
-        ENDIF.
+           UP TO @max_index ROWS ##SUBRC_OK.
 
         IF skip IS NOT INITIAL.
           DELETE business_data TO skip.
