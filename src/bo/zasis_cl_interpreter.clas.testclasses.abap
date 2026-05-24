@@ -171,7 +171,7 @@ CLASS ltcl_zasis_cl_interpreter IMPLEMENTATION.
 
     TRY.
         ruleset = NEW zasis_cl_ruleset(
-          header = VALUE #( rulesetuuid = '9808AFDDDA' rulesetid = 'UnitTest')
+          header = VALUE #( rulesetuuid = '9808AFDDDA' rulesetid = 'UnitTest' )
           items  = VALUE #( ( intpretationtarget = 'DeliveryNo' interpretationrule = '<B52H>([^<]*)' interpretation_type = 1 offset_pre = 6 offset_post = 0 ) )
         ).
       CATCH zasis_cx_exc INTO DATA(setup_exc).
@@ -242,7 +242,7 @@ CLASS ltcl_zasis_cl_interpreter IMPLEMENTATION.
 
     TRY.
         ruleset = NEW zasis_cl_ruleset(
-          header = VALUE #( rulesetuuid = '9808AFDDDA' rulesetid = 'UnitTest')
+          header = VALUE #( rulesetuuid = '9808AFDDDA' rulesetid = 'UnitTest' )
           items  = VALUE #( ( intpretationtarget = 'DeliveryNo' interpretationrule = '<B52H>([^<]*)' interpretation_type = 1 offset_pre = 6 offset_post = 0 ) )
         ).
       CATCH zasis_cx_exc INTO DATA(setup_exc).
