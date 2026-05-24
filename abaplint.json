@@ -166,6 +166,7 @@
       "patternKind": "required",
       "ignoreNames": [],
       "ignorePatterns": [],
+      "ignoreExceptions": true,
       "importing": "^[a-z][a-z0-9_]*$",
       "exporting": "^[a-z][a-z0-9_]*$",
       "changing": "^[a-z][a-z0-9_]*$",
@@ -177,6 +178,9 @@
       "patternKind": "required",
       "ignoreNames": [],
       "ignorePatterns": [],
+      "ignoreExceptions": true,
+      "ignoreLocal": false,
+      "ignoreInterfaces": false,
       "instance": "^_?[a-z][a-z0-9_]*$",
       "statics": "^_?[a-z][a-z0-9_]*$",
       "constants": "^[A-Z][A-Z0-9_]*$"
