@@ -17,8 +17,8 @@ CLASS zasis_cl_get_domain_fix_values IMPLEMENTATION.
 
   METHOD if_rap_query_provider~select.
 
-    DATA business_data TYPE TABLE OF ZASIS_I_DOMAIN_FIX_VALUES.
-    DATA business_data_line TYPE ZASIS_I_DOMAIN_FIX_VALUES.
+    DATA business_data TYPE TABLE OF zasis_i_domain_fix_values.
+    DATA business_data_line TYPE zasis_i_domain_fix_values.
     DATA(top)     = io_request->get_paging( )->get_page_size( ).
     DATA(skip)    = io_request->get_paging( )->get_offset( ).
     DATA(requested_fields)  = io_request->get_requested_elements( ).

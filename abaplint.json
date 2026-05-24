@@ -157,9 +157,7 @@
       "ignoreGlobalInterface": false,
       "ignoreKeywords": [],
       "exclude": [
-        "zbp_asis_i_ruleset.clas.locals_imp.abap",
-        "zasis_cl_interprettypetext.clas.abap",
-        "zasis_cl_get_domain_fix_values.clas.abap"
+        "zbp_asis_i_ruleset.clas.locals_imp.abap"
       ]
     },
     "method_parameter_names": {

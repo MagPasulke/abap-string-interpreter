@@ -31,9 +31,9 @@ CLASS zasis_cl_interprettypetext IMPLEMENTATION.
 
       LOOP AT original_data ASSIGNING FIELD-SYMBOL(<original_data_line>).
 
-        READ TABLE domain_values WITH KEY domvalue_l = <original_data_line>-InterpretationType INTO DATA(single_domain_value).
+        READ TABLE domain_values WITH KEY domvalue_l = <original_data_line>-interpretationtype INTO DATA(single_domain_value).
         IF sy-subrc = 0.
-          <original_data_line>-InterpretationTypeText = single_domain_value-ddtext.
+          <original_data_line>-interpretationtypetext = single_domain_value-ddtext.
         ENDIF.
 
       ENDLOOP.
