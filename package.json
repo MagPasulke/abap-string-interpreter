@@ -1,13 +1,13 @@
 {
   "name": "abap-string-interpreter",
   "private": true,
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "ZASIS - ABAP String Interpreter",
   "scripts": {
     "unit": "node -e \"fs=require('fs');fs.rmSync('output',{recursive:true,force:true})\" && abap_transpile && echo RUNNING && node output/index.mjs",
     "lint": "abaplint",
     "test": "npm run lint && npm run unit",
-    "http-test": "node -e \"const s=require('./.vscode/settings.json')['rest-client.environmentVariables']['local'];const vars=Object.entries(s).map(([k,v])=>k+'='+v).join(' ');require('child_process').execSync('npx httpyac send __test/http/tests.http --all --output short --var '+vars,{stdio:'inherit'});\""
+    "http-test": "jest __test/http/tests.test.js --testTimeout=30000"
   },
   "author": "",
   "license": "Unlicense",
@@ -15,6 +15,6 @@
     "@abaplint/cli": "^2.119.23",
     "@abaplint/runtime": "^2.13.26",
     "@abaplint/transpiler-cli": "^2.13.26",
-    "httpyac": "^6.16.7"
+    "jest": "^30.4.2"
   }
 }
