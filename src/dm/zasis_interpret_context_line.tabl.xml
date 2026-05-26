@@ -1,9 +1,9 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <abapGit version="v1.0.0" serializer="LCL_OBJECT_TABL" serializer_version="v1.0.0">
  <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
   <asx:values>
    <DD02V>
-    <TABNAME>ZASIS_S_INTERPRET_CONTEXT</TABNAME>
+    <TABNAME>ZASIS_INTERPRET_CONTEXT_LINE</TABNAME>
     <DDLANGUAGE>E</DDLANGUAGE>
     <TABCLASS>INTTAB</TABCLASS>
     <DDTEXT>ASIS - Interpretation Context Key-Value Pair</DDTEXT>
