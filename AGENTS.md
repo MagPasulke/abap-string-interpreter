@@ -174,12 +174,12 @@ The project has multiple test layers. See `package.json` for npm scripts:
 | `npm run lint` | `abaplint` | Static analysis using abaplint (rules in `abaplint.json`) |
 | `npm run unit` | Transpile + run in Node.js | Transpiles ABAP to JS via `abap_transpile.json` and runs unit tests |
 | `npm test` | `lint` + `unit` | Runs both lint and transpiled unit tests |
-| `npm run http-test` | `httpyac` | Integration tests against a running HTTP server (`__test/http/tests.http`) |
+| `npm run http-test` | Jest + `fetch` | Integration tests against a running HTTP server (`__test/http/tests.test.js`) |
 
 ### Important Testing Notes
 
 - **ABAP Transpile Tests** (`npm run unit`): Runs unit tests of the project via abap transpile.
-- **HTTP Integration Tests** (`npm run http-test`): Require the SAP ABAP server to be running and accessible. Environment variables (`baseUrl`, `client`, `auth_b64`) must be configured in `.vscode/settings.json` under `rest-client.environmentVariables.local`.
+- **HTTP Integration Tests** (`npm run http-test`): Require the SAP ABAP server to be running and accessible. Environment variables (`baseUrl`, `client`, `auth_b64`) must be configured in `__test/http/http-client.env.json` (gitignored).
 - **ABAP Unit Tests**: The authoritative test suite runs on the ABAP system itself. **After making changes, always ask the user to sync the project to the ABAP system via abapGit, run the ABAP Unit tests there, and confirm the results before considering the change complete.**
 
 

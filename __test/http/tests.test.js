@@ -1,5 +1,4 @@
-const settings = require('../../.vscode/settings.json');
-const env = settings['rest-client.environmentVariables']['local'];
+const env = require('./http-client.env.json')['local'];
 const { baseUrl, client, auth_b64 } = env;
 
 const headers = {
