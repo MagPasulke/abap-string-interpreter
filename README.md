@@ -202,20 +202,19 @@ In the RAP UI, invalid regex patterns and non-existent custom logic classes are 
 | `npm run lint` | `abaplint` | Static analysis |
 | `npm run unit` | `abap_transpile` + Node.js | Transpiled ABAP unit tests |
 | `npm test` | lint + unit | Both |
-| `npm run http-test` | `httpyac` | HTTP integration tests |
+| `npm run http-test` | Jest + `fetch` | HTTP integration tests |
 
-`http-test` requires a running SAP system instance. Connection details must be maintained in `.vscode/settings.json`:
+`http-test` requires a running SAP system instance. Connection details must be maintained in `__test/http/http-client.env.json` (gitignored — never commit credentials):
 
-> If SICF node path differs from `/zasis_ext_api`, adapt `baseUrl` in test environment accordingly.
+> If SICF node path differs from `/zasis_ext_api`, adapt `baseUrl` accordingly.
 
 ```jsonc
+// __test/http/http-client.env.json
 {
-    "rest-client.environmentVariables": {
-        "local": {
-            "baseUrl": "http://vhcala4hci:50000/zasis_ext_api",
-            "client": "001",
-            "auth_b64": "ACB1234"
-        }
+    "local": {
+        "baseUrl": "http://vhcala4hci:50000/zasis_ext_api",
+        "client": "001",
+        "auth_b64": "ACB1234"
     }
 }
 ```

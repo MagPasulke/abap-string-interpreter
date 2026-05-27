@@ -4,8 +4,9 @@
 !.env.example
 .vscode
 
-# REST Client private env (credentials)
+# REST Client / HTTP test env (credentials)
 http-client.private.env.json
+__test/http/http-client.env.json
 
 # ABAP backend specific files
 *.iwsv.xml
