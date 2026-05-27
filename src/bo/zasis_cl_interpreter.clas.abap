@@ -125,7 +125,7 @@ CLASS zasis_cl_interpreter IMPLEMENTATION.
 
       IF single_interpret_result IS NOT INITIAL.
 
-        APPEND INITIAL LINE TO interpretation_result ASSIGNING FIELD-SYMBOL(<result_line>).
+        APPEND INITIAL LINE TO output-results ASSIGNING FIELD-SYMBOL(<result_line>).
         IF sy-subrc = 0.
           <result_line>-targetfield          = rulesetitem-intpretationtarget.
           <result_line>-interpretationresult = single_interpret_result.
@@ -141,7 +141,7 @@ CLASS zasis_cl_interpreter IMPLEMENTATION.
 
       ELSE.
 
-        APPEND INITIAL LINE TO interpretation_result ASSIGNING FIELD-SYMBOL(<no_result_line>).
+        APPEND INITIAL LINE TO output-results ASSIGNING FIELD-SYMBOL(<no_result_line>).
         IF sy-subrc = 0.
           <no_result_line>-targetfield          = rulesetitem-intpretationtarget.
           <no_result_line>-interpretationresult = `no match`.
@@ -150,6 +150,8 @@ CLASS zasis_cl_interpreter IMPLEMENTATION.
       ENDIF.
 
     ENDLOOP.
+
+    output-context = context.
   ENDMETHOD.
 
 

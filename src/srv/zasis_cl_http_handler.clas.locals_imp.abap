@@ -158,13 +158,13 @@ CLASS zasis_lcl_http_handler IMPLEMENTATION.
 
     DATA(ruleset) = zasis_cl_ruleset_factory=>get_ruleset_by_rulesetid( ruleset_id ).
 
-    DATA(interpretation_result_internal) = NEW zasis_cl_interpreter( )->execute( ruleset = ruleset
-                                                                                  string_to_be_interpreted = request_body-string_to_be_interpreted
-                                                                                  context = request_body-context ).
+    DATA(interpret_output) = NEW zasis_cl_interpreter( )->execute( ruleset = ruleset
+                                                                    string_to_be_interpreted = request_body-string_to_be_interpreted
+                                                                    context = request_body-context ).
 
     /ui2/cl_json=>serialize(
       EXPORTING
-        data             = interpretation_result_internal
+        data             = interpret_output
       RECEIVING
         r_json           = interpretation_result
     ).

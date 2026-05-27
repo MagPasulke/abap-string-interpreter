@@ -273,13 +273,13 @@ CLASS lhc_ZASIS_I_RULESET IMPLEMENTATION.
             ruleset                  = ruleset_ref ).
 
           " Report results as multiple messages to trigger popup dialog
-          IF interpretation_result IS INITIAL.
+          IF interpretation_result-results IS INITIAL.
             APPEND VALUE #( %msg = new_message_with_text(
                               severity = if_abap_behv_message=>severity-information
                               text     = |No results for input string| ) )
                    TO reported-ruleset.
           ELSE.
-            LOOP AT interpretation_result INTO DATA(res_line).
+            LOOP AT interpretation_result-results INTO DATA(res_line).
               DATA(msg_severity) = COND #( WHEN res_line-interpretationresult = 'no match'
                                            THEN if_abap_behv_message=>severity-information
                                            ELSE if_abap_behv_message=>severity-success ).
