@@ -46,7 +46,9 @@ git commit -m "type(scope): description"
 	<example>docs: update README with usage instructions</example>
 	<example>refactor: improve performance of data processing</example>
 	<example>chore: update dependencies</example>
-	<example>feat!: send email on registration (BREAKING CHANGE: email service required)</example>
+	<example>feat!: send email on registration
+
+BREAKING CHANGE: email service is now required for user registration</example>
 </examples>
 ```
 
@@ -58,7 +60,7 @@ git commit -m "type(scope): description"
 	<scope>Optional, but recommended for clarity.</scope>
 	<description>Required. Use the imperative mood (e.g., "add", not "added").</description>
 	<body>Optional. Use for additional context.</body>
-	<footer>Use for breaking changes or issue references.</footer>
+	<footer>Use for breaking changes or issue references. BREAKING CHANGE: must appear as a footer token on its own line after a blank line — NOT inline in the description. Example: "BREAKING CHANGE: endpoint removed"</footer>
 </validation>
 ```
 
