@@ -16,6 +16,9 @@ CLASS ltcl_message_consistency DEFINITION FOR TESTING
     METHODS test_invalid_interpret_type FOR TESTING.
     METHODS test_error_custom_log_proc FOR TESTING.
     METHODS test_string_to_interpret_empty FOR TESTING.
+    METHODS test_method_not_supported FOR TESTING.
+    METHODS test_http_status_default FOR TESTING.
+    METHODS test_http_status_custom FOR TESTING.
 ENDCLASS.
 
 CLASS ltcl_message_consistency IMPLEMENTATION.
@@ -58,6 +61,25 @@ CLASS ltcl_message_consistency IMPLEMENTATION.
 
   METHOD test_string_to_interpret_empty.
     assert_message_resolves( textid = zasis_cx_exc=>string_to_interpret_empty ).
+  ENDMETHOD.
+
+  METHOD test_method_not_supported.
+    assert_message_resolves( textid = zasis_cx_exc=>method_not_supported ).
+  ENDMETHOD.
+
+  METHOD test_http_status_default.
+    DATA(exc) = NEW zasis_cx_exc( textid = zasis_cx_exc=>unknown_ruleset ).
+    cl_abap_unit_assert=>assert_equals(
+      act = exc->http_status
+      exp = '400' ).
+  ENDMETHOD.
+
+  METHOD test_http_status_custom.
+    DATA(exc) = NEW zasis_cx_exc( textid      = zasis_cx_exc=>method_not_supported
+                                  http_status = '405' ).
+    cl_abap_unit_assert=>assert_equals(
+      act = exc->http_status
+      exp = '405' ).
   ENDMETHOD.
 
 ENDCLASS.
