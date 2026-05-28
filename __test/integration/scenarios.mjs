@@ -161,3 +161,99 @@ export function methodTests(describe, it, assert, request, ruleSetId) {
 
   });
 }
+
+/**
+ * Helper: extract the error object from a response body, handling both
+ * uppercase (transpiled /ui2/cl_json) and lowercase (real SAP) key casing.
+ */
+function getError(body) {
+  const envelope = body.ERROR || body.error;
+  if (!envelope) return null;
+  return {
+    code: envelope.CODE || envelope.code,
+    message: envelope.MESSAGE || envelope.message,
+    status: envelope.STATUS || envelope.status,
+  };
+}
+
+export function errorFormatTests(describe, it, assert, request, ruleSetId) {
+  describe('Error response format', () => {
+
+    it('Empty string error has code ZASIS_MSGS/015 and descriptive message', async () => {
+      const { status, body } = await request('POST', `/ruleSetExecution/${ruleSetId}`, {
+        body: { string_to_be_interpreted: '' },
+      });
+      assert.equal(status, 400);
+      const error = getError(body);
+      assert.ok(error, 'Expected error envelope');
+      assert.equal(error.code, 'ZASIS_MSGS/015');
+      assert.equal(error.status, '400');
+      assert.ok(error.message.length > 0, 'Message must not be empty');
+      assert.match(error.message, /empty/i);
+    });
+
+    it('Unknown RuleSet error has code ZASIS_MSGS/007 and includes RuleSet name', async () => {
+      const { status, body } = await request('POST', '/ruleSetExecution/NO_SUCH_RS', {
+        body: { string_to_be_interpreted: 'test' },
+      });
+      assert.equal(status, 400);
+      const error = getError(body);
+      assert.ok(error, 'Expected error envelope');
+      assert.equal(error.code, 'ZASIS_MSGS/007');
+      assert.equal(error.status, '400');
+      assert.ok(error.message.includes('NO_SUCH_RS'), 'Message should include the RuleSet name');
+    });
+
+    it('Invalid route error has code ZASIS_MSGS/005', async () => {
+      const { status, body } = await request('GET', '/invalidRoute');
+      assert.equal(status, 400);
+      const error = getError(body);
+      assert.ok(error, 'Expected error envelope');
+      assert.equal(error.code, 'ZASIS_MSGS/005');
+      assert.equal(error.status, '400');
+    });
+
+    it('Wrong Content-Type error has code ZASIS_MSGS/006', async () => {
+      const { status, body } = await request('POST', `/ruleSetExecution/${ruleSetId}`, {
+        body: 'not json',
+        contentType: 'text/plain',
+      });
+      assert.equal(status, 400);
+      const error = getError(body);
+      assert.ok(error, 'Expected error envelope');
+      assert.equal(error.code, 'ZASIS_MSGS/006');
+      assert.equal(error.status, '400');
+    });
+
+    it('Method not supported error has code ZASIS_MSGS/016 and includes method name', async () => {
+      const { status, body } = await request('DELETE', `/ruleSetExecution/${ruleSetId}`);
+      assert.equal(status, 405);
+      const error = getError(body);
+      assert.ok(error, 'Expected error envelope');
+      assert.equal(error.code, 'ZASIS_MSGS/016');
+      assert.equal(error.status, '405');
+      assert.ok(error.message.includes('DELETE'), 'Message should include the HTTP method');
+    });
+
+    it('GET unknown RuleSet error has code ZASIS_MSGS/007', async () => {
+      const { status, body } = await request('GET', '/ruleSet/NO_SUCH_RS');
+      assert.equal(status, 400);
+      const error = getError(body);
+      assert.ok(error, 'Expected error envelope');
+      assert.equal(error.code, 'ZASIS_MSGS/007');
+      assert.ok(error.message.includes('NO_SUCH_RS'), 'Message should include the RuleSet name');
+    });
+
+    it('Error response body is valid JSON (Content-Type allows parsing)', async () => {
+      const { status, body } = await request('POST', '/ruleSetExecution/UNKNOWN_RS', {
+        body: { string_to_be_interpreted: 'x' },
+      });
+      assert.equal(status, 400);
+      // If body is an object (not a string), the response had application/json Content-Type
+      assert.equal(typeof body, 'object', 'Error response must be parseable JSON (Content-Type: application/json)');
+      const error = getError(body);
+      assert.ok(error, 'Expected error envelope in parsed JSON');
+    });
+
+  });
+}
