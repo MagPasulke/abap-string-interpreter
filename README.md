@@ -197,14 +197,21 @@ In the RAP UI, invalid regex patterns and non-existent custom logic classes are 
 
 ### Testing
 
+The project has three test layers. See [`docs/test-layer-comparison.md`](docs/test-layer-comparison.md) for a detailed comparison.
+
 | Script | Command | Description |
 | --- | --- | --- |
 | `npm run lint` | `abaplint` | Static analysis |
 | `npm run unit` | `abap_transpile` + Node.js | Transpiled ABAP unit tests |
 | `npm test` | lint + unit | Both |
-| `npm run http-test` | Jest + `fetch` | HTTP integration tests |
+| `npm run icf-test` | `node --test` | ICF shim integration tests (full HTTP handler, no SAP needed) |
+| `npm run icf-server` | Express server | Standalone server on port 3040 for manual curl testing |
+| `npm run sap-test` | `node --test` | Same shared scenarios against real SAP system |
+| `npm run sap-auth-test` | `node --test` | SAP-only auth tests (401/403) |
 
-`http-test` requires a running SAP system instance. Connection details must be maintained in `__test/http/http-client.env.json` (gitignored — never commit credentials):
+**ICF shim tests** exercise the full HTTP handler stack (routing, validation, factory, interpreter, JSON serialization) using Express + express-icf-shim + in-memory SQLite. No SAP system required. See [`docs/icf-shim-integration-tests.md`](docs/icf-shim-integration-tests.md) for architecture details.
+
+**`sap-test`** requires a running SAP system instance. Connection details must be maintained in `__test/http/http-client.env.json` (gitignored — never commit credentials):
 
 > If SICF node path differs from `/zasis_ext_api`, adapt `baseUrl` accordingly.
 

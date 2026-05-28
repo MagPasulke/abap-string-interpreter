@@ -36,7 +36,7 @@ Only enter this workflow when the user signals intent to **implement something**
 3. **Push with empty commit** (`git commit --allow-empty -m "chore: initialize feature branch"` && `git push`)
 4. **Open draft PR** against `main`
 5. **Implement** the changes
-6. **Write/enhance unit tests** — Add unit tests for new functionality and update existing tests for modified behavior
+6. **Write/enhance tests** — Use the **`create-tests`** skill for guidance on which test layer(s) to update and how
 7. **Run `npm run lint && npm test`**
    - If pass → commit & push
    - If fail → attempt one fix cycle; if still failing, report errors to user and wait for guidance
@@ -167,20 +167,31 @@ For **complex ABAP RESTful RAP features** (e.g. new behavior definitions, valida
 
 ## Testing
 
-The project has multiple test layers. See `package.json` for npm scripts:
+The project has three test layers, each covering different concerns. For a full comparison see [`docs/test-layer-comparison.md`](docs/test-layer-comparison.md).
 
 | Script | Command | Description |
 |--------|---------|-------------|
 | `npm run lint` | `abaplint` | Static analysis using abaplint (rules in `abaplint.json`) |
 | `npm run unit` | Transpile + run in Node.js | Transpiles ABAP to JS via `abap_transpile.json` and runs unit tests |
 | `npm test` | `lint` + `unit` | Runs both lint and transpiled unit tests |
-| `npm run http-test` | Jest + `fetch` | Integration tests against a running HTTP server (`__test/http/tests.test.js`) |
+| `npm run icf-test` | `node --test` | ICF shim integration tests — full HTTP handler stack without SAP |
+| `npm run icf-server` | Express server | Starts standalone server on port 3040 for manual curl testing |
+| `npm run sap-test` | `node --test` | Same shared scenarios against real SAP system |
+| `npm run sap-auth-test` | `node --test` | SAP-only auth tests (401/403) |
+
+### Test Layers Overview
+
+1. **ABAP Unit Tests** (`npm run unit`): Test individual classes in isolation with mocked dependencies. Covers interpreter logic, exception messages, edge cases. Runs via abap transpile — no SAP system needed.
+
+2. **ICF Shim Integration Tests** (`npm run icf-test`): Test the full HTTP handler stack (routing → validation → factory → interpreter → JSON serialization) using Express + express-icf-shim + in-memory SQLite. No SAP system needed. See [`docs/icf-shim-integration-tests.md`](docs/icf-shim-integration-tests.md) for architecture details.
+
+3. **HTTP Integration Tests** (`npm run sap-test`): Test against a real running SAP system using the same shared scenarios. Covers real auth, real HANA, real ICF. Requires credentials in `__test/http/http-client.env.json` (gitignored). Auth-specific tests: `npm run sap-auth-test`.
 
 ### Important Testing Notes
 
-- **ABAP Transpile Tests** (`npm run unit`): Runs unit tests of the project via abap transpile.
-- **HTTP Integration Tests** (`npm run http-test`): Require the SAP ABAP server to be running and accessible. Environment variables (`baseUrl`, `client`, `auth_b64`) must be configured in `__test/http/http-client.env.json` (gitignored).
-- **ABAP Unit Tests**: The authoritative test suite runs on the ABAP system itself. **After making changes, always ask the user to sync the project to the ABAP system via abapGit, run the ABAP Unit tests there, and confirm the results before considering the change complete.**
+- **Local validation before commit**: Always run `npm run lint && npm test` (step 7 in workflow). Also run `npm run icf-test` when HTTP handler or factory logic is modified.
+- **ABAP Unit Tests**: The authoritative test suite runs on the SAP system itself. **After making changes, always ask the user to sync the project to the ABAP system via abapGit, run the ABAP Unit tests there, and confirm the results before considering the change complete.**
+- **When to write which tests**: Use the **`create-tests`** skill for detailed guidance on where to add/adapt tests for different kinds of changes.
 
 
 

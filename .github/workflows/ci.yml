@@ -19,3 +19,4 @@ jobs:
     - uses: actions/setup-node@v6
     - run: npm ci
     - run: npm test
+    - run: npm run icf-test
