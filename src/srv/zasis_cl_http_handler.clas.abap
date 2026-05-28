@@ -14,9 +14,7 @@ ENDCLASS.
 
 CLASS zasis_cl_http_handler IMPLEMENTATION.
   METHOD if_http_extension~handle_request.
-    DATA response_body     TYPE /ui2/cl_json=>json.
-    DATA service_exception TYPE REF TO zasis_cx_exc.
-    DATA auth_exception    TYPE REF TO zasis_cx_no_auth.
+    DATA response_body TYPE /ui2/cl_json=>json.
 
     TRY.
         DATA(request_handler) = NEW zasis_lcl_http_handler( request  = server->request
@@ -28,48 +26,47 @@ CLASS zasis_cl_http_handler IMPLEMENTATION.
 
             response_body = request_handler->handle_get( ).
 
-            server->response->set_header_field( name  = 'Content-Type'
-                                                value = zasis_constants=>content_type-application_json ).
-            server->response->set_cdata( response_body ).
-
           WHEN zasis_constants=>http_method-post.
 
-            TRY.
+            response_body = request_handler->handle_post( ).
 
-                response_body = request_handler->handle_post( ).
+          WHEN OTHERS.
 
-                server->response->set_header_field( name  = 'Content-Type'
-                                                    value = zasis_constants=>content_type-application_json ).
-                server->response->set_cdata( response_body ).
-
-              CATCH zasis_cx_exc INTO service_exception.
-
-                server->response->set_status( code   = '400'
-                                              reason = service_exception->get_text( ) ).
-                RETURN.
-
-            ENDTRY.
-
-          WHEN OTHERS. " not supported
-
-            server->response->set_status( code   = '405'
-                                          reason = |Method { server->request->get_method( ) } not supported. | ).
-            RETURN.
+            RAISE EXCEPTION NEW zasis_cx_exc( textid      = zasis_cx_exc=>method_not_supported
+                                              method      = server->request->get_method( )
+                                              http_status = '405' ).
 
         ENDCASE.
 
-      CATCH zasis_cx_exc INTO service_exception.
+        server->response->set_header_field( name  = 'Content-Type'
+                                            value = zasis_constants=>content_type-application_json ).
+        server->response->set_cdata( response_body ).
 
-        server->response->set_status( code   = '400'
+      CATCH zasis_cx_exc INTO DATA(service_exception).
+
+        DATA(error_json) = lcl_error_response=>from_exception(
+          exception   = service_exception
+          http_status = service_exception->http_status
+        )->to_json( ).
+
+        server->response->set_status( code   = CONV #( service_exception->http_status )
                                       reason = service_exception->get_text( ) ).
+        server->response->set_header_field( name  = 'Content-Type'
+                                            value = zasis_constants=>content_type-application_json ).
+        server->response->set_cdata( error_json ).
 
-      CATCH zasis_cx_no_auth INTO auth_exception.
+      CATCH zasis_cx_no_auth INTO DATA(auth_exception).
 
-        server->response->set_status( code          = '403'
-                                      reason        = |Forbidden - Missing Authorization|
-                                      detailed_info = auth_exception->get_text( ) ).
+        DATA(auth_error_json) = lcl_error_response=>from_exception(
+          exception   = auth_exception
+          http_status = '403'
+        )->to_json( ).
 
-        RETURN.
+        server->response->set_status( code   = '403'
+                                      reason = 'Forbidden' ).
+        server->response->set_header_field( name  = 'Content-Type'
+                                            value = zasis_constants=>content_type-application_json ).
+        server->response->set_cdata( auth_error_json ).
 
     ENDTRY.
   ENDMETHOD.

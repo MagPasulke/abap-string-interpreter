@@ -86,13 +86,19 @@
      <MSGNR>014</MSGNR>
      <TEXT>Custom logic class &amp;1 must implement interface zasis_if_customlogic</TEXT>
     </T100>
-    <T100>
-     <SPRSL>E</SPRSL>
-     <ARBGB>ZASIS_MSGS</ARBGB>
-     <MSGNR>015</MSGNR>
-     <TEXT>String to be interpreted must not be empty</TEXT>
+     <T100>
+      <SPRSL>E</SPRSL>
+      <ARBGB>ZASIS_MSGS</ARBGB>
+      <MSGNR>015</MSGNR>
+      <TEXT>String to be interpreted must not be empty</TEXT>
+     </T100>
+     <T100>
+      <SPRSL>E</SPRSL>
+      <ARBGB>ZASIS_MSGS</ARBGB>
+      <MSGNR>016</MSGNR>
+      <TEXT>HTTP method &amp;1 is not supported</TEXT>
+     </T100>
     </T100>
-   </T100>
   </asx:values>
  </asx:abap>
 </abapGit>

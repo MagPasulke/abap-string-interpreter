@@ -75,33 +75,46 @@ export function postExecutionTests(describe, it, assert, request, ruleSetId) {
       assert.equal(status, 200);
     });
 
-    it('Empty string returns 400', async () => {
-      const { status } = await request('POST', `/ruleSetExecution/${ruleSetId}`, {
+    it('Empty string returns 400 with structured error', async () => {
+      const { status, body } = await request('POST', `/ruleSetExecution/${ruleSetId}`, {
         body: { string_to_be_interpreted: '' },
       });
       assert.equal(status, 400);
+      assert.ok(body.ERROR || body.error, 'Expected error envelope');
+      const error = body.ERROR || body.error;
+      assert.ok((error.CODE || error.code), 'Expected error code');
+      assert.ok((error.MESSAGE || error.message), 'Expected error message');
+      assert.equal(error.STATUS || error.status, '400');
     });
 
-    it('Missing string_to_be_interpreted returns 400', async () => {
-      const { status } = await request('POST', `/ruleSetExecution/${ruleSetId}`, {
+    it('Missing string_to_be_interpreted returns 400 with structured error', async () => {
+      const { status, body } = await request('POST', `/ruleSetExecution/${ruleSetId}`, {
         body: {},
       });
       assert.equal(status, 400);
+      assert.ok(body.ERROR || body.error, 'Expected error envelope');
+      const error = body.ERROR || body.error;
+      assert.equal(error.STATUS || error.status, '400');
     });
 
-    it('Unknown RuleSet returns 400', async () => {
-      const { status } = await request('POST', '/ruleSetExecution/UNKNOWN_RULESET_XYZ', {
+    it('Unknown RuleSet returns 400 with error code', async () => {
+      const { status, body } = await request('POST', '/ruleSetExecution/UNKNOWN_RULESET_XYZ', {
         body: { string_to_be_interpreted: 'test' },
       });
       assert.equal(status, 400);
+      assert.ok(body.ERROR || body.error, 'Expected error envelope');
+      const error = body.ERROR || body.error;
+      assert.ok((error.CODE || error.code).includes('ZASIS_MSGS'), 'Expected ZASIS_MSGS code');
+      assert.equal(error.STATUS || error.status, '400');
     });
 
-    it('Wrong Content-Type returns 400', async () => {
-      const { status } = await request('POST', `/ruleSetExecution/${ruleSetId}`, {
+    it('Wrong Content-Type returns 400 with structured error', async () => {
+      const { status, body } = await request('POST', `/ruleSetExecution/${ruleSetId}`, {
         body: 'some plain text',
         contentType: 'text/plain',
       });
       assert.equal(status, 400);
+      assert.ok(body.ERROR || body.error, 'Expected error envelope');
     });
 
   });
@@ -120,9 +133,13 @@ export function getTests(describe, it, assert, request, ruleSetId) {
       assert.ok(items.length >= 2, 'Expected at least 2 items');
     });
 
-    it('Unknown RuleSet returns 400', async () => {
-      const { status } = await request('GET', '/ruleSet/UNKNOWN_RULESET_XYZ');
+    it('Unknown RuleSet returns 400 with structured error', async () => {
+      const { status, body } = await request('GET', '/ruleSet/UNKNOWN_RULESET_XYZ');
       assert.equal(status, 400);
+      assert.ok(body.ERROR || body.error, 'Expected error envelope');
+      const error = body.ERROR || body.error;
+      assert.ok((error.CODE || error.code).includes('ZASIS_MSGS'), 'Expected ZASIS_MSGS code');
+      assert.equal(error.STATUS || error.status, '400');
     });
 
   });
@@ -131,11 +148,15 @@ export function getTests(describe, it, assert, request, ruleSetId) {
 export function methodTests(describe, it, assert, request, ruleSetId) {
   describe('Unsupported methods', () => {
 
-    it('PUT returns 405', async () => {
-      const { status } = await request('PUT', `/ruleSetExecution/${ruleSetId}`, {
+    it('PUT returns 405 with structured error', async () => {
+      const { status, body } = await request('PUT', `/ruleSetExecution/${ruleSetId}`, {
         body: { string_to_be_interpreted: 'test' },
       });
       assert.equal(status, 405);
+      assert.ok(body.ERROR || body.error, 'Expected error envelope');
+      const error = body.ERROR || body.error;
+      assert.ok((error.CODE || error.code).includes('ZASIS_MSGS/016'), 'Expected method_not_supported code');
+      assert.equal(error.STATUS || error.status, '405');
     });
 
   });
