@@ -226,7 +226,7 @@ CLASS lcl_error_response DEFINITION.
                 http_status TYPE string
       RETURNING VALUE(result) TYPE REF TO lcl_error_response.
 
-    METHODS to_json RETURNING VALUE(rv_json) TYPE /ui2/cl_json=>json.
+    METHODS to_json RETURNING VALUE(json) TYPE /ui2/cl_json=>json.
 
   PRIVATE SECTION.
     DATA _envelope TYPE ty_error_envelope.
@@ -245,7 +245,7 @@ CLASS lcl_error_response IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD to_json.
-    rv_json = /ui2/cl_json=>serialize( data = _envelope ).
+    json = /ui2/cl_json=>serialize( data = _envelope ).
   ENDMETHOD.
 
 ENDCLASS.
