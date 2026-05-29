@@ -173,7 +173,7 @@ Triggers an abapGit repository pull on the configured SAP system. Parameterless 
 - `.env` in project root with `SAP_ADT_URL`, `SAP_ADT_USER`, `SAP_ADT_PASSWORD` (see `.env.example`)
 - The repository must already be linked in the SAP system via abapGit
 
-**Usage:** The agent can call this tool directly after committing/pushing changes to sync them to the SAP system without manual intervention.
+**Usage:** The agent calls this tool **only when explicitly requested by the user**. Typical trigger: after a PR is merged into `main`, the user asks the agent to sync to SAP. Never call autonomously.
 
 ---
 
