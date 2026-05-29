@@ -161,22 +161,6 @@ For **complex ABAP RESTful RAP features** (e.g. new behavior definitions, valida
 
 ---
 
-## Custom Tools
-
-OpenCode custom tools in `.opencode/tools/` extend the agent with project-specific capabilities.
-
-### `adt_gitpull`
-
-Triggers an abapGit repository pull on the configured SAP system. Parameterless — automatically finds the repo by matching the git remote URL against repos linked in the SAP system.
-
-**Prerequisites:**
-- `.env` in project root with `SAP_ADT_URL`, `SAP_ADT_USER`, `SAP_ADT_PASSWORD` (see `.env.example`)
-- The repository must already be linked in the SAP system via abapGit
-
-**Usage:** The agent calls this tool **only when explicitly requested by the user**. Typical trigger: after a PR is merged into `main`, the user asks the agent to sync to SAP. Never call autonomously.
-
----
-
 ## Testing
 
 The project has three test layers, each covering different concerns. For a full comparison see [`docs/test-layer-comparison.md`](docs/test-layer-comparison.md).
