@@ -33,16 +33,3 @@ Only when the user explicitly requests a sync to SAP. Typical scenarios:
   SAP_ADT_PASSWORD=secret
   ```
 
-## Error handling
-
-The tool returns readable error strings (never throws). Common errors:
-- **Missing credentials** — `.env` not found or variables not set
-- **TLS certificate errors** — system uses self-signed cert, needs `NODE_TLS_REJECT_UNAUTHORIZED=0` or proper CA config
-- **Repo not found** — the git remote URL doesn't match any linked repo in the SAP system
-- **500 Internal Server Error** — abapGit ADT Backend (`/sap/bc/adt/abapgit`) not activated in SICF
-
-## Implementation
-
-- Tool wrapper: `.opencode/tools/adt_gitpull.ts`
-- Core logic (reusable): `.opencode/tools/adt_gitpull_core.ts`
-- Dependency: `abap-adt-api` (devDependency in `package.json`)
