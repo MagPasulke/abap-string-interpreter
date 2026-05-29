@@ -32,7 +32,6 @@ Only when the user explicitly requests a sync to SAP. Typical scenarios:
   SAP_ADT_USER=DEVELOPER
   SAP_ADT_PASSWORD=secret
   ```
-- The repository must already be linked in the SAP system via abapGit (SE38 → ZABAPGIT or ADT)
 
 ## Error handling
 
