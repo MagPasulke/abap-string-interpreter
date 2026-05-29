@@ -1,6 +1,7 @@
-# Skill: adt-gitpull
-
-Trigger an abapGit repository pull on the SAP system to sync the current codebase.
+---
+name: adt-gitpull
+description: Trigger an abapGit repository pull on the SAP system to sync the current codebase.
+---
 
 ## Tool
 
