@@ -2,5 +2,6 @@ INTERFACE zasis_if_version
   PUBLIC.
 
   CONSTANTS version TYPE string VALUE '0.4.0' ##NO_TEXT.
+  CONSTANTS dummy TYPE string VALUE 'SYNC_TEST' ##NO_TEXT.
 
 ENDINTERFACE.
