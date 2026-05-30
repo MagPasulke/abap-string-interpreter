@@ -1,18 +1,55 @@
 name: deploy-sap
 
 on:
-  workflow_run:
-    workflows: [ci]
-    types: [completed]
-    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  actions: read
+  contents: read
 
 jobs:
-  deploy-sap:
-    name: Sync to SAP via abapGit
+  verify-ci:
+    name: Verify successful CI on main
     runs-on: ubuntu-latest
     timeout-minutes: 5
-    # Only run when CI passed
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+
+    steps:
+      - uses: actions/github-script@v8
+        with:
+          script: |
+            const branch = context.ref.replace('refs/heads/', '');
+
+            if (branch !== 'main') {
+              core.setFailed('deploy-sap can only be run manually for the main branch.');
+              return;
+            }
+
+            const runs = await github.paginate(github.rest.actions.listWorkflowRuns, {
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              workflow_id: 'ci.yml',
+              branch,
+              status: 'completed',
+              per_page: 100,
+            });
+
+            const run = runs.find((candidate) =>
+              candidate.head_sha === context.sha && candidate.event === 'push');
+
+            if (!run) {
+              core.setFailed(`No completed ci workflow run found for commit ${context.sha} on ${branch}.`);
+              return;
+            }
+
+            if (run.conclusion !== 'success') {
+              core.setFailed(`ci workflow for commit ${context.sha} concluded with '${run.conclusion}'.`);
+            }
+
+  deploy-sap:
+    name: Sync to SAP via abapGit
+    needs: verify-ci
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
 
     steps:
       - uses: actions/checkout@v6
