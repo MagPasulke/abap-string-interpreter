@@ -10,6 +10,8 @@ export interface AdtGitPullOptions {
   password: string
   /** Working directory to resolve git remote from */
   cwd: string
+  /** Branch to pull (full ref or short name). If omitted, auto-detected from current git checkout. */
+  branch?: string
 }
 
 export interface AdtGitPullSuccess {
@@ -56,9 +58,31 @@ export async function adtGitPull(options: AdtGitPullOptions): Promise<AdtGitPull
     }
   }
 
+  // 2. Resolve branch to pull (explicit or auto-detect from current checkout)
+  let branchRef: string
+  if (options.branch) {
+    branchRef = options.branch.startsWith("refs/heads/")
+      ? options.branch
+      : `refs/heads/${options.branch}`
+  } else {
+    let currentBranch: string
+    try {
+      currentBranch = execSync("git rev-parse --abbrev-ref HEAD", {
+        cwd,
+        encoding: "utf-8",
+      }).trim()
+    } catch {
+      return {
+        ok: false,
+        error: "Could not determine current git branch. Is HEAD detached?",
+      }
+    }
+    branchRef = `refs/heads/${currentBranch}`
+  }
+
   const localNormalized = normalizeUrl(remoteUrl)
 
-  // 2. Connect to SAP system
+  // 3. Connect to SAP system
   let client: ADTClient
   try {
     client = new ADTClient(url, user, password)
@@ -66,7 +90,7 @@ export async function adtGitPull(options: AdtGitPullOptions): Promise<AdtGitPull
     return { ok: false, error: `Failed to create ADT client: ${e.message || e}` }
   }
 
-  // 3. List repos and find matching one
+  // 4. List repos and find matching one
   let repos: GitRepo[]
   try {
     repos = await client.gitRepos()
@@ -88,22 +112,22 @@ export async function adtGitPull(options: AdtGitPullOptions): Promise<AdtGitPull
     }
   }
 
-  // 4. Trigger pull
+  // 5. Trigger pull
   try {
-    await client.gitPullRepo(matchingRepo.key)
+    await client.gitPullRepo(matchingRepo.key, branchRef)
   } catch (e: any) {
     return {
       ok: false,
-      error: `Pull failed for repo "${matchingRepo.sapPackage}" (key: ${matchingRepo.key}): ${e.message || e}`,
+      error: `Pull failed for repo "${matchingRepo.sapPackage}" (key: ${matchingRepo.key}, branch: ${branchRef}): ${e.message || e}`,
     }
   }
 
-  // 5. Success
+  // 6. Success
   return {
     ok: true,
     repoUrl: matchingRepo.url,
     sapPackage: matchingRepo.sapPackage,
-    branch: matchingRepo.branch_name,
+    branch: branchRef,
     systemUrl: url,
   }
 }

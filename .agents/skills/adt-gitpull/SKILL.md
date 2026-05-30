@@ -5,21 +5,29 @@ description: Trigger an abapGit repository pull on the SAP system to sync the cu
 
 ## Tool
 
-Use the built-in `adt_gitpull` custom tool. It requires **no parameters**.
+Use the built-in `adt_gitpull` custom tool.
+
+### Parameters
+
+| Parameter | Required | Description |
+|-----------|----------|-------------|
+| `branch`  | No       | Branch to pull (short name like `main` or full ref like `refs/heads/feat/my-feature`). If omitted, auto-detects from the currently checked-out git branch. |
 
 ## What it does
 
 1. Reads SAP credentials from `.env` in the project root (`SAP_ADT_URL`, `SAP_ADT_USER`, `SAP_ADT_PASSWORD`)
 2. Determines the git remote URL (`origin`)
-3. Connects to the SAP system via ADT API
-4. Lists all abapGit repositories linked in the system
-5. Finds the one matching the local remote URL
-6. Triggers a pull (imports current branch state into the SAP system)
+3. Resolves the branch to pull — uses the explicit `branch` parameter if provided, otherwise detects from `git rev-parse --abbrev-ref HEAD`
+4. Connects to the SAP system via ADT API
+5. Lists all abapGit repositories linked in the system
+6. Finds the one matching the local remote URL
+7. Triggers a pull of the resolved branch (always passes explicit `refs/heads/<branch>` to the API)
 
 ## When to use
 
 Only when the user explicitly requests a sync to SAP. Typical scenarios:
 - After merging a PR into `main`, user says "sync to SAP" or "pull to SAP"
+- User wants to test a feature branch on the SAP system before merging
 - User wants to verify ABAP Unit tests on the system after pushing changes
 
 **Never call autonomously.** Always wait for user trigger.
