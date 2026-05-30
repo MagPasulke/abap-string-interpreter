@@ -1,7 +1,7 @@
 import { tool } from "@opencode-ai/plugin"
 import { readFileSync } from "node:fs"
 import { resolve } from "node:path"
-import { adtGitPull } from "./adt_gitpull_core"
+import { adtGitPull } from "../../scripts/adt_gitpull_core"
 
 function loadEnv(dir: string): Record<string, string> {
   const env: Record<string, string> = {}
