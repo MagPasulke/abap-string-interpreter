@@ -23,7 +23,6 @@
     "@types/node": "^25.9.1",
     "abap-adt-api": "^8.4.0",
     "express": "^4.22.2",
-    "jest": "^30.4.2",
     "typescript": "^6.0.3"
   }
 }
