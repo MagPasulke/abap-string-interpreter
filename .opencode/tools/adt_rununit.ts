@@ -29,20 +29,18 @@ export default tool({
     "If omitted, runs tests for the package defined in SAP_ROOT_PACKAGE (.env). " +
     "Returns a formatted summary with pass/fail counts and failure details.",
   args: {
-    objectType: {
-      type: "string",
-      description:
+    objectType: tool.schema.string()
+      .describe(
         "ABAP object type: 'CLAS' (class) or 'DEVC' (package). " +
-        "Defaults to DEVC (package) when objectName is omitted.",
-      required: false,
-    },
-    objectName: {
-      type: "string",
-      description:
+        "Defaults to DEVC (package) when objectName is omitted."
+      )
+      .optional(),
+    objectName: tool.schema.string()
+      .describe(
         "ABAP object name (e.g. 'ZASIS_CL_INTERPRETER' for a class, or 'ZASIS' for a package). " +
-        "If omitted, uses SAP_ROOT_PACKAGE from .env.",
-      required: false,
-    },
+        "If omitted, uses SAP_ROOT_PACKAGE from .env."
+      )
+      .optional(),
   },
   async execute(args, context) {
     const rootDir = context.worktree || context.directory
