@@ -28,9 +28,3 @@ Only when the user explicitly requests running unit tests on SAP. Typical scenar
 - Final verification before merging a PR
 
 **Never call autonomously.** Always wait for user trigger.
-
-## Important: Chat mode only
-
-This tool (and `adt_gitpull`) must **only be used in interactive chat mode** — never in autonomous/background agent runs. When using in chat mode:
-- Always wait for user confirmation before calling
-- After calling, wait for the user to confirm the result on the SAP side before proceeding with further steps
