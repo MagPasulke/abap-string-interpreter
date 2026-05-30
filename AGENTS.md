@@ -37,7 +37,7 @@ Only enter this workflow when the user signals intent to **implement something**
 4. **Open draft PR** against `main`
 5. **Implement** the changes
 6. **Write/enhance tests** — Use the **`create-tests`** skill for guidance on which test layer(s) to update and how
-7. **Run `npm run lint && npm test`**
+7. **Run `npm test`**
    - If pass → commit & push
    - If fail → attempt one fix cycle; if still failing, report errors to user and wait for guidance
 8. **Repeat steps 5–7** for each logical unit of work (multiple commits are encouraged for traceability)
@@ -52,7 +52,7 @@ This applies to ALL changes — code, documentation, skills, configuration. No e
 - **Always use the `conventional-commit` skill** for every commit
 - **Never amend commits** — each change gets its own commit
 - **Never force-push** (`--force`, `--force-with-lease`) — history must remain linear and traceable
-- **Only commit when tests pass** — never push code that fails `npm run lint && npm test`
+- **Only commit when tests pass** — never push code that fails `npm test`
 - If a fix is needed after a commit, create a new commit with a clear message (e.g., `fix: resolve duplicate attribute in zasis_cx_exc`)
 - The commit history should tell the story of what happened, including fixes
 
@@ -168,8 +168,9 @@ The project has three test layers, each covering different concerns. For a full 
 | Script | Command | Description |
 |--------|---------|-------------|
 | `npm run lint` | `abaplint` | Static analysis using abaplint (rules in `abaplint.json`) |
+| `npm run typecheck` | `tsc --noEmit` | TypeScript type-checking for scripts/*.ts and .opencode/tools/*.ts |
 | `npm run unit` | Transpile + run in Node.js | Transpiles ABAP to JS via `abap_transpile.json` and runs unit tests |
-| `npm test` | `lint` + `unit` | Runs both lint and transpiled unit tests |
+| `npm test` | `lint` + `typecheck` + `unit` | Runs all three checks |
 | `npm run icf-test` | `node --test` | ICF shim integration tests — full HTTP handler stack without SAP |
 | `npm run icf-server` | Express server | Starts standalone server on port 3040 for manual curl testing |
 | `npm run sap-test` | `node --test` | Same shared scenarios against real SAP system |
@@ -185,7 +186,7 @@ The project has three test layers, each covering different concerns. For a full 
 
 ### Important Testing Notes
 
-- **Local validation before commit**: Always run `npm run lint && npm test` (step 7 in workflow). Also run `npm run icf-test` when HTTP handler or factory logic is modified.
+- **Local validation before commit**: Always run `npm test` (step 7 in workflow). Also run `npm run icf-test` when HTTP handler or factory logic is modified.
 - **ABAP Unit Tests**: The authoritative test suite runs on the SAP system itself. **After making changes, always ask the user to sync the project to the ABAP system via abapGit, run the ABAP Unit tests there, and confirm the results before considering the change complete.**
 - **When to write which tests**: Use the **`create-tests`** skill for detailed guidance on where to add/adapt tests for different kinds of changes.
 
