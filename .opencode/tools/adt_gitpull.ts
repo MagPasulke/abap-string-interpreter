@@ -29,13 +29,12 @@ export default tool({
     "Uses credentials from .env (SAP_ADT_URL, SAP_ADT_USER, SAP_ADT_PASSWORD). " +
     "If branch is omitted, auto-detects from the current git checkout.",
   args: {
-    branch: {
-      type: "string",
-      description:
+    branch: tool.schema.string()
+      .describe(
         "Branch to pull (short name like 'main' or full ref like 'refs/heads/feat/my-feature'). " +
-        "If omitted, auto-detects from the currently checked-out branch.",
-      required: false,
-    },
+        "If omitted, auto-detects from the currently checked-out branch."
+      )
+      .optional(),
   },
   async execute(args, context) {
     const rootDir = context.worktree || context.directory
