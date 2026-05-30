@@ -112,8 +112,11 @@ export async function adtGitPull(options: AdtGitPullOptions): Promise<AdtGitPull
     }
   }
 
-  // 5. Trigger pull
+  // 5. Switch branch on SAP if needed, then pull
   try {
+    if (matchingRepo.branch_name !== branchRef) {
+      await client.switchRepoBranch(matchingRepo, branchRef)
+    }
     await client.gitPullRepo(matchingRepo.key, branchRef)
   } catch (e: any) {
     return {
