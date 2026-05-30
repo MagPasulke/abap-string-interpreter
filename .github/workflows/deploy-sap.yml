@@ -30,4 +30,4 @@ jobs:
           SAP_ADT_URL: ${{ secrets.SAP_ADT_URL }}
           SAP_ADT_USER: ${{ secrets.SAP_ADT_USER }}
           SAP_ADT_PASSWORD: ${{ secrets.SAP_ADT_PASSWORD }}
-        run: npx tsx scripts/adt-gitpull-ci.ts
+        run: npx tsx --esm scripts/adt-gitpull-ci.ts
