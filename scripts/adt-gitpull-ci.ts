@@ -10,7 +10,7 @@
  *   npx tsx scripts/adt-gitpull-ci.ts
  */
 
-import { adtGitPull } from "../.opencode/tools/adt_gitpull_core.ts"
+import { adtGitPull } from "./adt_gitpull_core.ts"
 
 const url = process.env.SAP_ADT_URL
 const user = process.env.SAP_ADT_USER
