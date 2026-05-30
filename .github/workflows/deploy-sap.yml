@@ -1,0 +1,33 @@
+name: deploy-sap
+
+on:
+  workflow_run:
+    workflows: [ci]
+    types: [completed]
+    branches: [main]
+
+jobs:
+  deploy-sap:
+    name: Sync to SAP via abapGit
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    # Only run when CI passed
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Trigger abapGit pull on SAP system
+        env:
+          SAP_ADT_URL: ${{ secrets.SAP_ADT_URL }}
+          SAP_ADT_USER: ${{ secrets.SAP_ADT_USER }}
+          SAP_ADT_PASSWORD: ${{ secrets.SAP_ADT_PASSWORD }}
+        run: npx tsx scripts/adt-gitpull-ci.ts
