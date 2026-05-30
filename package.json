@@ -5,8 +5,9 @@
   "description": "ZASIS - ABAP String Interpreter",
   "scripts": {
     "unit": "node -e \"fs=require('fs');fs.rmSync('output',{recursive:true,force:true})\" && abap_transpile && echo RUNNING && node output/index.mjs",
+    "typecheck": "tsc --noEmit --esModuleInterop --module nodenext --moduleResolution nodenext --target esnext --types node --allowImportingTsExtensions scripts/*.ts .opencode/tools/*.ts",
     "lint": "abaplint",
-    "test": "npm run lint && npm run unit",
+    "test": "npm run lint && npm run typecheck && npm run unit",
     "icf-test": "node --test __test/integration/icf.test.mjs",
     "icf-server": "node __test/integration/serve.mjs",
     "sap-test": "node --test __test/integration/sap.test.mjs",
@@ -22,6 +23,7 @@
     "@types/node": "^25.9.1",
     "abap-adt-api": "^8.4.0",
     "express": "^4.22.2",
-    "jest": "^30.4.2"
+    "jest": "^30.4.2",
+    "typescript": "^6.0.3"
   }
 }
