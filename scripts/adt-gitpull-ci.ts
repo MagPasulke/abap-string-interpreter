@@ -21,15 +21,17 @@ if (!url || !user || !password) {
   process.exit(1)
 }
 
-const result = await adtGitPull({ url, user, password, cwd: process.cwd() })
+void (async () => {
+  const result = await adtGitPull({ url, user, password, cwd: process.cwd() })
 
-if (!result.ok) {
-  console.error("abapGit pull failed:", result.error)
-  process.exit(1)
-}
+  if (!result.ok) {
+    console.error("abapGit pull failed:", result.error)
+    process.exit(1)
+  }
 
-console.log(`abapGit pull succeeded`)
-console.log(`  Repo:    ${result.repoUrl}`)
-console.log(`  Package: ${result.sapPackage}`)
-console.log(`  Branch:  ${result.branch}`)
-console.log(`  System:  ${result.systemUrl}`)
+  console.log(`abapGit pull succeeded`)
+  console.log(`  Repo:    ${result.repoUrl}`)
+  console.log(`  Package: ${result.sapPackage}`)
+  console.log(`  Branch:  ${result.branch}`)
+  console.log(`  System:  ${result.systemUrl}`)
+})()
