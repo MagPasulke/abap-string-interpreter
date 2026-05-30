@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.5.1](https://github.com/MagPasulke/abap-string-interpreter/compare/v0.5.0...v0.5.1) (2026-05-30)
+
+
+### Bug Fixes
+
+* Make deploy workflow manual and gated by CI ([#64](https://github.com/MagPasulke/abap-string-interpreter/issues/64)) ([b6b38ed](https://github.com/MagPasulke/abap-string-interpreter/commit/b6b38ed13c9c612e6a3c853d2533d759f2856130))
+
 ## [0.5.0](https://github.com/MagPasulke/abap-string-interpreter/compare/v0.4.0...v0.5.0) (2026-05-30)
 
 
