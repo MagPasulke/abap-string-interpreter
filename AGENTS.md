@@ -187,7 +187,7 @@ The project has three test layers, each covering different concerns. For a full 
 ### Important Testing Notes
 
 - **Local validation before commit**: Always run `npm test` (step 7 in workflow). Also run `npm run icf-test` when HTTP handler or factory logic is modified.
-- **ABAP Unit Tests**: The authoritative test suite runs on the SAP system itself. **After making changes, use `adt_gitpull` to sync the branch to SAP, then use `adt_rununit` to run ABAP Unit tests remotely. Only consider the change complete when both local (`npm test`) and remote ABAP Unit tests pass.**
+- **ABAP Unit Tests**: The authoritative test suite runs on the SAP system itself. **After making changes and local `npm test` passes, ask the user whether to sync and run ABAP Unit tests on SAP (via `adt_gitpull` + `adt_rununit`). Only consider the change complete when both local and remote tests pass.**
 - **When to write which tests**: Use the **`create-tests`** skill for detailed guidance on where to add/adapt tests for different kinds of changes.
 
 
