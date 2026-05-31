@@ -19,20 +19,27 @@ etag master LocalLastChangedAt
 
   validation checkUniqueRuleSetId on save { field RuleSetId; create; }
 
+  draft determine action Prepare
+  {
+    validation checkUniqueRuleSetId;
+    validation RuleSetItem~checkIsValidRegex;
+    validation RuleSetItem~checkEventProducer;
+  }
+
   field ( numbering : managed, readonly ) RuleSetUUID;
   field ( mandatory ) RuleSetId;
 
   mapping for zasis_rulesethd
-  {
-    RuleSetUUID = rulesetuuid;
-    RuleSetId = rulesetid;
-    Attachment = attachment;
-    MimeType = mimetype;
-    FileName = filename;
-    LastChangedBy = last_changed_by;
-    LastChangedAt = last_changed_at;
-    LocalLastChangedAt = local_last_changed_at;
-  }
+    {
+      RuleSetUUID        = rulesetuuid;
+      RuleSetId          = rulesetid;
+      Attachment         = attachment;
+      MimeType           = mimetype;
+      FileName           = filename;
+      LastChangedBy      = last_changed_by;
+      LastChangedAt      = last_changed_at;
+      LocalLastChangedAt = local_last_changed_at;
+    }
 }
 
 define behavior for ZASIS_I_RULESETITEM alias RuleSetItem
@@ -52,23 +59,21 @@ etag master LocalLastChangedAt
   validation checkIsValidRegex on save { field InterpretationRule; create; update; }
   validation checkEventProducer on save { field EventProducer; create; update; }
 
-  mapping for ZASIS_RULESETITM
-  {
-
-    RuleSetUUID = rulesetuuid;
-    InterpretationItem = interpretationitm;
-    Intpretationtarget = intpretationTarget;
-    InterpretationRule = interpretationrule;
-    InterpretationType = interpretation_type;
-    OffsetPre = offset_pre;
-    OffsetPost = offset_post;
-    ReplacementString = replacement_string;
-    CustomLogic = custom_logic;
-    EventProducer = event_producer;
-    LastChangedBy = last_changed_by;
-    LastChangedAt = last_changed_at;
-    LocalLastChangedAt = local_last_changed_at;
-
-  }
+  mapping for zasis_rulesetitm
+    {
+      RuleSetUUID        = rulesetuuid;
+      InterpretationItem = interpretationitm;
+      Intpretationtarget = intpretationTarget;
+      InterpretationRule = interpretationrule;
+      InterpretationType = interpretation_type;
+      OffsetPre          = offset_pre;
+      OffsetPost         = offset_post;
+      ReplacementString  = replacement_string;
+      CustomLogic        = custom_logic;
+      EventProducer      = event_producer;
+      LastChangedBy      = last_changed_by;
+      LastChangedAt      = last_changed_at;
+      LocalLastChangedAt = local_last_changed_at;
+    }
 
 }
