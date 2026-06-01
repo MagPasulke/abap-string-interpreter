@@ -10,13 +10,6 @@
         "sap-released-objects": {
             "type": "remote",
             "url": "https://sap-released-objects-server-production.up.railway.app/mcp"
-        },
-        "com.sap.adt/mcp": {
-            "type": "remote",
-            "url": "http://localhost:2236/mcp",
-            "headers": {
-                "Authorization": "Bearer {env:ADTMCPTOKEN}"
-            }
         }
     }
 }

@@ -14,8 +14,8 @@
     "sap-test": "node --test __test/integration/sap.test.mjs",
     "sap-auth-test": "node --test __test/integration/sap-auth.test.mjs"
   },
-  "author": "",
-  "license": "Unlicense",
+  "author": "Philipp Doelker",
+  "license": "MIT",
   "devDependencies": {
     "@abaplint/cli": "^2.119.23",
     "@abaplint/database-sqlite": "^2.11.78",

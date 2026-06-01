@@ -1,6 +1,5 @@
 {
     "recommendations": [
-        "sapse.adt-vscode",
         "github.vscode-github-actions",
         "github.vscode-pull-request-github",
         "sapse.vscode-cds",
