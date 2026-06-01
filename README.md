@@ -13,6 +13,8 @@ ZASIS extracts structured data from unstructured strings. You configure regex-ba
 
 ## Part 1 — Functionality
 
+> 📖 **[User Manual](docs/user/manual.md)** — configuration guide, API reference, ABAP samples, and troubleshooting.
+
 ### The Problem
 
 Scanners, barcode readers, and external systems often deliver a single string that packs multiple business values into one payload. Parsing that string is repetitive work — different formats, different fields, same logic over and over.
@@ -61,47 +63,6 @@ ZASIS lets you define a **RuleSet** once and reuse it everywhere. A RuleSet is a
   { "targetfield": "MaterialNo",  "interpretationresult": "MyMaterialNumber" },
   { "targetfield": "DeliveryNote", "interpretationresult": "MyDeliveryNote"   }
 ]
-```
-
-### Usage
-
-#### Fiori UI
-
-1. Create service binding `ZASIS_UI_RULESET_O4` (OData V4) for service definition `ZASIS_UI_RULESET`.
-2. Publish service binding `ZASIS_UI_RULESET_O4`.
-3. Open the Fiori Elements preview for entity **RuleSet**.
-4. Create/maintain RuleSet header and items.
-5. Click **Test RuleSet** to execute against a sample string.
-
-#### ABAP API
-
-```abap
-DATA(ruleset) = zasis_cl_ruleset_factory=>get_ruleset_by_rulesetid( |MySample| ).
-
-DATA(result) = NEW zasis_cl_interpreter( )->execute(
-  ruleset                  = ruleset
-  string_to_be_interpreted = |<Start><A7X>MyMaterialNumber<B52H>MyDeliveryNote<End>| ).
-```
-
-#### HTTP API
-
-**GET** — retrieve a RuleSet definition:
-
-```bash
-curl -X GET \
-  "https://your_host/zasis_ext_api/ruleSet/MySample?sap-client=001" \
-  -H "Content-Type: application/json" \
-  -H "Authorization: Basic <base64>"
-```
-
-**POST** — execute a RuleSet:
-
-```bash
-curl -X POST \
-  "https://your_host/zasis_ext_api/ruleSetExecution/MySample?sap-client=001" \
-  -H "Content-Type: application/json" \
-  -H "Authorization: Basic <base64>" \
-  -d '{"string_to_be_interpreted":"<Start><A7X>MyMaterialNumber<B52H>MyDeliveryNote<End>"}'
 ```
 
 ---

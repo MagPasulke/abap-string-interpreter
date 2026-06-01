@@ -1,0 +1,161 @@
+name: update-user-manual
+
+on:
+  pull_request:
+    types: [closed]
+  workflow_dispatch:
+    inputs:
+      pr_number:
+        description: 'PR number to process (use for retroactive backfill when label was added after merge)'
+        required: true
+        type: number
+      force:
+        description: 'Skip the docs:user-manual label check (use only for exceptional cases)'
+        required: false
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+  pull-requests: read
+  issues: write
+
+jobs:
+  create-docs-issue:
+    # Automatic path: only run when the PR was actually merged
+    # Manual path: always run (validation happens inside the script)
+    if: >
+      github.event_name == 'workflow_dispatch' ||
+      (github.event.pull_request.merged == true &&
+       contains(github.event.pull_request.labels.*.name, 'docs:user-manual'))
+
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Create Copilot docs-update issue
+        uses: actions/github-script@v7
+        with:
+          script: |
+            // ── Resolve PR data ─────────────────────────────────────────────
+            let pr;
+
+            if (context.eventName === 'workflow_dispatch') {
+              const prNumber = Number(context.payload.inputs.pr_number);
+              const force    = context.payload.inputs.force === 'true';
+
+              const { data } = await github.rest.pulls.get({
+                owner: context.repo.owner,
+                repo:  context.repo.repo,
+                pull_number: prNumber,
+              });
+              pr = data;
+
+              if (!pr.merged) {
+                core.setFailed(`PR #${prNumber} has not been merged yet. Only merged PRs can trigger a docs update.`);
+                return;
+              }
+
+              const hasLabel = pr.labels.some(l => l.name === 'docs:user-manual');
+              if (!hasLabel && !force) {
+                core.setFailed(
+                  `PR #${prNumber} does not have the 'docs:user-manual' label. ` +
+                  `Add the label to the PR or re-run with force=true to bypass this check.`
+                );
+                return;
+              }
+            } else {
+              pr = context.payload.pull_request;
+            }
+
+            // ── Idempotency guard ────────────────────────────────────────────
+            // Avoid creating a second issue if the workflow is re-run for the same PR
+            const existingIssues = await github.rest.issues.listForRepo({
+              owner: context.repo.owner,
+              repo:  context.repo.repo,
+              state: 'open',
+              labels: 'docs:user-manual-pending',
+              per_page: 50,
+            });
+
+            const duplicate = existingIssues.data.find(issue =>
+              issue.title.includes(`PR #${pr.number}`)
+            );
+
+            if (duplicate) {
+              core.warning(`Skipping: open docs-update issue already exists for PR #${pr.number}: ${duplicate.html_url}`);
+              return;
+            }
+
+            // ── Fetch changed files ──────────────────────────────────────────
+            const filesResponse = await github.paginate(github.rest.pulls.listFiles, {
+              owner: context.repo.owner,
+              repo:  context.repo.repo,
+              pull_number: pr.number,
+              per_page: 100,
+            });
+
+            const changedFiles = filesResponse.map(f => `- \`${f.filename}\` (${f.status})`).join('\n');
+
+            // ── Build issue body ─────────────────────────────────────────────
+            const body = `\
+            ## Task: Update User Manual
+
+            This issue was automatically created because PR #${pr.number} — **"${pr.title}"** — was merged with the \`docs:user-manual\` label.
+
+            **Your goal:** Update \`docs/user/manual.md\` to reflect any user-visible changes introduced by that PR.
+
+            ---
+
+            ### Source PR
+
+            - **PR:** [#${pr.number} — ${pr.title}](${pr.html_url})
+            - **Merged:** ${pr.merged_at}
+            - **Author:** @${pr.user.login}
+
+            ### Files changed in PR #${pr.number}
+
+            ${changedFiles}
+
+            ---
+
+            ### Instructions
+
+            1. **Read the changed files** listed above to understand what was added, modified, or removed.
+            2. **Read \`docs/user/manual.md\`** in full to understand the current state of the manual.
+            3. **Determine which sections of the manual are affected** by the PR changes:
+               - New ABAP classes or interfaces that expose user-visible behavior → add/update the relevant concept or API section.
+               - Changed HTTP routes or request/response shapes → update the HTTP API reference.
+               - New or removed rule types, offset semantics, custom logic patterns → update the corresponding section.
+               - Internal refactors with no user impact → no manual change needed; close this issue with a comment explaining why.
+            4. **Write or update content** following these authoring rules:
+               - **Audience**: administrators and developers integrating ZASIS into their landscape. Assume familiarity with SAP/ABAP but not with ZASIS internals.
+               - **Tone**: clear, technical, direct. No marketing language.
+               - **Scope**: user-visible behavior only. Do not expose ABAP class names, abapGit internals, CI/CD details, or test infrastructure.
+               - **Structure**: preserve existing section headings unless a structural change is clearly warranted. Add new sections at the appropriate level.
+               - **Examples**: include concrete request/response examples for any API changes.
+               - **Accuracy**: only document behavior that actually exists in the codebase. Do not speculate or document planned features.
+            5. **Create a branch** named \`docs/user-manual-pr-${pr.number}\` and **open a PR** targeting \`main\` with the updated \`docs/user/manual.md\`.
+            6. **PR title**: \`docs: update user manual for PR #${pr.number} — ${pr.title}\`
+            7. **Close this issue** by referencing it in the PR description with \`Closes #ISSUE_NUMBER\`.
+
+            ---
+
+            ### Definition of Done
+
+            - [ ] \`docs/user/manual.md\` updated (or issue closed with documented reason for no change)
+            - [ ] PR opened against \`main\` referencing this issue
+            - [ ] Content reviewed for accuracy against the actual source code
+            `;
+
+            // ── Create issue ─────────────────────────────────────────────────
+            const issue = await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo:  context.repo.repo,
+              title: `docs: update user manual for PR #${pr.number} — ${pr.title}`,
+              body:  body.replace(/^ {12}/gm, ''), // strip template indentation
+              labels: ['docs:user-manual-pending'],
+              assignees: ['Copilot'],
+            });
+
+            core.notice(`Created docs-update issue: ${issue.data.html_url}`);
