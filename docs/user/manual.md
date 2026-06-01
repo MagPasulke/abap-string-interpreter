@@ -75,7 +75,7 @@ Each RuleSet contains an ordered list of **Rule Items**. Every item defines:
 | `InterpretationRule`  | A PCRE-compatible regular expression                                          |
 | `InterpretationType`  | `1` = MATCH, `2` = REPLACE (see [Rule Types](#rule-types))                  |
 | `OffsetPre`           | Characters to skip from the **start** of the regex match (MATCH only)       |
-| `OffsetPost`          | Characters to trim from the **end** of the regex match (MATCH only)         |
+| `RightTrim`           | Characters to trim from the **end** of the regex match (MATCH only)         |
 | `ReplacementString`   | The replacement value used with REPLACE rules                                 |
 | `CustomLogic`         | Optional: ABAP class name implementing `ZASIS_IF_CUSTOMLOGIC` (overrides regex) |
 | `EventProducer`       | Optional: ABAP class name implementing `ZASIS_IF_EVENT_PRODUCER`             |
@@ -121,12 +121,12 @@ Result: `MyValue`
 Offsets apply **only to MATCH results** and allow you to trim characters without adjusting the regex:
 
 - **`OffsetPre`**: number of characters to remove from the **beginning** of the matched string.
-- **`OffsetPost`**: number of characters to remove from the **end** of the matched string.
+- **`RightTrim`**: number of characters to remove from the **end** of the matched string.
 
 **Example:**
 
 Match result: `[MyValue]`  
-`OffsetPre = 1`, `OffsetPost = 1`  
+`OffsetPre = 1`, `RightTrim = 1`  
 Final result: `MyValue`
 
 If the sum of offsets equals or exceeds the match length, the result will be empty or invalid — validate your regex and offsets together.
@@ -473,7 +473,7 @@ Contact your SAP system administrator to assign the appropriate roles.
 2. Check for invisible characters or encoding differences in the scanned input.
 3. For MATCH rules: confirm the regex returns a non-empty match.
 4. For REPLACE rules: ensure the replacement result is different from the input string (see [Known limitation](#replace-type-2)).
-5. Check that `OffsetPre` + `OffsetPost` does not exceed the match length.
+5. Check that `OffsetPre` + `RightTrim` does not exceed the match length.
 
 ### HTTP 400 — Unknown RuleSet
 
