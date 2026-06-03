@@ -45,9 +45,9 @@ CLASS zasis_cl_ruleset_factory IMPLEMENTATION.
     checker->check_read( ruleset_id = ruleset_id ).
 
     "check the buffer first if ruleset was already read
-    READ TABLE ruleset_refs WITH KEY ruleset_id = ruleset_id BINARY SEARCH INTO DATA(ruleset).
-    IF sy-subrc = 0.
-      ruleset_ref = ruleset-ruleset_ref.
+    DATA(cached) = VALUE zasis_ruleset_refs( ruleset_refs[ ruleset_id = ruleset_id ] OPTIONAL ).
+    ruleset_ref = cached-ruleset_ref.
+    IF ruleset_ref IS BOUND.
       RETURN.
     ENDIF.
 
