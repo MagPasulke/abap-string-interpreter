@@ -16,6 +16,7 @@
 3. [Configuring RuleSets](#configuring-rulesets)
    - [Creating a RuleSet](#creating-a-ruleset)
    - [Adding Rule Items](#adding-rule-items)
+   - [Testing a RuleSet from the UI](#testing-a-ruleset-from-the-ui)
 4. [ABAP API](#abap-api)
 5. [HTTP API Reference](#http-api-reference)
    - [Execute RuleSet — POST /ruleSetExecution/{ruleSetId}](#execute-ruleset)
@@ -161,6 +162,17 @@ Within a saved RuleSet:
 3. Fill in the fields (see [Rule Items](#rule-items) table above).
 4. Order items using the sequence controls — the execution order matches the display order.
 5. Save. Changes take effect immediately on the next API call (the cache is invalidated on save).
+
+### Testing a RuleSet from the UI
+
+The Fiori maintenance screen provides a **Test RuleSet** action that lets you run the interpreter against a sample input string without making an HTTP call:
+
+1. Open a saved RuleSet.
+2. Click **Test RuleSet**.
+3. Enter a sample input string in the prompt.
+4. Confirm. The UI displays one result message per rule item, showing the extracted value or `no match`.
+
+This is useful for verifying regex patterns and offset values during configuration.
 
 ---
 
@@ -416,7 +428,9 @@ In the RuleSet configuration, enter the fully qualified ABAP class name in the *
 
 ## Event Producers
 
-An **Event Producer** class is called **after** a rule item produces a result (either from regex or custom logic). It allows you to react to interpretation results — for example, to publish a Business Event or update a status.
+An **Event Producer** class is called **after** a rule item produces a successful match (either from regex or custom logic). It allows you to react to interpretation results — for example, to publish a Business Event or update a status.
+
+> **Note:** Event producers are **not** called when a rule item produces `no match`.
 
 ### Implementation
 
@@ -427,7 +441,7 @@ Create an ABAP class implementing `ZASIS_IF_EVENT_PRODUCER`. The class receives:
 - The interpretation result for that item
 - The caller-supplied context
 
-Event producers run asynchronously within the same call stack; they do not influence the result returned to the caller.
+Event producers run synchronously within the same HTTP call. Any `zasis_cx_exc` raised by an event producer is caught and suppressed — it does not affect the interpretation result returned to the caller.
 
 ### Registration
 
