@@ -44,7 +44,7 @@ CLASS zasis_cl_http_handler IMPLEMENTATION.
 
       CATCH zasis_cx_exc INTO DATA(service_exception).
 
-        DATA(error_json) = lcl_error_response=>from_exception(
+        DATA(error_json) = zasis_cl_http_error_response=>from_exception(
           exception   = service_exception
           http_status = service_exception->http_status
         )->to_json( ).
@@ -57,7 +57,7 @@ CLASS zasis_cl_http_handler IMPLEMENTATION.
 
       CATCH zasis_cx_no_auth INTO DATA(auth_exception).
 
-        DATA(auth_error_json) = lcl_error_response=>from_exception(
+        DATA(auth_error_json) = zasis_cl_http_error_response=>from_exception(
           exception   = auth_exception
           http_status = '403'
         )->to_json( ).
