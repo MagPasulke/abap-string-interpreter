@@ -8,10 +8,16 @@ CLASS zasis_cl_http_error_response DEFINITION PUBLIC.
     TYPES: BEGIN OF ty_error_envelope,
              error TYPE ty_error,
            END OF ty_error_envelope.
+    "! Creates an error response instance from an exception.
+    "! @parameter exception   | Exception to extract error details from
+    "! @parameter http_status | HTTP status code string to include in the error response
+    "! @parameter result      | Error response instance populated with the exception details
     CLASS-METHODS from_exception
       IMPORTING exception     TYPE REF TO cx_root
                 http_status   TYPE string
       RETURNING VALUE(result) TYPE REF TO zasis_cl_http_error_response.
+    "! Serializes the error envelope to a JSON string.
+    "! @parameter json | JSON representation of the error envelope
     METHODS to_json RETURNING VALUE(json) TYPE /ui2/cl_json=>json.
   PRIVATE SECTION.
     DATA _envelope TYPE ty_error_envelope.

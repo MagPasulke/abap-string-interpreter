@@ -1,19 +1,19 @@
-class ZASIS_CL_HTTP_HANDLER_CLD definition
-  public
-  create public .
+CLASS zasis_cl_http_handler_cld DEFINITION
+  PUBLIC
+  CREATE PUBLIC .
 
-public section.
+PUBLIC SECTION.
 
-  interfaces IF_HTTP_SERVICE_EXTENSION .
-protected section.
-private section.
+  INTERFACES if_http_service_extension .
+PROTECTED SECTION.
+PRIVATE SECTION.
 ENDCLASS.
 
 
 
-CLASS ZASIS_CL_HTTP_HANDLER_CLD IMPLEMENTATION.
+CLASS zasis_cl_http_handler_cld IMPLEMENTATION.
 
 
-  method IF_HTTP_SERVICE_EXTENSION~HANDLE_REQUEST.
-  endmethod.
+  METHOD if_http_service_extension~handle_request.
+  ENDMETHOD.
 ENDCLASS.
