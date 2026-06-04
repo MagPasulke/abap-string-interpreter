@@ -6,9 +6,9 @@ CLASS zasis_lcl_http_requ_validator DEFINITION.
   PUBLIC SECTION.
 
     DATA _request TYPE REF TO if_http_request.
-    DATA _path     TYPE string                      READ-ONLY.
-    DATA _num_path_elements TYPE i READ-ONLY.
-    DATA _path_elements TYPE TABLE OF string READ-ONLY.
+    DATA path     TYPE string                      READ-ONLY.
+    DATA num_path_elements TYPE i READ-ONLY.
+    DATA path_elements TYPE TABLE OF string READ-ONLY.
 
     METHODS constructor IMPORTING request TYPE REF TO if_http_request.
 
@@ -25,7 +25,7 @@ CLASS zasis_lcl_http_requ_validator DEFINITION.
   PROTECTED SECTION.
   PRIVATE SECTION.
 
-    METHODS _determine_path_elements.
+    METHODS determine_path_elements.
 
 
 ENDCLASS.
@@ -35,7 +35,7 @@ CLASS zasis_lcl_http_requ_validator IMPLEMENTATION.
 
     _request = request.
 
-    _determine_path_elements( ).
+    determine_path_elements( ).
 
   ENDMETHOD.
 
@@ -45,23 +45,23 @@ CLASS zasis_lcl_http_requ_validator IMPLEMENTATION.
 
     TRY.
 
-        ruleset_id = _path_elements[ _num_path_elements ].
+        ruleset_id = path_elements[ num_path_elements ].
 
       CATCH cx_sy_itab_line_not_found.
 
         RAISE EXCEPTION NEW zasis_cx_exc( textid = zasis_cx_exc=>invalid_api_route
-                                          route  = _path
+                                          route  = path
                                           ).
 
     ENDTRY.
   ENDMETHOD.
 
-  METHOD _determine_path_elements.
+  METHOD determine_path_elements.
 
-    _path = _request->get_header_field( '~path_info' ).
-    SHIFT _path LEFT BY 1 PLACES.
-    SPLIT _path AT '/' INTO TABLE _path_elements.
-    _num_path_elements  = lines( _path_elements ).
+    path = _request->get_header_field( '~path_info' ).
+    SHIFT path LEFT BY 1 PLACES.
+    SPLIT path AT '/' INTO TABLE path_elements.
+    num_path_elements  = lines( path_elements ).
 
   ENDMETHOD.
 
@@ -78,35 +78,35 @@ CLASS zasis_lcl_http_requ_validator IMPLEMENTATION.
 
   METHOD validate_path.
 
-    IF strlen( _path ) = 0.
+    IF strlen( path ) = 0.
       RAISE EXCEPTION NEW zasis_cx_exc( textid = zasis_cx_exc=>invalid_api_route
-                                        route  = _path
+                                        route  = path
                                         ).
     ENDIF.
 
-    IF _num_path_elements < 2.
+    IF num_path_elements < 2.
 
       "there is only two valid routes:
       "" POST ruleSetExecution/ruleSetID & GET ruleSet/ruleSetID
       """ => both of them contain at least 2 elements
       RAISE EXCEPTION NEW zasis_cx_exc( textid = zasis_cx_exc=>invalid_api_route
-                                        route  = _path
+                                        route  = path
                                         ).
 
     ENDIF.
 
-    IF ( _path_elements[ _num_path_elements - 1 ] <> |ruleSetExecution| AND _path_elements[ _num_path_elements - 1 ] <> |ruleSet| ).
+    IF ( path_elements[ num_path_elements - 1 ] <> |ruleSetExecution| AND path_elements[ num_path_elements - 1 ] <> |ruleSet| ).
 
       RAISE EXCEPTION NEW zasis_cx_exc( textid = zasis_cx_exc=>invalid_api_route
-                                        route  = _path
+                                        route  = path
                                         ).
 
     ENDIF.
 
-    IF _path_elements[ _num_path_elements ] IS INITIAL.
+    IF path_elements[ num_path_elements ] IS INITIAL.
 
       RAISE EXCEPTION NEW zasis_cx_exc( textid = zasis_cx_exc=>invalid_api_route
-                                        route  = _path
+                                        route  = path
                                         ).
 
     ENDIF.
