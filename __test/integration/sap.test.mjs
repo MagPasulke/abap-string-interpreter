@@ -7,10 +7,8 @@
  */
 import { describe, it, before } from 'node:test';
 import assert from 'node:assert/strict';
-import { getSapEnv, isSapAvailable } from './helpers/sap-client.mjs';
+import { getAllSapEnvs, isSapAvailable } from './helpers/sap-client.mjs';
 import { postExecutionTests, getTests, methodTests } from './scenarios.mjs';
-
-const RULESET = 'MySample';
 
 before(() => {
   if (!isSapAvailable()) {
@@ -20,31 +18,38 @@ before(() => {
   }
 });
 
-const env = getSapEnv() || {};
+const envs = getAllSapEnvs();
 
-async function request(method, path, { body, contentType = 'application/json' } = {}) {
-  const url = `${env.baseUrl}${path}?sap-client=${env.client}`;
-  const headers = {
-    'Authorization': `Basic ${env.auth_b64}`,
-    'Accept': 'application/json',
-    'Content-Type': contentType,
-  };
-  const options = { method, headers };
-  if (body !== undefined) {
-    options.body = typeof body === 'string' ? body : JSON.stringify(body);
+for (const [envName, env] of Object.entries(envs)) {
+  const ruleSetId = env.ruleSetId || 'MySample';
+
+  function makeRequest(method, path, { body, contentType = 'application/json' } = {}) {
+    const queryParams = env.queryParams || (env.client ? `?sap-client=${env.client}` : '');
+    const url = `${env.baseUrl}${path}${queryParams}`;
+    const headers = {
+      'Authorization': `Basic ${env.auth_b64}`,
+      'Accept': 'application/json',
+      'Content-Type': contentType,
+    };
+    const options = { method, headers };
+    if (body !== undefined) {
+      options.body = typeof body === 'string' ? body : JSON.stringify(body);
+    }
+    return fetch(url, options).then(async (res) => {
+      let responseBody;
+      const ct = res.headers.get('content-type') || '';
+      if (ct.includes('application/json')) {
+        responseBody = await res.json();
+      } else {
+        responseBody = await res.text();
+      }
+      return { status: res.status, body: responseBody };
+    });
   }
-  const res = await fetch(url, options);
-  let responseBody;
-  const ct = res.headers.get('content-type') || '';
-  if (ct.includes('application/json')) {
-    responseBody = await res.json();
-  } else {
-    responseBody = await res.text();
-  }
-  return { status: res.status, body: responseBody };
+
+  describe(`[${envName}]`, () => {
+    postExecutionTests(describe, it, assert, makeRequest, ruleSetId);
+    getTests(describe, it, assert, makeRequest, ruleSetId);
+    methodTests(describe, it, assert, makeRequest, ruleSetId);
+  });
 }
-
-// Run all shared scenarios (identical to ICF runner)
-postExecutionTests(describe, it, assert, request, RULESET);
-getTests(describe, it, assert, request, RULESET);
-methodTests(describe, it, assert, request, RULESET);

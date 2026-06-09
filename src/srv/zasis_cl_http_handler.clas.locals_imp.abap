@@ -1,251 +1,63 @@
 *"* use this source file for the definition and implementation of
 *"* local helper classes, interface definitions and type
 *"* declarations
-CLASS zasis_lcl_http_requ_validator DEFINITION.
 
+"! SICF Request Adapter — wraps if_http_request into zasis_if_http_request
+CLASS lcl_sicf_request DEFINITION.
   PUBLIC SECTION.
-
-    DATA _request TYPE REF TO if_http_request.
-    DATA _path     TYPE string                      READ-ONLY.
-    DATA _num_path_elements TYPE i READ-ONLY.
-    DATA _path_elements TYPE TABLE OF string READ-ONLY.
-
+    INTERFACES zasis_if_http_request.
     METHODS constructor IMPORTING request TYPE REF TO if_http_request.
-
-    METHODS validate_content_type
-      RAISING
-        zasis_cx_exc.
-
-    METHODS validate_path
-      RAISING
-        zasis_cx_exc.
-
-    METHODS extract_ruleset_id_from_requ RETURNING VALUE(ruleset_id) TYPE zasis_ruleset_id  RAISING zasis_cx_exc.
-
-  PROTECTED SECTION.
   PRIVATE SECTION.
-
-    METHODS _determine_path_elements.
-
-
+    DATA _request TYPE REF TO if_http_request.
 ENDCLASS.
 
-CLASS zasis_lcl_http_requ_validator IMPLEMENTATION.
+CLASS lcl_sicf_request IMPLEMENTATION.
   METHOD constructor.
-
     _request = request.
-
-    _determine_path_elements( ).
-
   ENDMETHOD.
 
-  METHOD extract_ruleset_id_from_requ.
-
-    validate_path( ).
-
-    TRY.
-
-        ruleset_id = _path_elements[ _num_path_elements ].
-
-      CATCH cx_sy_itab_line_not_found.
-
-        RAISE EXCEPTION NEW zasis_cx_exc( textid = zasis_cx_exc=>invalid_api_route
-                                          route  = _path
-                                          ).
-
-    ENDTRY.
+  METHOD zasis_if_http_request~get_path.
+    path = _request->get_header_field( '~path_info' ).
   ENDMETHOD.
 
-  METHOD _determine_path_elements.
-
-    _path = _request->get_header_field( '~path_info' ).
-    SHIFT _path LEFT BY 1 PLACES.
-    SPLIT _path AT '/' INTO TABLE _path_elements.
-    _num_path_elements  = lines( _path_elements ).
-
+  METHOD zasis_if_http_request~get_method.
+    method = _request->get_method( ).
   ENDMETHOD.
 
-  METHOD validate_content_type.
-
-    DATA(request_content_type) = _request->get_header_field( 'content-type' ).
-    IF request_content_type <> zasis_constants=>content_type-application_json.
-
-      RAISE EXCEPTION NEW zasis_cx_exc( textid = zasis_cx_exc=>content_not_json
-                                        ).
-    ENDIF.
-
+  METHOD zasis_if_http_request~get_header_field.
+    value = _request->get_header_field( name ).
   ENDMETHOD.
 
-  METHOD validate_path.
-
-    IF strlen( _path ) = 0.
-      RAISE EXCEPTION NEW zasis_cx_exc( textid = zasis_cx_exc=>invalid_api_route
-                                        route  = _path
-                                        ).
-    ENDIF.
-
-    IF _num_path_elements < 2.
-
-      "there is only two valid routes:
-      "" POST ruleSetExecution/ruleSetID & GET ruleSet/ruleSetID
-      """ => both of them contain at least 2 elements
-      RAISE EXCEPTION NEW zasis_cx_exc( textid = zasis_cx_exc=>invalid_api_route
-                                        route  = _path
-                                        ).
-
-    ENDIF.
-
-    IF ( _path_elements[ _num_path_elements - 1 ] <> |ruleSetExecution| AND _path_elements[ _num_path_elements - 1 ] <> |ruleSet| ).
-
-      RAISE EXCEPTION NEW zasis_cx_exc( textid = zasis_cx_exc=>invalid_api_route
-                                        route  = _path
-                                        ).
-
-    ENDIF.
-
-    IF _path_elements[ _num_path_elements ] IS INITIAL.
-
-      RAISE EXCEPTION NEW zasis_cx_exc( textid = zasis_cx_exc=>invalid_api_route
-                                        route  = _path
-                                        ).
-
-    ENDIF.
-
+  METHOD zasis_if_http_request~get_body_text.
+    text = _request->get_cdata( ).
   ENDMETHOD.
-
 ENDCLASS.
 
-CLASS zasis_lcl_http_handler DEFINITION.
-
+"! SICF Response Adapter — wraps if_http_response into zasis_if_http_response
+CLASS lcl_sicf_response DEFINITION.
   PUBLIC SECTION.
-
-    TYPES: BEGIN OF ty_abap_body,
-             string_to_be_interpreted TYPE string,
-             context TYPE zasis_tt_interpret_context,
-           END OF ty_abap_body.
-
-    DATA: request_body TYPE ty_abap_body READ-ONLY.
-
-    DATA ruleset_id TYPE zasis_ruleset_id READ-ONLY.
-
-    DATA request  TYPE REF TO if_http_request  READ-ONLY.
-    DATA response TYPE REF TO if_http_response READ-ONLY.
-
-    METHODS constructor IMPORTING request  TYPE REF TO if_http_request
-                                  response TYPE REF TO if_http_response
-                        RAISING
-                                  zasis_cx_exc.
-
-    METHODS handle_post RETURNING VALUE(interpretation_result) TYPE /ui2/cl_json=>json
-                        RAISING
-                                  zasis_cx_exc
-                                  zasis_cx_no_auth.
-
-    METHODS handle_get RETURNING VALUE(get_result) TYPE /ui2/cl_json=>json
-                       RAISING
-                                 zasis_cx_exc
-                                 zasis_cx_no_auth.
-
-  PROTECTED SECTION.
+    INTERFACES zasis_if_http_response.
+    METHODS constructor IMPORTING response TYPE REF TO if_http_response.
   PRIVATE SECTION.
-
-
+    DATA _response TYPE REF TO if_http_response.
 ENDCLASS.
 
-CLASS zasis_lcl_http_handler IMPLEMENTATION.
-
-  METHOD handle_post.
-
-    DATA(ruleset) = zasis_cl_ruleset_factory=>get_ruleset_by_rulesetid( ruleset_id ).
-
-    DATA(interpret_output) = NEW zasis_cl_interpreter( )->execute( ruleset = ruleset
-                                                                    string_to_be_interpreted = request_body-string_to_be_interpreted
-                                                                    context = request_body-context ).
-
-    /ui2/cl_json=>serialize(
-      EXPORTING
-        data             = interpret_output
-      RECEIVING
-        r_json           = interpretation_result
-    ).
-
-  ENDMETHOD.
-
+CLASS lcl_sicf_response IMPLEMENTATION.
   METHOD constructor.
-
-    DATA(request_validator) = NEW zasis_lcl_http_requ_validator( request = request ).
-
-    ruleset_id = request_validator->extract_ruleset_id_from_requ( ).
-
-    IF request->get_method( ) EQ zasis_constants=>http_method-post.
-      request_validator->validate_content_type( ).
-
-      /ui2/cl_json=>deserialize(
-        EXPORTING
-          json             = CONV string( request->get_cdata( ) )
-          assoc_arrays     = abap_true
-        CHANGING
-          data             = request_body
-      ).
-    ENDIF.
-
-    me->response = response.
-
-    me->request  = request.
-
+    _response = response.
   ENDMETHOD.
 
-  METHOD handle_get.
-
-    DATA(ruleset) = zasis_cl_ruleset_factory=>get_ruleset_by_rulesetid( ruleset_id ).
-
-    DATA(responsebody) = VALUE zasis_srvruleset( header = CORRESPONDING #( ruleset->header ) items = CORRESPONDING #( ruleset->items ) ).
-
-    get_result = /ui2/cl_json=>serialize( data = responsebody ).
-
+  METHOD zasis_if_http_response~set_status.
+    _response->set_status( code   = code
+                           reason = reason ).
   ENDMETHOD.
 
-ENDCLASS.
-
-CLASS lcl_error_response DEFINITION.
-
-  PUBLIC SECTION.
-
-    TYPES: BEGIN OF ty_error,
-             code    TYPE string,
-             message TYPE string,
-             status  TYPE string,
-           END OF ty_error.
-
-    TYPES: BEGIN OF ty_error_envelope,
-             error TYPE ty_error,
-           END OF ty_error_envelope.
-
-    CLASS-METHODS from_exception
-      IMPORTING exception   TYPE REF TO cx_root
-                http_status TYPE string
-      RETURNING VALUE(result) TYPE REF TO lcl_error_response.
-
-    METHODS to_json RETURNING VALUE(json) TYPE /ui2/cl_json=>json.
-
-  PRIVATE SECTION.
-    DATA _envelope TYPE ty_error_envelope.
-
-ENDCLASS.
-
-CLASS lcl_error_response IMPLEMENTATION.
-
-  METHOD from_exception.
-    result = NEW #( ).
-    result->_envelope-error-message = exception->get_text( ).
-    result->_envelope-error-status  = http_status.
-
-    DATA(t100_msg) = CAST if_t100_message( exception ).
-    result->_envelope-error-code = |{ t100_msg->t100key-msgid }/{ t100_msg->t100key-msgno }|.
+  METHOD zasis_if_http_response~set_header_field.
+    _response->set_header_field( name  = name
+                                 value = value ).
   ENDMETHOD.
 
-  METHOD to_json.
-    json = /ui2/cl_json=>serialize( data = _envelope ).
+  METHOD zasis_if_http_response~set_body_text.
+    _response->set_cdata( text ).
   ENDMETHOD.
-
 ENDCLASS.

@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<abapGit version="v1.0.0" serializer="LCL_OBJECT_HTTP" serializer_version="v1.0.0">
+ <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
+  <asx:values>
+   <HTTPID>ZASIS_EXT_API_CLD</HTTPID>
+   <HTTPTEXT>
+    <ID>ZASIS_EXT_API_CLD</ID>
+    <VERSION>A</VERSION>
+    <LANG>E</LANG>
+    <SHORTTEXT>ASIS - External API HTTP Service - Cloud</SHORTTEXT>
+   </HTTPTEXT>
+   <HTTPHDL>
+    <item>
+     <ID>ZASIS_EXT_API_CLD</ID>
+     <VERSION>A</VERSION>
+     <SERVICEORDER>01</SERVICEORDER>
+     <SERVICEHANDLER>ZASIS_CL_HTTP_HANDLER_CLD</SERVICEHANDLER>
+    </item>
+   </HTTPHDL>
+  </asx:values>
+ </asx:abap>
+</abapGit>

@@ -88,6 +88,15 @@ CLASS zasis_cx_exc DEFINITION
                  attr4 TYPE scx_attrname VALUE '',
                END OF method_not_supported.
 
+    CONSTANTS: BEGIN OF http_request_read_error,
+                 msgid TYPE symsgid      VALUE 'ZASIS_MSGS',
+                 msgno TYPE symsgno      VALUE '017',
+                 attr1 TYPE scx_attrname VALUE 'ROUTE',
+                 attr2 TYPE scx_attrname VALUE '',
+                 attr3 TYPE scx_attrname VALUE '',
+                 attr4 TYPE scx_attrname VALUE '',
+               END OF http_request_read_error.
+
     "! Creates a general ZASIS exception with a T100 message and optional message variable attributes.
     "! @parameter textid      | T100 message key identifying the error text; uses the default text if omitted
     "! @parameter previous    | Previous exception that caused this one, for exception chaining
