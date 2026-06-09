@@ -252,9 +252,14 @@ Items with no regex match contain `no match` in `interpretationresult`.
 
 ## HTTP API Reference
 
-The ZASIS REST API is registered as an SAP ICF service. The base path is determined by your ICF service configuration — contact your system administrator for the host and port.
+ZASIS exposes the same HTTP API through two service variants:
 
-All requests and responses use `Content-Type: application/json`.
+- classic SAP ICF service (traditional ABAP HTTP exposure)
+- ABAP Cloud HTTP service binding (ABAP Cloud environments)
+
+All routes documented below are **relative to service root**. Exact URL prefix depends on deployed service variant and system configuration — contact your system administrator for concrete host, port, and service root. Example: route `/ruleSetExecution/BARCODE_01` could be exposed as `https://host.example/sap/bc/http/sap/zasis/ruleSetExecution/BARCODE_01` in one system and under a different prefix in another.
+
+`POST` callers must send `Content-Type: application/json`. All responses are returned as JSON.
 
 ---
 
@@ -281,6 +286,12 @@ Interprets the input string against all rules of the specified RuleSet and retur
   ]
 }
 ```
+
+#### Required Header
+
+| Header         | Value                |
+|----------------|----------------------|
+| `Content-Type` | `application/json`   |
 
 | Field                      | Type            | Required | Description                                      |
 |---------------------------|-----------------|----------|--------------------------------------------------|
@@ -316,7 +327,7 @@ Interprets the input string against all rules of the specified RuleSet and retur
 Returned when:
 - `string_to_be_interpreted` is missing or empty
 - The `ruleSetId` does not exist
-- The `Content-Type` header is not `application/json`
+- For `POST`, the `Content-Type` header is not `application/json`
 - The API path is malformed
 
 ```json
@@ -332,6 +343,20 @@ Returned when:
 #### Response — 403 Forbidden
 
 Returned when the calling user lacks the required authorization for the RuleSet (see [Authorization](#authorization)).
+
+#### Response — 500 Internal Server Error
+
+Returned when ZASIS cannot read HTTP request payload before validation or execution starts.
+
+```json
+{
+  "ERROR": {
+    "CODE": "ZASIS_MSGS/017",
+    "MESSAGE": "Error reading HTTP request: ...",
+    "STATUS": "500"
+  }
+}
+```
 
 ---
 
@@ -375,6 +400,7 @@ All errors follow the same envelope structure:
 |------------|-----------------------------------------------------------------------|
 | `400`       | Invalid input, unknown RuleSet, wrong content-type, malformed path    |
 | `403`       | Authorization check failed for the given RuleSet and user             |
+| `500`       | HTTP request payload could not be read                                |
 | `405`       | HTTP method not supported (only GET and POST are valid)               |
 
 ---
@@ -481,11 +507,19 @@ Verify that the `ruleSetId` in the URL exactly matches the ID configured in the 
 
 ### HTTP 400 — Content-Type error
 
-Ensure the request includes the header `Content-Type: application/json`.
+For `POST /ruleSetExecution/{ruleSetId}`, ensure request includes header `Content-Type: application/json`.
 
 ### HTTP 403 — Forbidden
 
 The calling user lacks the required authorization. Contact your system administrator to verify role assignments for authorization object `ZASIS_GRL`.
+
+### HTTP 500 — Request read error
+
+If API returns `ZASIS_MSGS/017`, request payload could not be read by HTTP runtime.
+
+- Retry request once to rule out transient client or network interruption.
+- Check reverse proxy, API gateway, or client logs for truncated body, early disconnect, or transfer-encoding issues.
+- If error persists, contact system administrator and provide full response payload plus timestamp for backend log analysis.
 
 ### Custom logic class not found or not called
 
