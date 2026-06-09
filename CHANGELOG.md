@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.6.0](https://github.com/MagPasulke/abap-string-interpreter/compare/v0.5.0...v0.6.0) (2026-06-09)
+
+
+### Features
+
+* add docs:user-manual label automation + seed initial user manual ([#69](https://github.com/MagPasulke/abap-string-interpreter/issues/69)) ([223dc41](https://github.com/MagPasulke/abap-string-interpreter/commit/223dc419b8513dfc762951ac761a79a8a3fe6317))
+* **srv:** add ABAP Cloud HTTP handler with adapter pattern ([#74](https://github.com/MagPasulke/abap-string-interpreter/issues/74)) ([dcb6830](https://github.com/MagPasulke/abap-string-interpreter/commit/dcb6830be26e4efae4a7455fb49cad2a1f8c79b6))
+
+
+### Bug Fixes
+
+* **ci:** use COPILOT_PAT + agent_assignment for Copilot issue assignment ([78dde76](https://github.com/MagPasulke/abap-string-interpreter/commit/78dde76a6ae34018305d20060cef44023925a785))
+* Make deploy workflow manual and gated by CI ([#64](https://github.com/MagPasulke/abap-string-interpreter/issues/64)) ([b6b38ed](https://github.com/MagPasulke/abap-string-interpreter/commit/b6b38ed13c9c612e6a3c853d2533d759f2856130))
+
 ## [0.5.0](https://github.com/MagPasulke/abap-string-interpreter/compare/v0.4.0...v0.5.0) (2026-05-30)
 
 
