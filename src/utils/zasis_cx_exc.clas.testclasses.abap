@@ -17,6 +17,7 @@ CLASS ltcl_message_consistency DEFINITION FOR TESTING
     METHODS test_error_custom_log_proc FOR TESTING.
     METHODS test_string_to_interpret_empty FOR TESTING.
     METHODS test_method_not_supported FOR TESTING.
+    METHODS test_http_request_read_error FOR TESTING.
     METHODS test_http_status_default FOR TESTING.
     METHODS test_http_status_custom FOR TESTING.
 ENDCLASS.
@@ -65,6 +66,10 @@ CLASS ltcl_message_consistency IMPLEMENTATION.
 
   METHOD test_method_not_supported.
     assert_message_resolves( textid = zasis_cx_exc=>method_not_supported ).
+  ENDMETHOD.
+
+  METHOD test_http_request_read_error.
+    assert_message_resolves( textid = zasis_cx_exc=>http_request_read_error ).
   ENDMETHOD.
 
   METHOD test_http_status_default.
