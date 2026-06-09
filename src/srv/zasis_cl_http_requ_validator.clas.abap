@@ -31,7 +31,9 @@ CLASS zasis_cl_http_requ_validator DEFINITION
 
     DATA _request TYPE REF TO zasis_if_http_request.
 
-    METHODS determine_path_elements.
+    METHODS determine_path_elements
+      RAISING
+        zasis_cx_exc.
 
     METHODS validate_path
       RAISING
@@ -45,7 +47,6 @@ CLASS zasis_cl_http_requ_validator IMPLEMENTATION.
 
   METHOD constructor.
     _request = request.
-    determine_path_elements( ).
   ENDMETHOD.
 
   METHOD determine_path_elements.
@@ -56,6 +57,7 @@ CLASS zasis_cl_http_requ_validator IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD extract_ruleset_id.
+    determine_path_elements( ).
     validate_path( ).
 
     TRY.

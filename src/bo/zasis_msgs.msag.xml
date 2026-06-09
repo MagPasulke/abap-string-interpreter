@@ -98,6 +98,12 @@
      <MSGNR>016</MSGNR>
      <TEXT>HTTP method &amp;1 is not supported</TEXT>
     </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZASIS_MSGS</ARBGB>
+     <MSGNR>017</MSGNR>
+     <TEXT>Error reading HTTP request: &amp;1</TEXT>
+    </T100>
    </T100>
   </asx:values>
  </asx:abap>

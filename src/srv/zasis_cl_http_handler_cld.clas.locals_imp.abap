@@ -19,32 +19,44 @@ CLASS lcl_cld_request IMPLEMENTATION.
   METHOD zasis_if_http_request~get_path.
     TRY.
         path = _request->get_header_field( i_name = '~path' ).
-      CATCH cx_web_message_error.
-        path = ||.
+      CATCH cx_web_message_error INTO DATA(path_exc).
+        RAISE EXCEPTION NEW zasis_cx_exc( textid      = zasis_cx_exc=>http_request_read_error
+                                          previous    = path_exc
+                                          route       = path_exc->get_text( )
+                                          http_status = '500' ).
     ENDTRY.
   ENDMETHOD.
 
   METHOD zasis_if_http_request~get_method.
     TRY.
         method = _request->get_method( ).
-      CATCH cx_web_message_error.
-        method = ||.
+      CATCH cx_web_message_error INTO DATA(method_exc).
+        RAISE EXCEPTION NEW zasis_cx_exc( textid      = zasis_cx_exc=>http_request_read_error
+                                          previous    = method_exc
+                                          route       = method_exc->get_text( )
+                                          http_status = '500' ).
     ENDTRY.
   ENDMETHOD.
 
   METHOD zasis_if_http_request~get_header_field.
     TRY.
         value = _request->get_header_field( i_name = name ).
-      CATCH cx_web_message_error.
-        value = ||.
+      CATCH cx_web_message_error INTO DATA(header_exc).
+        RAISE EXCEPTION NEW zasis_cx_exc( textid      = zasis_cx_exc=>http_request_read_error
+                                          previous    = header_exc
+                                          route       = header_exc->get_text( )
+                                          http_status = '500' ).
     ENDTRY.
   ENDMETHOD.
 
   METHOD zasis_if_http_request~get_body_text.
     TRY.
         text = _request->get_text( ).
-      CATCH cx_web_message_error.
-        text = ||.
+      CATCH cx_web_message_error INTO DATA(body_exc).
+        RAISE EXCEPTION NEW zasis_cx_exc( textid      = zasis_cx_exc=>http_request_read_error
+                                          previous    = body_exc
+                                          route       = body_exc->get_text( )
+                                          http_status = '500' ).
     ENDTRY.
   ENDMETHOD.
 ENDCLASS.
