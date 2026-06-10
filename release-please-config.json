@@ -1,13 +1,9 @@
 {
   "packages": {
     ".": {
-      "release-type": "simple",
+      "release-type": "node",
       "extra-files": [
-        {
-          "type": "generic",
-          "path": "src/zasis_if_version.intf.abap",
-          "search-pattern": "VALUE '{{version}}'"
-        }
+        "src/zasis_if_version.intf.abap"
       ]
     }
   }

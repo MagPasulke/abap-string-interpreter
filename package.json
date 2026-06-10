@@ -1,6 +1,6 @@
 {
   "name": "abap-string-interpreter",
-  "version": "0.4.0",
+  "version": "0.6.1",
   "description": "ZASIS - ABAP String Interpreter",
   "scripts": {
     "unit": "node -e \"fs=require('fs');fs.rmSync('output',{recursive:true,force:true})\" && abap_transpile && echo RUNNING && node output/index.mjs",
