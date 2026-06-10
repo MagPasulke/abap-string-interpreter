@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.6.1](https://github.com/MagPasulke/abap-string-interpreter/compare/v0.6.0...v0.6.1) (2026-06-10)
+
+
+### Bug Fixes
+
+* add WITH_UNIT_TESTS indicator to validator class XML ([#78](https://github.com/MagPasulke/abap-string-interpreter/issues/78)) ([95b3044](https://github.com/MagPasulke/abap-string-interpreter/commit/95b3044a7a503a1712ef9b60bcd88ca9691f3880))
+
 ## [0.6.0](https://github.com/MagPasulke/abap-string-interpreter/compare/v0.5.0...v0.6.0) (2026-06-09)
 
 
