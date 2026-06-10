@@ -15,6 +15,20 @@ CLASS zasis_cl_class_validator DEFINITION
       RAISING
         zasis_cx_exc.
 
+    "! Verifies that an ABAP class exists and implements the specified interface, then creates and returns an instance.
+    "! @parameter class_name     | Name of the ABAP class to instantiate
+    "! @parameter interface_name | Fully qualified name of the interface the class must implement
+    "! @parameter result         | New instance of the class as a generic object reference
+    "! @raising   zasis_cx_exc | Raised when the class does not exist or does not implement the interface
+    CLASS-METHODS create_instance
+      IMPORTING
+        class_name     TYPE string
+        interface_name TYPE string
+      RETURNING
+        VALUE(result)  TYPE REF TO object
+      RAISING
+        zasis_cx_exc.
+
   PROTECTED SECTION.
   PRIVATE SECTION.
 ENDCLASS.
@@ -46,6 +60,13 @@ CLASS zasis_cl_class_validator IMPLEMENTATION.
         classname = CONV #( upper_class ) ).
     ENDIF.
 
+  ENDMETHOD.
+
+  METHOD create_instance.
+    check_implements(
+      class_name     = class_name
+      interface_name = interface_name ).
+    CREATE OBJECT result TYPE (class_name).
   ENDMETHOD.
 
 ENDCLASS.

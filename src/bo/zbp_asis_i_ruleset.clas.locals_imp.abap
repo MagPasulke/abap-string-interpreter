@@ -8,6 +8,11 @@ CLASS lhc_rulesetitem DEFINITION INHERITING FROM cl_abap_behavior_handler.
       IMPORTING keys FOR RuleSetItem~checkEventProducer.
     METHODS precheck_update FOR PRECHECK
       IMPORTING entities FOR UPDATE RuleSetItem.
+    METHODS is_regex_valid
+      IMPORTING
+        pattern       TYPE string
+      RETURNING
+        VALUE(result) TYPE abap_bool.
 
 ENDCLASS.
 
@@ -23,20 +28,17 @@ CLASS lhc_rulesetitem IMPLEMENTATION.
     ENDIF.
 
     LOOP AT rulesetitems INTO DATA(rulesetitem).
-      TRY.
-          DATA(regex) = cl_abap_regex=>create_pcre( pattern = rulesetitem-InterpretationRule ).
+      IF is_regex_valid( rulesetitem-InterpretationRule ) = abap_false.
 
-        CATCH cx_sy_regex cx_sy_invalid_regex_operation.
+        APPEND VALUE #( %tky = rulesetitem-%tky ) TO failed-rulesetitem.
 
-          APPEND VALUE #( %tky = rulesetitem-%tky ) TO failed-rulesetitem.
+        APPEND VALUE #( %tky = rulesetitem-%tky
+                        %msg = NEW zasis_cx_ruleset_ui( textid   = zasis_cx_ruleset_ui=>invalid_regex
+                                                        severity = if_abap_behv_message=>severity-error
+                                                        regex    = rulesetitem-InterpretationRule ) )
+               TO reported-rulesetitem.
 
-          APPEND VALUE #( %tky = rulesetitem-%tky
-                          %msg = NEW zasis_cx_ruleset_ui( textid   = zasis_cx_ruleset_ui=>invalid_regex
-                                                          severity = if_abap_behv_message=>severity-error
-                                                          regex    = rulesetitem-InterpretationRule ) )
-                 TO reported-rulesetitem.
-
-      ENDTRY.
+      ENDIF.
     ENDLOOP.
   ENDMETHOD.
 
@@ -81,23 +83,16 @@ CLASS lhc_rulesetitem IMPLEMENTATION.
   METHOD precheck_update.
     LOOP AT entities INTO DATA(entity).
 
-      IF entity-%control-InterpretationRule EQ '01' AND entity-%control-InterpretationRule IS NOT INITIAL. " was updated, not deleted.
+      IF entity-%control-InterpretationRule EQ '01' " was updated, not deleted.
+         AND is_regex_valid( entity-InterpretationRule ) = abap_false.
 
-        TRY.
-            DATA(regex) = cl_abap_regex=>create_pcre( pattern = entity-InterpretationRule ).
+          APPEND VALUE #( %tky = entity-%tky ) TO failed-rulesetitem.
 
-          CATCH cx_sy_invalid_regex.
-
-            " invalid regex
-            APPEND VALUE #( %tky = entity-%tky ) TO failed-rulesetitem.
-
-            APPEND VALUE #( %tky = entity-%tky
-                            %msg = NEW zasis_cx_ruleset_ui( textid   = zasis_cx_ruleset_ui=>invalid_regex
-                                                            severity = if_abap_behv_message=>severity-error
-                                                            regex    = entity-InterpretationRule ) )
-                   TO reported-rulesetitem.
-
-        ENDTRY.
+          APPEND VALUE #( %tky = entity-%tky
+                          %msg = NEW zasis_cx_ruleset_ui( textid   = zasis_cx_ruleset_ui=>invalid_regex
+                                                          severity = if_abap_behv_message=>severity-error
+                                                          regex    = entity-InterpretationRule ) )
+                 TO reported-rulesetitem.
 
       ENDIF.
 
@@ -130,6 +125,15 @@ CLASS lhc_rulesetitem IMPLEMENTATION.
     ENDLOOP.
   ENDMETHOD.
 
+  METHOD is_regex_valid.
+    TRY.
+        cl_abap_regex=>create_pcre( pattern = pattern ).
+        result = abap_true.
+      CATCH cx_sy_regex.
+        result = abap_false.
+    ENDTRY.
+  ENDMETHOD.
+
 ENDCLASS.
 
 CLASS lhc_ZASIS_I_RULESET DEFINITION INHERITING FROM cl_abap_behavior_handler.
@@ -143,6 +147,11 @@ CLASS lhc_ZASIS_I_RULESET DEFINITION INHERITING FROM cl_abap_behavior_handler.
       IMPORTING keys FOR ruleset~checkuniquerulesetid.
     METHODS testRuleSet FOR MODIFY
       IMPORTING keys FOR ACTION ruleset~testRuleSet.
+    METHODS check_rap_authority
+      IMPORTING
+        activity      TYPE string
+      RETURNING
+        VALUE(result) TYPE if_abap_behv=>t_char01.
 
 ENDCLASS.
 
@@ -150,59 +159,42 @@ CLASS lhc_ZASIS_I_RULESET IMPLEMENTATION.
   METHOD get_global_authorizations.
 
     IF requested_authorizations-%create = if_abap_behv=>mk-on.
-
-      AUTHORITY-CHECK OBJECT 'ZASIS_GRL'
-                      ID 'ZASIS_RULE' DUMMY
-                      ID 'ACTVT'      FIELD '01'.
-
-      result-%create = COND #( WHEN sy-subrc = 0 THEN if_abap_behv=>auth-allowed ELSE if_abap_behv=>auth-unauthorized ).
-
+      result-%create = check_rap_authority( '01' ).
       IF result-%create = if_abap_behv=>auth-unauthorized.
         APPEND VALUE #( %msg = NEW zasis_cx_ruleset_ui( textid   = zasis_cx_ruleset_ui=>no_auth
                                                         severity = if_abap_behv_message=>severity-error
                                                         action   = |Create| ) )
                TO reported-ruleset.
-
       ENDIF.
-
     ENDIF.
 
-    " Authorization check for update operations
     IF requested_authorizations-%update = if_abap_behv=>mk-on.
-
-      AUTHORITY-CHECK OBJECT 'ZASIS_GRL'
-                      ID 'ZASIS_RULE' DUMMY
-                      ID 'ACTVT'      FIELD '02'.
-
-      result-%update = COND #( WHEN sy-subrc = 0 THEN if_abap_behv=>auth-allowed ELSE if_abap_behv=>auth-unauthorized ).
-
+      result-%update = check_rap_authority( '02' ).
       IF result-%update = if_abap_behv=>auth-unauthorized.
-
         APPEND VALUE #( %msg = NEW zasis_cx_ruleset_ui( textid   = zasis_cx_ruleset_ui=>no_auth
                                                         severity = if_abap_behv_message=>severity-error
                                                         action   = 'Update' ) )
                TO reported-ruleset.
-
       ENDIF.
     ENDIF.
 
     IF requested_authorizations-%delete = if_abap_behv=>mk-on.
-
-      AUTHORITY-CHECK OBJECT 'ZASIS_GRL'
-                      ID 'ZASIS_RULE' DUMMY
-                      ID 'ACTVT'      FIELD '06'.
-
-      result-%delete = COND #( WHEN sy-subrc = 0 THEN if_abap_behv=>auth-allowed ELSE if_abap_behv=>auth-unauthorized ).
-
+      result-%delete = check_rap_authority( '06' ).
       IF result-%delete = if_abap_behv=>auth-unauthorized.
-
         APPEND VALUE #( %msg = NEW zasis_cx_ruleset_ui( textid   = zasis_cx_ruleset_ui=>no_auth
                                                         severity = if_abap_behv_message=>severity-error
                                                         action   = 'Delete' ) )
                TO reported-ruleset.
-
       ENDIF.
     ENDIF.
+
+  ENDMETHOD.
+
+  METHOD check_rap_authority.
+    AUTHORITY-CHECK OBJECT 'ZASIS_GRL'
+                    ID 'ZASIS_RULE' DUMMY
+                    ID 'ACTVT'      FIELD activity.
+    result = COND #( WHEN sy-subrc = 0 THEN if_abap_behv=>auth-allowed ELSE if_abap_behv=>auth-unauthorized ).
   ENDMETHOD.
 
   METHOD get_instance_features.
