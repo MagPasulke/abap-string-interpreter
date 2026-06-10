@@ -159,7 +159,7 @@ CLASS lhc_ZASIS_I_RULESET IMPLEMENTATION.
   METHOD get_global_authorizations.
 
     IF requested_authorizations-%create = if_abap_behv=>mk-on.
-      result-%create = check_rap_authority( '01' ).
+      result-%create = check_rap_authority( zasis_constants=>activity-create ).
       IF result-%create = if_abap_behv=>auth-unauthorized.
         APPEND VALUE #( %msg = NEW zasis_cx_ruleset_ui( textid   = zasis_cx_ruleset_ui=>no_auth
                                                         severity = if_abap_behv_message=>severity-error
@@ -169,7 +169,7 @@ CLASS lhc_ZASIS_I_RULESET IMPLEMENTATION.
     ENDIF.
 
     IF requested_authorizations-%update = if_abap_behv=>mk-on.
-      result-%update = check_rap_authority( '02' ).
+      result-%update = check_rap_authority( zasis_constants=>activity-change ).
       IF result-%update = if_abap_behv=>auth-unauthorized.
         APPEND VALUE #( %msg = NEW zasis_cx_ruleset_ui( textid   = zasis_cx_ruleset_ui=>no_auth
                                                         severity = if_abap_behv_message=>severity-error
@@ -179,7 +179,7 @@ CLASS lhc_ZASIS_I_RULESET IMPLEMENTATION.
     ENDIF.
 
     IF requested_authorizations-%delete = if_abap_behv=>mk-on.
-      result-%delete = check_rap_authority( '06' ).
+      result-%delete = check_rap_authority( zasis_constants=>activity-delete ).
       IF result-%delete = if_abap_behv=>auth-unauthorized.
         APPEND VALUE #( %msg = NEW zasis_cx_ruleset_ui( textid   = zasis_cx_ruleset_ui=>no_auth
                                                         severity = if_abap_behv_message=>severity-error

@@ -33,25 +33,25 @@ CLASS zasis_cl_auth_checker IMPLEMENTATION.
   METHOD zasis_if_auth_checker~check_read.
     check_authority(
       ruleset_id = ruleset_id
-      activity   = '03' ).
+      activity   = zasis_constants=>activity-display ).
   ENDMETHOD.
 
   METHOD zasis_if_auth_checker~check_execute.
     check_authority(
       ruleset_id = ruleset_id
-      activity   = '16' ).
+      activity   = zasis_constants=>activity-execute ).
   ENDMETHOD.
 
   METHOD zasis_if_auth_checker~check_create.
     check_authority(
       ruleset_id = ruleset_id
-      activity   = '01' ).
+      activity   = zasis_constants=>activity-create ).
   ENDMETHOD.
 
   METHOD zasis_if_auth_checker~check_change.
     check_authority(
       ruleset_id = ruleset_id
-      activity   = '02' ).
+      activity   = zasis_constants=>activity-change ).
   ENDMETHOD.
 
 ENDCLASS.
