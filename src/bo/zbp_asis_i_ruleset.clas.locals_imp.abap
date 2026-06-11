@@ -319,10 +319,7 @@ CLASS lhc_ZASIS_I_RULESET IMPLEMENTATION.
     DATA: rulesets_cba TYPE TABLE FOR CREATE zasis_i_ruleset\_Items.
 
     " Assert %cid is filled (mandatory for factory actions)
-    READ TABLE keys WITH KEY %cid = '' INTO DATA(key_with_initial_cid).
-    IF sy-subrc = 0.
-      ASSERT 1 = 2. " %cid must not be initial for factory actions
-    ENDIF.
+    ASSERT NOT line_exists( keys[ %cid = '' ] ).
 
     " Read source ruleset header data
     READ ENTITIES OF zasis_i_ruleset IN LOCAL MODE
@@ -339,16 +336,15 @@ CLASS lhc_ZASIS_I_RULESET IMPLEMENTATION.
     DATA(rulesets) = VALUE TABLE FOR CREATE zasis_i_ruleset( ).
 
     LOOP AT keys INTO DATA(key).
-      READ TABLE source_rulesets ASSIGNING FIELD-SYMBOL(<source>)
-        WITH KEY id COMPONENTS %tky = key-%tky.
-
-      IF sy-subrc <> 0.
-        APPEND VALUE #( %cid = key-%cid
-                        %key = key-%tky
-                        %fail = VALUE #( cause = if_abap_behv=>cause-not_found ) )
-               TO failed-ruleset.
-        CONTINUE.
-      ENDIF.
+      TRY.
+          DATA(source) = source_rulesets[ id COMPONENTS %tky = key-%tky ].
+        CATCH cx_sy_itab_line_not_found.
+          APPEND VALUE #( %cid = key-%cid
+                          %key = key-%tky
+                          %fail = VALUE #( cause = if_abap_behv=>cause-not_found ) )
+                 TO failed-ruleset.
+          CONTINUE.
+      ENDTRY.
 
       " Prepare new RuleSet header
       APPEND VALUE #( %cid      = key-%cid
@@ -360,7 +356,7 @@ CLASS lhc_ZASIS_I_RULESET IMPLEMENTATION.
 
       DATA(item_counter) = 0.
       LOOP AT source_items ASSIGNING FIELD-SYMBOL(<source_item>)
-        USING KEY entity WHERE RuleSetUUID = <source>-RuleSetUUID.
+        USING KEY entity WHERE RuleSetUUID = source-RuleSetUUID.
 
         item_counter += 1.
 
