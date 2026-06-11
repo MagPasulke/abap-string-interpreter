@@ -122,9 +122,12 @@ function formatSummary(pkg: string, worklist: AtcWorkList, findings: SyntaxFindi
   const p2 = findings.filter((f) => f.priority === 2).length
   const p3 = findings.filter((f) => f.priority >= 3).length
 
+  const objectsWithFindings = worklist.objects.filter((o) => o.findings.length > 0).length
+
   lines.push(`SYNTAX CHECK: ${findings.length} finding(s) (P1: ${p1}, P2: ${p2}, P3: ${p3})`)
   lines.push(`  Package: ${pkg}`)
-  lines.push(`  Objects with findings: ${worklist.objects.length}`)
+  lines.push(`  Objects checked: ${worklist.objects.length}`)
+  lines.push(`  Objects with findings: ${objectsWithFindings}`)
   lines.push("")
 
   for (const finding of findings) {
