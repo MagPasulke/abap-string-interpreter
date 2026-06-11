@@ -143,6 +143,8 @@ CLASS lhc_ZASIS_I_RULESET DEFINITION INHERITING FROM cl_abap_behavior_handler.
       IMPORTING keys FOR ruleset~checkuniquerulesetid.
     METHODS testRuleSet FOR MODIFY
       IMPORTING keys FOR ACTION ruleset~testRuleSet.
+    METHODS copyRuleSet FOR MODIFY
+      IMPORTING keys FOR ACTION ruleset~copyRuleSet.
 
 ENDCLASS.
 
@@ -309,6 +311,100 @@ CLASS lhc_ZASIS_I_RULESET IMPLEMENTATION.
       ENDTRY.
 
     ENDLOOP.
+
+  ENDMETHOD.
+
+  METHOD copyRuleSet.
+
+    DATA: rulesets_cba TYPE TABLE FOR CREATE zasis_i_ruleset\_Items.
+
+    " Assert %cid is filled (mandatory for factory actions)
+    READ TABLE keys WITH KEY %cid = '' INTO DATA(key_with_initial_cid).
+    IF sy-subrc = 0.
+      ASSERT 1 = 2. " %cid must not be initial for factory actions
+    ENDIF.
+
+    " Read source ruleset header data
+    READ ENTITIES OF zasis_i_ruleset IN LOCAL MODE
+         ENTITY RuleSet
+         ALL FIELDS WITH CORRESPONDING #( keys )
+         RESULT DATA(source_rulesets).
+
+    " Read source ruleset items via association
+    READ ENTITIES OF zasis_i_ruleset IN LOCAL MODE
+         ENTITY RuleSet BY \_Items
+         ALL FIELDS WITH CORRESPONDING #( source_rulesets )
+         RESULT DATA(source_items).
+
+    DATA(rulesets) = VALUE TABLE FOR CREATE zasis_i_ruleset( ).
+
+    LOOP AT keys INTO DATA(key).
+      READ TABLE source_rulesets ASSIGNING FIELD-SYMBOL(<source>)
+        WITH KEY id COMPONENTS %tky = key-%tky.
+
+      IF sy-subrc <> 0.
+        APPEND VALUE #( %cid = key-%cid
+                        %key = key-%tky
+                        %fail = VALUE #( cause = if_abap_behv=>cause-not_found ) )
+               TO failed-ruleset.
+        CONTINUE.
+      ENDIF.
+
+      " Prepare new RuleSet header
+      APPEND VALUE #( %cid      = key-%cid
+                      %data     = VALUE #( RuleSetId = key-%param-new_ruleset_id ) )
+             TO rulesets.
+
+      " Prepare items for create-by-association
+      APPEND VALUE #( %cid_ref = key-%cid ) TO rulesets_cba ASSIGNING FIELD-SYMBOL(<items_cba>).
+
+      DATA(item_counter) = 0.
+      LOOP AT source_items ASSIGNING FIELD-SYMBOL(<source_item>)
+        USING KEY entity WHERE RuleSetUUID = <source>-RuleSetUUID.
+
+        item_counter += 1.
+
+        DATA(event_producer) = COND #( WHEN key-%param-copy_event_producer = abap_true
+                                       THEN <source_item>-EventProducer
+                                       ELSE '' ).
+
+        DATA(custom_logic) = COND #( WHEN key-%param-copy_custom_logic = abap_true
+                                     THEN <source_item>-CustomLogic
+                                     ELSE '' ).
+
+        APPEND VALUE #( %cid               = |{ key-%cid }_ITEM_{ item_counter }|
+                        Intpretationtarget = <source_item>-Intpretationtarget
+                        InterpretationRule = <source_item>-InterpretationRule
+                        InterpretationType = <source_item>-InterpretationType
+                        OffsetPre          = <source_item>-OffsetPre
+                        OffsetPost         = <source_item>-OffsetPost
+                        ReplacementString  = <source_item>-ReplacementString
+                        CustomLogic        = custom_logic
+                        EventProducer      = event_producer )
+               TO <items_cba>-%target.
+
+      ENDLOOP.
+
+    ENDLOOP.
+
+    " Execute create + create-by-association in local mode
+    MODIFY ENTITIES OF zasis_i_ruleset IN LOCAL MODE
+      ENTITY RuleSet
+        CREATE FIELDS ( RuleSetId )
+          WITH rulesets
+        CREATE BY \_Items FIELDS ( Intpretationtarget InterpretationRule InterpretationType
+                                   OffsetPre OffsetPost ReplacementString CustomLogic EventProducer )
+          WITH rulesets_cba
+      MAPPED DATA(mapped_create)
+      FAILED DATA(failed_create)
+      REPORTED DATA(reported_create).
+
+    " Map factory result: only root instance
+    mapped-ruleset = mapped_create-ruleset.
+
+    " Forward any failures
+    INSERT LINES OF failed_create-ruleset INTO TABLE failed-ruleset.
+    INSERT LINES OF reported_create-ruleset INTO TABLE reported-ruleset.
 
   ENDMETHOD.
 
