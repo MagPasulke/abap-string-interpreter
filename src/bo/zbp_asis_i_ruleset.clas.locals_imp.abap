@@ -316,7 +316,8 @@ CLASS lhc_ZASIS_I_RULESET IMPLEMENTATION.
 
   METHOD copyRuleSet.
 
-    DATA: rulesets_cba TYPE TABLE FOR CREATE zasis_i_ruleset\_Items.
+    DATA: rulesets_cba TYPE TABLE FOR CREATE zasis_i_ruleset\_Items,
+          rulesets     TYPE TABLE FOR CREATE zasis_i_ruleset.
 
     " Guard: %cid must be filled for factory actions — without it, CREATE BY association
     " would fail silently for source instances that have child items
@@ -333,8 +334,6 @@ CLASS lhc_ZASIS_I_RULESET IMPLEMENTATION.
          ENTITY RuleSet BY \_Items
          ALL FIELDS WITH CORRESPONDING #( source_rulesets )
          RESULT DATA(source_items).
-
-    DATA(rulesets) = VALUE TABLE FOR CREATE zasis_i_ruleset( ).
 
     LOOP AT keys INTO DATA(key).
       TRY.
