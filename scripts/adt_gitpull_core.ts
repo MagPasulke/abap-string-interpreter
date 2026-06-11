@@ -130,10 +130,10 @@ export async function adtGitPull(options: AdtGitPullOptions): Promise<AdtGitPull
     }
   }
 
-  // 6. Optionally check for syntax errors (inactive objects)
+  // 6. Optionally check for syntax errors
   let checkResult: AdtCheckErrorsResult | undefined
   if (options.checkErrors) {
-    checkResult = await adtCheckErrors({ url, user, password })
+    checkResult = await adtCheckErrors({ url, user, password, package: matchingRepo.sapPackage })
   }
 
   // 7. Success

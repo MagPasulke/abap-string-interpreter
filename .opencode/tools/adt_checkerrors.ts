@@ -24,10 +24,9 @@ function loadEnv(dir: string): Record<string, string> {
 
 export default tool({
   description:
-    "Checks for syntax errors on the SAP system by detecting inactive objects " +
-    "and retrieving their activation error messages. Use after adt_gitpull to " +
-    "detect objects that failed activation due to syntax issues. Returns error " +
-    "details with object name, line number, and message text.",
+    "Checks for syntax errors on the SAP system by running ATC with the SYNTAX_CHECK " +
+    "variant on the project package. Use after adt_gitpull to detect objects with " +
+    "syntax issues. Returns error details with object name, line number, and message text.",
   args: {},
   async execute(_args, context) {
     const rootDir = context.worktree || context.directory
@@ -35,6 +34,7 @@ export default tool({
     const url = process.env.SAP_ADT_URL || env.SAP_ADT_URL
     const user = process.env.SAP_ADT_USER || env.SAP_ADT_USER
     const password = process.env.SAP_ADT_PASSWORD || env.SAP_ADT_PASSWORD
+    const pkg = process.env.SAP_ROOT_PACKAGE || env.SAP_ROOT_PACKAGE
 
     if (!url || !user || !password) {
       return (
@@ -45,7 +45,7 @@ export default tool({
       )
     }
 
-    const result = await adtCheckErrors({ url, user, password })
+    const result = await adtCheckErrors({ url, user, password, package: pkg })
 
     if (!result.ok) {
       return `ERROR: ${result.error}`

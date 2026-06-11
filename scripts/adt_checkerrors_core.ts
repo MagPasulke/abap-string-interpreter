@@ -1,4 +1,4 @@
-import { ADTClient, InactiveObjectRecord, ActivationResult } from "abap-adt-api"
+import { ADTClient, AtcWorkList } from "abap-adt-api"
 
 export interface AdtCheckErrorsOptions {
   /** SAP system base URL (e.g. https://host:44300) */
@@ -7,27 +7,35 @@ export interface AdtCheckErrorsOptions {
   user: string
   /** SAP password */
   password: string
+  /** SAP package to check (e.g. "$ZASIS"). Uses SAP_ROOT_PACKAGE from env if omitted. */
+  package?: string
 }
 
-export interface ActivationError {
-  /** Object description (e.g. "Class ZASIS_CL_INTERPRETER") */
+export interface SyntaxFinding {
+  /** Object name (e.g. "ZASIS_CL_INTERPRETER") */
   object: string
-  /** Error severity (E=Error, W=Warning, A=Abort) */
-  type: string
-  /** Line number where error occurs */
-  line: number
-  /** Error message text */
+  /** Object type (e.g. "CLAS") */
+  objectType: string
+  /** Priority: 1=error, 2=warning, 3=info */
+  priority: number
+  /** Check that produced the finding */
+  checkTitle: string
+  /** Finding message text */
   message: string
-  /** ADT URI of the object */
-  href: string
+  /** Location line number */
+  line: number
+  /** Location column */
+  column: number
 }
 
 export interface AdtCheckErrorsSuccess {
   ok: true
-  /** Number of inactive objects found */
-  inactiveCount: number
-  /** Activation error messages (empty if all objects activated successfully) */
-  errors: ActivationError[]
+  /** Total objects checked */
+  objectsChecked: number
+  /** Number of findings (errors + warnings) */
+  findingCount: number
+  /** Structured findings */
+  findings: SyntaxFinding[]
   /** Human-readable summary */
   summary: string
 }
@@ -40,14 +48,13 @@ export interface AdtCheckErrorsError {
 export type AdtCheckErrorsResult = AdtCheckErrorsSuccess | AdtCheckErrorsError
 
 /**
- * Checks for inactive objects on a SAP system and retrieves their
- * activation/syntax error messages by attempting preaudit activation.
- *
- * Objects that have no errors will be activated (which is the desired state).
- * Objects with syntax errors remain inactive and their error messages are returned.
+ * Runs a syntax check on a SAP package using the ATC (ABAP Test Cockpit)
+ * with the SYNTAX_CHECK variant. Returns all syntax errors and warnings
+ * found in the package.
  */
 export async function adtCheckErrors(options: AdtCheckErrorsOptions): Promise<AdtCheckErrorsResult> {
   const { url, user, password } = options
+  const pkg = options.package || "$ZASIS"
 
   // 1. Connect to SAP system
   let client: ADTClient
@@ -57,101 +64,73 @@ export async function adtCheckErrors(options: AdtCheckErrorsOptions): Promise<Ad
     return { ok: false, error: `Failed to create ADT client: ${e.message || e}` }
   }
 
-  // 2. Get inactive objects
-  let inactiveRecords: InactiveObjectRecord[]
+  // 2. Run ATC with SYNTAX_CHECK variant on the package
+  const packageUrl = `/sap/bc/adt/packages/${encodeURIComponent(pkg.toLowerCase())}`
+  let runResult: { id: string; timestamp: number }
   try {
-    inactiveRecords = await client.inactiveObjects()
+    runResult = await client.createAtcRun("SYNTAX_CHECK", packageUrl)
   } catch (e: any) {
-    return { ok: false, error: `Failed to retrieve inactive objects: ${e.message || e}` }
+    return { ok: false, error: `Failed to start ATC run (variant SYNTAX_CHECK) on ${pkg}: ${e.message || e}` }
   }
 
-  // Filter to records that have an actual object (not just transport entries)
-  const inactiveObjects = inactiveRecords
-    .filter((r) => r.object)
-    .map((r) => r.object!)
+  // 3. Retrieve worklist (findings)
+  let worklist: AtcWorkList
+  try {
+    worklist = await client.atcWorklists(runResult.id)
+  } catch (e: any) {
+    return { ok: false, error: `Failed to retrieve ATC worklist (run ID: ${runResult.id}): ${e.message || e}` }
+  }
 
-  if (inactiveObjects.length === 0) {
-    return {
-      ok: true,
-      inactiveCount: 0,
-      errors: [],
-      summary: "No inactive objects found. All objects are active and syntax-error-free.",
+  // 4. Extract findings
+  const findings: SyntaxFinding[] = []
+  for (const obj of worklist.objects) {
+    for (const finding of obj.findings) {
+      findings.push({
+        object: obj.name,
+        objectType: obj.type,
+        priority: finding.priority,
+        checkTitle: finding.checkTitle,
+        message: finding.messageTitle,
+        line: finding.location.range.start.line,
+        column: finding.location.range.start.column,
+      })
     }
   }
-
-  // 3. Attempt activation with preaudit to get error messages
-  let activationResult: ActivationResult
-  try {
-    activationResult = await client.activate(
-      inactiveObjects.map((obj) => ({
-        "adtcore:uri": obj["adtcore:uri"],
-        "adtcore:type": obj["adtcore:type"],
-        "adtcore:name": obj["adtcore:name"],
-        "adtcore:parentUri": obj["adtcore:parentUri"] || "",
-      })),
-      true // preauditRequested
-    )
-  } catch (e: any) {
-    // If activation call itself fails, still report the inactive objects
-    const objectList = inactiveObjects
-      .map((o) => `  - ${o["adtcore:name"]} (${o["adtcore:type"]})`)
-      .join("\n")
-    return {
-      ok: false,
-      error:
-        `Found ${inactiveObjects.length} inactive object(s) but activation preaudit failed: ${e.message || e}\n\n` +
-        `Inactive objects:\n${objectList}`,
-    }
-  }
-
-  // 4. Extract error messages
-  const errors: ActivationError[] = activationResult.messages.map((msg) => ({
-    object: msg.objDescr,
-    type: msg.type,
-    line: msg.line,
-    message: msg.shortText,
-    href: msg.href,
-  }))
 
   // 5. Format summary
-  const summary = formatSummary(inactiveObjects.length, activationResult, errors)
+  const summary = formatSummary(pkg, worklist, findings)
 
   return {
     ok: true,
-    inactiveCount: inactiveObjects.length,
-    errors,
+    objectsChecked: worklist.objects.length,
+    findingCount: findings.length,
+    findings,
     summary,
   }
 }
 
-function formatSummary(
-  inactiveCount: number,
-  result: ActivationResult,
-  errors: ActivationError[]
-): string {
+function formatSummary(pkg: string, worklist: AtcWorkList, findings: SyntaxFinding[]): string {
   const lines: string[] = []
 
-  if (result.success && errors.length === 0) {
-    lines.push(`All ${inactiveCount} inactive object(s) activated successfully. No syntax errors.`)
+  const errors = findings.filter((f) => f.priority === 1)
+  const warnings = findings.filter((f) => f.priority === 2)
+  const infos = findings.filter((f) => f.priority >= 3)
+
+  if (findings.length === 0) {
+    lines.push(`SYNTAX CHECK PASSED: No errors found in package ${pkg}.`)
+    lines.push(`  Objects checked: ${worklist.objects.length}`)
     return lines.join("\n")
   }
 
-  const errorCount = errors.filter((e) => e.type === "E" || e.type === "A").length
-  const warningCount = errors.filter((e) => e.type === "W").length
-  const stillInactive = result.inactive?.length ?? 0
-
-  lines.push(`SYNTAX ERRORS FOUND: ${errorCount} error(s), ${warningCount} warning(s)`)
-  lines.push(`  Inactive objects checked: ${inactiveCount}`)
-  if (stillInactive > 0) {
-    lines.push(`  Still inactive after attempt: ${stillInactive}`)
-  }
+  lines.push(`SYNTAX CHECK: ${errors.length} error(s), ${warnings.length} warning(s), ${infos.length} info(s)`)
+  lines.push(`  Package: ${pkg}`)
+  lines.push(`  Objects with findings: ${worklist.objects.length}`)
   lines.push("")
 
-  for (const err of errors) {
-    const severity = err.type === "E" ? "ERROR" : err.type === "W" ? "WARN" : err.type
-    const lineInfo = err.line > 0 ? `:${err.line}` : ""
-    lines.push(`  [${severity}] ${err.object}${lineInfo}`)
-    lines.push(`         ${err.message}`)
+  for (const finding of findings) {
+    const severity = finding.priority === 1 ? "ERROR" : finding.priority === 2 ? "WARN" : "INFO"
+    lines.push(`  [${severity}] ${finding.objectType} ${finding.object}:${finding.line}`)
+    lines.push(`         ${finding.message}`)
   }
 
   return lines.join("\n")
