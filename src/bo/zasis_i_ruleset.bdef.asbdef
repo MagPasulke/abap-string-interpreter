@@ -17,7 +17,7 @@ etag master LocalLastChangedAt
 
   action testRuleSet parameter zasis_a_testruleset;
 
-  factory action copyRuleSet parameter zasis_a_copyruleset lock: none [1];
+  factory action copyRuleSet parameter zasis_a_copyruleset [1];
 
   validation checkUniqueRuleSetId on save { field RuleSetId; create; }
 
