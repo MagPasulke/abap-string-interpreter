@@ -337,7 +337,7 @@ CLASS lhc_ZASIS_I_RULESET IMPLEMENTATION.
 
     LOOP AT keys INTO DATA(key).
       TRY.
-          DATA(source) = source_rulesets[ id COMPONENTS %tky = key-%tky ].
+          DATA(source) = source_rulesets[ KEY id COMPONENTS %tky = key-%tky ].
         CATCH cx_sy_itab_line_not_found.
           APPEND VALUE #( %cid = key-%cid
                           %key = key-%tky
