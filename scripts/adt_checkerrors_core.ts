@@ -16,7 +16,7 @@ export interface SyntaxFinding {
   object: string
   /** Object type (e.g. "CLAS") */
   objectType: string
-  /** Priority: 1=error, 2=warning, 3=info */
+  /** ATC priority (1=high, 2=medium, 3=low) */
   priority: number
   /** Check that produced the finding */
   checkTitle: string
@@ -112,25 +112,24 @@ export async function adtCheckErrors(options: AdtCheckErrorsOptions): Promise<Ad
 function formatSummary(pkg: string, worklist: AtcWorkList, findings: SyntaxFinding[]): string {
   const lines: string[] = []
 
-  const errors = findings.filter((f) => f.priority === 1)
-  const warnings = findings.filter((f) => f.priority === 2)
-  const infos = findings.filter((f) => f.priority >= 3)
-
   if (findings.length === 0) {
-    lines.push(`SYNTAX CHECK PASSED: No errors found in package ${pkg}.`)
+    lines.push(`SYNTAX CHECK PASSED: No findings in package ${pkg}.`)
     lines.push(`  Objects checked: ${worklist.objects.length}`)
     return lines.join("\n")
   }
 
-  lines.push(`SYNTAX CHECK: ${errors.length} error(s), ${warnings.length} warning(s), ${infos.length} info(s)`)
+  const p1 = findings.filter((f) => f.priority === 1).length
+  const p2 = findings.filter((f) => f.priority === 2).length
+  const p3 = findings.filter((f) => f.priority >= 3).length
+
+  lines.push(`SYNTAX CHECK: ${findings.length} finding(s) (P1: ${p1}, P2: ${p2}, P3: ${p3})`)
   lines.push(`  Package: ${pkg}`)
   lines.push(`  Objects with findings: ${worklist.objects.length}`)
   lines.push("")
 
   for (const finding of findings) {
-    const severity = finding.priority === 1 ? "ERROR" : finding.priority === 2 ? "WARN" : "INFO"
-    lines.push(`  [${severity}] ${finding.objectType} ${finding.object}:${finding.line}`)
-    lines.push(`         ${finding.message}`)
+    lines.push(`  [P${finding.priority}] ${finding.objectType} ${finding.object}:${finding.line}`)
+    lines.push(`       ${finding.message}`)
   }
 
   return lines.join("\n")
