@@ -41,7 +41,7 @@ Only enter this workflow when the user signals intent to **implement something**
    - If pass → commit & push
    - If fail → attempt one fix cycle; if still failing, report errors to user and wait for guidance
 8. **Repeat steps 5–7** for each logical unit of work (multiple commits are encouraged for traceability)
-9. **Ask user whether to sync to SAP and run ABAP Unit tests** — use `adt_gitpull` + `adt_rununit`. Never run without explicit user confirmation.
+9. **Ask user whether to sync to SAP and run ABAP Unit tests** — use `adt_gitpull` (optionally with `checkErrors=true`) + `adt_rununit`. Never run without explicit user confirmation.
 10. **Create session summary** as the final commit (using `session-summary` skill)
 11. **Mark PR ready for review**
     - PR description includes: "⚠️ Please sync to SAP system via abapGit and run ABAP Unit tests before merging."
@@ -190,6 +190,7 @@ The project has three test layers, each covering different concerns. For a full 
 
 - **Local validation before commit**: Always run `npm test` (step 7 in workflow). Also run `npm run icf-test` when HTTP handler or factory logic is modified.
 - **ABAP Unit Tests**: The authoritative test suite runs on the SAP system itself. **After local `npm test` passes, changes are committed and pushed, ask the user whether to sync the branch to SAP and run ABAP Unit tests (step 9 in workflow, via `adt_gitpull` + `adt_rununit`). Never run without explicit user confirmation.**
+- **Syntax Check**: Use `adt_checkerrors` (or `adt_gitpull` with `checkErrors=true`) to run ATC variant `SYNTAX_CHECK` on the SAP system. Detects compilation errors that abaplint cannot catch (unknown types, missing methods, BDEF issues). Findings use priority P1/P2/P3 — not error/warning/info.
 - **When to write which tests**: Use the **`create-tests`** skill for detailed guidance on where to add/adapt tests for different kinds of changes.
 
 

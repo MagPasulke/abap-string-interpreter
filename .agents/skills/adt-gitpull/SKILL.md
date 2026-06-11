@@ -12,6 +12,7 @@ Use the built-in `adt_gitpull` custom tool.
 | Parameter | Required | Description |
 |-----------|----------|-------------|
 | `branch`  | No       | Branch to pull (short name like `main` or full ref like `refs/heads/feat/my-feature`). If omitted, auto-detects from the currently checked-out git branch. |
+| `checkErrors` | No  | If `true`, runs ATC syntax check (variant `SYNTAX_CHECK`) on the package after pull and appends findings to the output. Default: `false`. |
 
 ## What it does
 
