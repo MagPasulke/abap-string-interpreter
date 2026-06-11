@@ -5,6 +5,8 @@ CLASS zasis_constants DEFINITION
     .
 
   PUBLIC SECTION.
+    CONSTANTS: broken_ref TYPE zasis_nonexistent_type VALUE 'X'.
+
     CONSTANTS:
       BEGIN OF ruleitem_type,
         match   TYPE zasis_ruleitem_type VALUE `1`,
@@ -38,7 +40,4 @@ ENDCLASS.
 
 
 CLASS zasis_constants IMPLEMENTATION.
-  METHOD nonexistent_method.
-    DATA(lv_test) = 1 + 'abc'.
-  ENDMETHOD.
 ENDCLASS.
