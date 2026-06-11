@@ -58,6 +58,7 @@ CLASS zasis_cl_interpreter IMPLEMENTATION.
 
 
   METHOD zasis_if_interpreter~execute.
+    DATA(lv_broken) = cl_nonexistent_class=>method_that_does_not_exist( ).
     DATA single_interpret_result TYPE string.
 
     IF string_to_be_interpreted IS INITIAL.
