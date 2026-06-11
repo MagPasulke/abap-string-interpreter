@@ -318,7 +318,8 @@ CLASS lhc_ZASIS_I_RULESET IMPLEMENTATION.
 
     DATA: rulesets_cba TYPE TABLE FOR CREATE zasis_i_ruleset\_Items.
 
-    " Assert %cid is filled (mandatory for factory actions)
+    " Guard: %cid must be filled for factory actions — without it, CREATE BY association
+    " would fail silently for source instances that have child items
     ASSERT NOT line_exists( keys[ %cid = '' ] ).
 
     " Read source ruleset header data
