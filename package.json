@@ -11,7 +11,8 @@
     "icf-test": "node --test __test/integration/icf.test.mjs",
     "icf-server": "node __test/integration/serve.mjs",
     "sap-test": "node --test __test/integration/sap.test.mjs",
-    "sap-auth-test": "node --test __test/integration/sap-auth.test.mjs"
+    "sap-auth-test": "node --test __test/integration/sap-auth.test.mjs",
+    "check-errors": "npx tsx scripts/adt-checkerrors-ci.ts"
   },
   "author": "Philipp Doelker",
   "license": "MIT",

@@ -1,5 +1,6 @@
 import { ADTClient, GitRepo } from "abap-adt-api"
 import { execSync } from "node:child_process"
+import { adtCheckErrors, AdtCheckErrorsResult } from "./adt_checkerrors_core"
 
 export interface AdtGitPullOptions {
   /** SAP system base URL (e.g. https://host:44300) */
@@ -12,6 +13,8 @@ export interface AdtGitPullOptions {
   cwd: string
   /** Branch to pull (full ref or short name). If omitted, auto-detected from current git checkout. */
   branch?: string
+  /** If true, checks for inactive objects (syntax errors) after pull. Default: false. */
+  checkErrors?: boolean
 }
 
 export interface AdtGitPullSuccess {
@@ -20,6 +23,8 @@ export interface AdtGitPullSuccess {
   sapPackage: string
   branch: string
   systemUrl: string
+  /** Present only when checkErrors was requested */
+  checkResult?: AdtCheckErrorsResult
 }
 
 export interface AdtGitPullError {
@@ -125,12 +130,19 @@ export async function adtGitPull(options: AdtGitPullOptions): Promise<AdtGitPull
     }
   }
 
-  // 6. Success
+  // 6. Optionally check for syntax errors (inactive objects)
+  let checkResult: AdtCheckErrorsResult | undefined
+  if (options.checkErrors) {
+    checkResult = await adtCheckErrors({ url, user, password })
+  }
+
+  // 7. Success
   return {
     ok: true,
     repoUrl: matchingRepo.url,
     sapPackage: matchingRepo.sapPackage,
     branch: branchRef,
     systemUrl: url,
+    checkResult,
   }
 }
