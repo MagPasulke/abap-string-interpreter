@@ -337,10 +337,10 @@ CLASS lhc_ZASIS_I_RULESET IMPLEMENTATION.
 
     LOOP AT keys INTO DATA(key).
       TRY.
-          DATA(source) = source_rulesets[ %tky = key-%tky ].
+          DATA(source) = source_rulesets[ RuleSetUUID = key-%tky-RuleSetUUID ].
         CATCH cx_sy_itab_line_not_found.
           APPEND VALUE #( %cid = key-%cid
-                          %key = key-%tky
+                          %tky = key-%tky
                           %fail = VALUE #( cause = if_abap_behv=>cause-not_found ) )
                  TO failed-ruleset.
           CONTINUE.
