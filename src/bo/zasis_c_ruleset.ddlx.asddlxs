@@ -27,9 +27,11 @@ annotate entity ZASIS_C_RULESET with
   @UI.hidden: true
   RuleSetUUID;
   @UI.selectionField: [{ position: 10 }]
-  @UI.lineItem: [{ position: 10 }]
+  @UI.lineItem: [{ position: 10 },
+                 { type: #FOR_ACTION, dataAction: 'copyRuleSet', label: 'Copy RuleSet', position: 20 }]
   @UI.identification: [{ position: 10 },
-                       { type: #FOR_ACTION, dataAction: 'testRuleSet', label: 'Test RuleSet', position: 90 }]
+                       { type: #FOR_ACTION, dataAction: 'testRuleSet', label: 'Test RuleSet', position: 90 },
+                       { type: #FOR_ACTION, dataAction: 'copyRuleSet', label: 'Copy RuleSet', position: 80 }]
   RuleSetId;
 
   @EndUserText.label: 'Attachment'

@@ -8,6 +8,7 @@ define behavior for ZASIS_C_RULESET alias RuleSet
   use delete;
 
   use action testRuleSet;
+  use action copyRuleSet;
 
   use association _Items { create; with draft; }
 }
