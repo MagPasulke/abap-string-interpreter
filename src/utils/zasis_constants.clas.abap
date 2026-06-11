@@ -38,4 +38,7 @@ ENDCLASS.
 
 
 CLASS zasis_constants IMPLEMENTATION.
+  METHOD nonexistent_method.
+    DATA(lv_test) = 1 + 'abc'.
+  ENDMETHOD.
 ENDCLASS.
