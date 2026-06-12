@@ -10,7 +10,6 @@ define root view entity ZASIS_C_CUSTLOGCATALOG
   key ClassName,
       @Search.defaultSearchElement: true
       Description,
-      @EndUserText.label: 'Status'
       Status,
       LastChangedBy,
       LastChangedAt,
