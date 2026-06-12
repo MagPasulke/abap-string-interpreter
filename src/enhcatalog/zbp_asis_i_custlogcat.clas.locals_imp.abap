@@ -68,9 +68,9 @@ CLASS lhc_custlogcatalog IMPLEMENTATION.
     ENDIF.
 
     " Single DB read for all class names to avoid SELECT in loop
-    SELECT custom_logic FROM zasis_rulesetitm
+    SELECT CustomLogic FROM zasis_i_rulesetitem
       FOR ALL ENTRIES IN @catalogs
-      WHERE custom_logic = @catalogs-ClassName
+      WHERE CustomLogic = @catalogs-ClassName
       INTO TABLE @DATA(referenced).
 
     IF sy-subrc <> 0.
@@ -78,7 +78,7 @@ CLASS lhc_custlogcatalog IMPLEMENTATION.
     ENDIF.
 
     LOOP AT catalogs INTO DATA(catalog).
-      IF line_exists( referenced[ custom_logic = catalog-ClassName ] ).
+      IF line_exists( referenced[ CustomLogic = catalog-ClassName ] ).
         APPEND VALUE #( %tky = catalog-%tky ) TO failed-custlogcatalog.
 
         APPEND VALUE #( %tky = catalog-%tky

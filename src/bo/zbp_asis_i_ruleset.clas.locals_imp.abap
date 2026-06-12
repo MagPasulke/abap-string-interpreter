@@ -91,9 +91,9 @@ CLASS lhc_rulesetitem IMPLEMENTATION.
     ENDIF.
 
     " Bulk read catalog entries for all referenced custom logic classes
-    SELECT class_name, status FROM zasis_custlogcat
+    SELECT ClassName, Status FROM zasis_i_custlogcatalog
       FOR ALL ENTRIES IN @rulesetitems
-      WHERE class_name = @rulesetitems-CustomLogic
+      WHERE ClassName = @rulesetitems-CustomLogic
       INTO TABLE @DATA(catalog_entries).
 
     IF sy-subrc <> 0.
@@ -107,7 +107,7 @@ CLASS lhc_rulesetitem IMPLEMENTATION.
       ENDIF.
 
       READ TABLE catalog_entries INTO DATA(entry)
-        WITH KEY class_name = rulesetitem-CustomLogic.
+        WITH KEY ClassName = rulesetitem-CustomLogic.
 
       IF sy-subrc <> 0.
         APPEND VALUE #( %tky = rulesetitem-%tky ) TO failed-rulesetitem.
@@ -120,7 +120,7 @@ CLASS lhc_rulesetitem IMPLEMENTATION.
         CONTINUE.
       ENDIF.
 
-      IF entry-status <> 1. " 1 = active
+      IF entry-Status <> 1. " 1 = active
         APPEND VALUE #( %tky = rulesetitem-%tky ) TO failed-rulesetitem.
 
         APPEND VALUE #( %tky = rulesetitem-%tky

@@ -65,7 +65,8 @@
       "exclude": [
         "zasisdr_rusthd.tabl.xml",
         "zasisdr_rustit.tabl.xml",
-        "zasisdr_clcat.tabl.xml"
+        "zasisdr_clcat.tabl.xml",
+        "zasis_custlogcat.tabl.xml"
       ]
     },
     "unused_methods": {},
