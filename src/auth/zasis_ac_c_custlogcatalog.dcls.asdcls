@@ -6,6 +6,6 @@ define role ZASIS_AC_C_CUSTLOGCATALOG {
             on
                 ZASIS_C_CUSTLOGCATALOG
                     where
-                        (ClassName) = aspect pfcg_auth(ZASIS_GRL, ZASIS_RULE, ACTVT = '03');
+                        inheriting conditions from entity ZASIS_I_CUSTLOGCATALOG;
 
 }
