@@ -97,7 +97,6 @@ CLASS ltcl_export_mapper IMPLEMENTATION.
     DATA(result) = cut->map( ruleset ).
     DATA(item) = result-items[ 1 ].
 
-    cl_abap_unit_assert=>assert_not_initial( item-interpretationitm ).
     cl_abap_unit_assert=>assert_equals(
       act = item-intpretationtarget
       exp = 'BATCH' ).

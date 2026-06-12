@@ -191,12 +191,18 @@ export function exportTests(describe, it, assert, request, ruleSetId) {
       assert.ok(disposition.includes('.json'), 'Expected .json in filename');
     });
 
-    it('Export does not contain UUID field', async () => {
+    it('Export does not contain UUID fields', async () => {
       const { body } = await request('GET', `/ruleSetExport/${ruleSetId}`);
       assert.equal(body.RULESETUUID, undefined);
       assert.equal(body.rulesetuuid, undefined);
       const header = body.HEADER || body.header;
       assert.equal(header, undefined, 'Export should not have a header sub-object');
+      const items = body.ITEMS || body.items;
+      assert.ok(items.length > 0, 'Expected at least one item');
+      for (const item of items) {
+        assert.equal(item.INTERPRETATIONITM, undefined, 'Item UUID should be excluded');
+        assert.equal(item.interpretationitm, undefined, 'Item UUID should be excluded (lowercase)');
+      }
     });
 
     it('Unknown RuleSet returns 400 with structured error', async () => {

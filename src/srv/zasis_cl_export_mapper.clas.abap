@@ -29,7 +29,6 @@ CLASS zasis_cl_export_mapper IMPLEMENTATION.
 
     LOOP AT ruleset->items INTO DATA(item).
       APPEND VALUE zasis_srv_export_itm(
-        interpretationitm   = item-interpretationitm
         intpretationtarget  = item-intpretationtarget
         interpretationrule  = item-interpretationrule
         interpretation_type = map_type( item-interpretation_type )
