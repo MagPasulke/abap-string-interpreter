@@ -10,7 +10,7 @@ lock master total etag LastChangedAt
 authorization master ( global )
 {
   field ( readonly )
-    LastChangedBy, LastChangedAt, LocalLastChangedAt;
+    ClassName, LastChangedBy, LastChangedAt, LocalLastChangedAt;
 
   create;
   update;
@@ -23,6 +23,7 @@ authorization master ( global )
   draft determine action Prepare
   {
     validation checkClassImplementsInterface;
+    validation checkNotReferencedOnDelete;
   }
 
   validation checkClassImplementsInterface on save { field ClassName; create; }
