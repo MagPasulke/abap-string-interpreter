@@ -2,8 +2,6 @@
   "BASEINFO": {
     "FROM": [
       "ZASIS_CUSTLOGCAT"
-    ],
-    "ASSOCIATED": [],
-    "BASE": []
+    ]
   }
 }
