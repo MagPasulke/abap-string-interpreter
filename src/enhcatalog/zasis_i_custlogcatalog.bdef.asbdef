@@ -14,7 +14,7 @@ authorization master ( global )
 
   create;
   update;
-  delete;
+  delete ( precheck );
 
   draft action Edit;
   draft action Activate optimized;
@@ -23,11 +23,9 @@ authorization master ( global )
   draft determine action Prepare
   {
     validation checkClassImplementsInterface;
-    validation checkNotReferencedOnDelete;
   }
 
   validation checkClassImplementsInterface on save { field ClassName; create; }
-  validation checkNotReferencedOnDelete on save { delete; }
 
   mapping for zasis_custlogcat
   {

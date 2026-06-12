@@ -4,8 +4,8 @@ CLASS lhc_custlogcatalog DEFINITION INHERITING FROM cl_abap_behavior_handler.
       IMPORTING REQUEST requested_authorizations FOR CustLogCatalog RESULT result.
     METHODS checkclassimplementsinterface FOR VALIDATE ON SAVE ##CALLED
       IMPORTING keys FOR CustLogCatalog~checkClassImplementsInterface.
-    METHODS checknotreferencedOnDelete FOR VALIDATE ON SAVE ##CALLED
-      IMPORTING keys FOR CustLogCatalog~checkNotReferencedOnDelete.
+    METHODS precheck_delete FOR PRECHECK ##CALLED
+      IMPORTING keys FOR DELETE CustLogCatalog.
 ENDCLASS.
 
 CLASS lhc_custlogcatalog IMPLEMENTATION.
@@ -89,7 +89,8 @@ CLASS lhc_custlogcatalog IMPLEMENTATION.
     ENDLOOP.
   ENDMETHOD.
 
-  METHOD checknotreferencedOnDelete.
+  METHOD precheck_delete.
+    " Precheck runs BEFORE delete reaches the buffer — block if referenced
     READ ENTITIES OF zasis_i_custlogcatalog IN LOCAL MODE
          ENTITY CustLogCatalog
          ALL FIELDS WITH CORRESPONDING #( keys )
