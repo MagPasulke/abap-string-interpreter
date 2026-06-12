@@ -1,0 +1,40 @@
+managed implementation in class zbp_asis_i_custlogcat unique;
+strict ( 2 );
+with draft;
+
+define behavior for ZASIS_I_CUSTLOGCATALOG alias CustLogCatalog
+persistent table zasis_custlogcat
+draft table zasisdr_clcat
+etag master LocalLastChangedAt
+lock master total etag LastChangedAt
+authorization master ( global )
+{
+  field ( readonly )
+    LastChangedBy, LastChangedAt, LocalLastChangedAt;
+
+  create;
+  update;
+  delete;
+
+  draft action Edit;
+  draft action Activate optimized;
+  draft action Discard;
+  draft action Resume;
+  draft determine action Prepare
+  {
+    validation checkClassImplementsInterface;
+  }
+
+  validation checkClassImplementsInterface on save { field ClassName; create; }
+  validation checkNotReferencedOnDelete on save { delete; }
+
+  mapping for zasis_custlogcat
+  {
+    ClassName          = class_name;
+    Description        = description;
+    Status             = status;
+    LastChangedBy      = last_changed_by;
+    LastChangedAt      = last_changed_at;
+    LocalLastChangedAt = local_last_changed_at;
+  }
+}

@@ -71,6 +71,24 @@ CLASS zasis_cx_ruleset_ui DEFINITION
                  attr4 TYPE scx_attrname VALUE '',
                END OF custom_logic_no_intf.
 
+    CONSTANTS: BEGIN OF custom_logic_not_active,
+                 msgid TYPE symsgid      VALUE 'ZASIS_MSGS',
+                 msgno TYPE symsgno      VALUE '018',
+                 attr1 TYPE scx_attrname VALUE 'CLASSNAME',
+                 attr2 TYPE scx_attrname VALUE '',
+                 attr3 TYPE scx_attrname VALUE '',
+                 attr4 TYPE scx_attrname VALUE '',
+               END OF custom_logic_not_active.
+
+    CONSTANTS: BEGIN OF catalog_entry_in_use,
+                 msgid TYPE symsgid      VALUE 'ZASIS_MSGS',
+                 msgno TYPE symsgno      VALUE '019',
+                 attr1 TYPE scx_attrname VALUE 'CLASSNAME',
+                 attr2 TYPE scx_attrname VALUE '',
+                 attr3 TYPE scx_attrname VALUE '',
+                 attr4 TYPE scx_attrname VALUE '',
+               END OF catalog_entry_in_use.
+
     "! Creates a RAP behavior exception with a T100 message and optional message variable attributes.
     "! @parameter severity  | Message severity for the Fiori Elements UI (default: error)
     "! @parameter textid    | T100 message key identifying the error text; uses the default text if omitted

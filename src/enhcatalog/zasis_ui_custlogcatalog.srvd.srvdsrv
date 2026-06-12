@@ -1,0 +1,4 @@
+@EndUserText.label: 'Custom Logic Catalog - UI Service'
+define service ZASIS_UI_CUSTLOGCATALOG {
+  expose ZASIS_C_CUSTLOGCATALOG as CustLogCatalog;
+}

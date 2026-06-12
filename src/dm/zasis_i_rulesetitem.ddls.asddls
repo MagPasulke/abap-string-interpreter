@@ -4,6 +4,7 @@
 define view entity ZASIS_I_RULESETITEM
   as select from zasis_rulesetitm
   association to parent ZASIS_I_RULESET as _Header on $projection.RuleSetUUID = _Header.RuleSetUUID
+  association [0..1] to ZASIS_I_CUSTLOGCATALOG as _CustLogCatalog on $projection.CustomLogic = _CustLogCatalog.ClassName
 {
   key rulesetuuid           as RuleSetUUID,
   key interpretationitm     as InterpretationItem,
@@ -21,5 +22,6 @@ define view entity ZASIS_I_RULESETITEM
       last_changed_at       as LastChangedAt,
       @Semantics.systemDateTime.localInstanceLastChangedAt: true
       local_last_changed_at as LocalLastChangedAt,
-      _Header
+      _Header,
+      _CustLogCatalog
 }

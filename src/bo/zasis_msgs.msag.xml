@@ -104,6 +104,18 @@
      <MSGNR>017</MSGNR>
      <TEXT>Error reading HTTP request: &amp;1</TEXT>
     </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZASIS_MSGS</ARBGB>
+     <MSGNR>018</MSGNR>
+     <TEXT>Custom logic class &amp;1 is not active in the catalog</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZASIS_MSGS</ARBGB>
+     <MSGNR>019</MSGNR>
+     <TEXT>Catalog entry &amp;1 is still referenced by RuleSet items</TEXT>
+    </T100>
    </T100>
   </asx:values>
  </asx:abap>

@@ -1,0 +1,11 @@
+@EndUserText.label: 'ASIS - Access Control for Custom Logic Catalog (C)'
+@MappingRole: true
+define role ZASIS_AC_C_CUSTLOGCATALOG {
+    grant
+        select
+            on
+                ZASIS_C_CUSTLOGCATALOG
+                    where
+                        (ClassName) = aspect pfcg_auth(ZASIS_GRL, ZASIS_RULE, ACTVT = '03');
+
+}

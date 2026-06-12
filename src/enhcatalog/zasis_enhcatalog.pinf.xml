@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<abapGit version="v1.0.0" serializer="LCL_OBJECT_PINF" serializer_version="v1.0.0">
+ <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
+  <asx:values>
+   <PINF>
+    <ATTRIBUTES>
+     <INTF_NAME>ZASIS_ENHCATALOG</INTF_NAME>
+     <DESCRIPT>Enhancement Catalog - Public Interface</DESCRIPT>
+    </ATTRIBUTES>
+    <ELEMENTS>
+     <SCOMELDTLN>
+      <INTF_NAME>ZASIS_ENHCATALOG</INTF_NAME>
+      <ELEM_TYPE>TABL</ELEM_TYPE>
+      <ELEM_KEY>ZASIS_CUSTLOGCAT</ELEM_KEY>
+     </SCOMELDTLN>
+     <SCOMELDTLN>
+      <INTF_NAME>ZASIS_ENHCATALOG</INTF_NAME>
+      <ELEM_TYPE>DDLS</ELEM_TYPE>
+      <ELEM_KEY>ZASIS_I_CUSTLOGCATALOG</ELEM_KEY>
+     </SCOMELDTLN>
+     <SCOMELDTLN>
+      <INTF_NAME>ZASIS_ENHCATALOG</INTF_NAME>
+      <ELEM_TYPE>DDLS</ELEM_TYPE>
+      <ELEM_KEY>ZASIS_I_CUSTLOGCAT_VH</ELEM_KEY>
+     </SCOMELDTLN>
+     <SCOMELDTLN>
+      <INTF_NAME>ZASIS_ENHCATALOG</INTF_NAME>
+      <ELEM_TYPE>DDLS</ELEM_TYPE>
+      <ELEM_KEY>ZASIS_ENHCAT_STATUS</ELEM_KEY>
+     </SCOMELDTLN>
+    </ELEMENTS>
+   </PINF>
+  </asx:values>
+ </asx:abap>
+</abapGit>

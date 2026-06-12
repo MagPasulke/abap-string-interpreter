@@ -6,6 +6,8 @@ CLASS lhc_rulesetitem DEFINITION INHERITING FROM cl_abap_behavior_handler.
       IMPORTING keys FOR RuleSetItem~checkIsValidRegex.
     METHODS checkEventProducer FOR VALIDATE ON SAVE
       IMPORTING keys FOR RuleSetItem~checkEventProducer.
+    METHODS checkCustomLogic FOR VALIDATE ON SAVE
+      IMPORTING keys FOR RuleSetItem~checkCustomLogic.
     METHODS precheck_update FOR PRECHECK
       IMPORTING entities FOR UPDATE RuleSetItem.
 
@@ -78,6 +80,59 @@ CLASS lhc_rulesetitem IMPLEMENTATION.
     ENDLOOP.
   ENDMETHOD.
 
+  METHOD checkCustomLogic.
+    READ ENTITIES OF zasis_i_ruleset IN LOCAL MODE
+         ENTITY RuleSetItem
+         ALL FIELDS WITH CORRESPONDING #( keys )
+         RESULT DATA(rulesetitems).
+
+    IF rulesetitems IS INITIAL.
+      RETURN.
+    ENDIF.
+
+    " Bulk read catalog entries for all referenced custom logic classes
+    SELECT class_name, status FROM zasis_custlogcat
+      FOR ALL ENTRIES IN @rulesetitems
+      WHERE class_name = @rulesetitems-CustomLogic
+      INTO TABLE @DATA(catalog_entries).
+
+    IF sy-subrc <> 0.
+      CLEAR catalog_entries.
+    ENDIF.
+
+    LOOP AT rulesetitems INTO DATA(rulesetitem).
+
+      IF rulesetitem-CustomLogic IS INITIAL.
+        CONTINUE.
+      ENDIF.
+
+      READ TABLE catalog_entries INTO DATA(entry)
+        WITH KEY class_name = rulesetitem-CustomLogic.
+
+      IF sy-subrc <> 0.
+        APPEND VALUE #( %tky = rulesetitem-%tky ) TO failed-rulesetitem.
+
+        APPEND VALUE #( %tky = rulesetitem-%tky
+                        %msg = NEW zasis_cx_ruleset_ui( textid    = zasis_cx_ruleset_ui=>custom_logic_not_exist
+                                                        severity  = if_abap_behv_message=>severity-error
+                                                        classname = rulesetitem-CustomLogic ) )
+               TO reported-rulesetitem.
+        CONTINUE.
+      ENDIF.
+
+      IF entry-status <> 1. " 1 = active
+        APPEND VALUE #( %tky = rulesetitem-%tky ) TO failed-rulesetitem.
+
+        APPEND VALUE #( %tky = rulesetitem-%tky
+                        %msg = NEW zasis_cx_ruleset_ui( textid    = zasis_cx_ruleset_ui=>custom_logic_not_active
+                                                        severity  = if_abap_behv_message=>severity-error
+                                                        classname = rulesetitem-CustomLogic ) )
+               TO reported-rulesetitem.
+      ENDIF.
+
+    ENDLOOP.
+  ENDMETHOD.
+
   METHOD precheck_update.
     LOOP AT entities INTO DATA(entity).
 
@@ -96,32 +151,6 @@ CLASS lhc_rulesetitem IMPLEMENTATION.
                                                             severity = if_abap_behv_message=>severity-error
                                                             regex    = entity-InterpretationRule ) )
                    TO reported-rulesetitem.
-
-        ENDTRY.
-
-      ENDIF.
-
-      IF entity-%control-CustomLogic EQ '01' OR entity-CustomLogic IS NOT INITIAL. " was updated or deleted.
-
-        TRY.
-            zasis_cl_class_validator=>check_implements(
-              class_name     = CONV string( entity-CustomLogic )
-              interface_name = zasis_constants=>ruleset_execution-custom_log_if_name ).
-
-          CATCH zasis_cx_exc INTO DATA(cl_exc).
-
-            APPEND VALUE #( %tky = entity-%tky ) TO failed-rulesetitem.
-
-            DATA(cl_textid) = COND #( WHEN cl_exc->if_t100_message~t100key-msgno = zasis_cx_exc=>class_not_exist-msgno
-                                      THEN zasis_cx_ruleset_ui=>custom_logic_not_exist
-                                      ELSE zasis_cx_ruleset_ui=>custom_logic_no_intf ).
-
-            APPEND VALUE #( %tky = entity-%tky
-                            %msg = NEW zasis_cx_ruleset_ui( textid   = cl_textid
-                                                            severity = if_abap_behv_message=>severity-error ) )
-                   TO reported-rulesetitem.
-
-            CONTINUE.
 
         ENDTRY.
 

@@ -10,7 +10,7 @@
     }
   ],
   "syntax": {
-    "version": "v757",
+    "version": "v758",
     "errorNamespace": "^(Z|Y|LCL_|TY_|LIF_)"
   },
   "rules": {
@@ -64,17 +64,23 @@
     "unused_ddic": {
       "exclude": [
         "zasisdr_rusthd.tabl.xml",
-        "zasisdr_rustit.tabl.xml"
+        "zasisdr_rustit.tabl.xml",
+        "zasisdr_clcat.tabl.xml"
       ]
     },
-    "unused_methods": {},
+    "unused_methods": {
+      "exclude": [
+        "zbp_asis_i_custlogcat.clas.locals_imp.abap"
+      ]
+    },
     "unused_types": {
       "exclude": []
     },
     "unused_variables": {
       "exclude": [
         "zasis_cl_interpreter.clas.testclasses.abap",
-        "zasis_cl_get_domain_fix_values.clas.abap"
+        "zasis_cl_get_domain_fix_values.clas.abap",
+        "zasis_cx_ruleset_ui.clas.abap"
       ],
       "skipAbstract": true
     },
@@ -122,7 +128,11 @@
     "constructor_visibility_public": true,
     "modify_only_own_db_tables": true,
     "cyclic_oo": true,
-    "unsecure_fae": true,
+    "unsecure_fae": {
+      "exclude": [
+        "zbp_asis_i_custlogcat.clas.locals_imp.abap"
+      ]
+    },
     "call_transaction_authority_check": true,
     "dangerous_statement": {
       "exclude": [
@@ -159,7 +169,8 @@
       "ignoreGlobalInterface": false,
       "ignoreKeywords": [],
       "exclude": [
-        "zbp_asis_i_ruleset.clas.locals_imp.abap"
+        "zbp_asis_i_ruleset.clas.locals_imp.abap",
+        "zbp_asis_i_custlogcat.clas.locals_imp.abap"
       ]
     },
     "method_parameter_names": {

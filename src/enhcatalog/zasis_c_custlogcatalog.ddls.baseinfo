@@ -1,0 +1,11 @@
+{
+  "BASEINFO": {
+    "FROM": [
+      "ZASIS_I_CUSTLOGCATALOG"
+    ],
+    "ASSOCIATED": [],
+    "BASE": [
+      "ZASIS_I_CUSTLOGCATALOG"
+    ]
+  }
+}

@@ -26,6 +26,7 @@ etag master LocalLastChangedAt
     validation checkUniqueRuleSetId; // <-- Hier fehlte der Eintrag
     validation ZASIS_I_RULESETITEM~checkIsValidRegex;
     validation ZASIS_I_RULESETITEM~checkEventProducer;
+    validation ZASIS_I_RULESETITEM~checkCustomLogic;
   }
 
   field ( numbering : managed, readonly ) RuleSetUUID;
@@ -60,6 +61,7 @@ etag master LocalLastChangedAt
 
   validation checkIsValidRegex on save { field InterpretationRule; create; update; }
   validation checkEventProducer on save { field EventProducer; create; update; }
+  validation checkCustomLogic on save { field CustomLogic; create; update; }
 
   mapping for zasis_rulesetitm
     {
