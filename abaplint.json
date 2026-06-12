@@ -61,14 +61,7 @@
     },
     "unnecessary_return": true,
     "unreachable_code": true,
-    "unused_ddic": {
-      "exclude": [
-        "zasisdr_rusthd.tabl.xml",
-        "zasisdr_rustit.tabl.xml",
-        "zasisdr_clcat.tabl.xml",
-        "zasis_custlogcat.tabl.xml"
-      ]
-    },
+    "unused_ddic": false,
     "unused_methods": {},
     "unused_types": {
       "exclude": []
