@@ -19,8 +19,10 @@ CLASS zasis_cl_customlogic_resolver IMPLEMENTATION.
     DATA instance TYPE REF TO object.
 
     " Check catalog: class must be registered and active
-    SELECT SINGLE status FROM zasis_i_custlogcatalog
-      WHERE classname = @class_name
+    " Note: SELECT from DB table (not CDS view) — required for transpiler
+    " compatibility. Simple single-field lookup, no DCL needed here.
+    SELECT SINGLE status FROM zasis_custlogcat
+      WHERE class_name = @class_name
       INTO @DATA(status).
 
     IF sy-subrc <> 0.
