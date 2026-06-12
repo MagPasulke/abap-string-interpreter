@@ -61,6 +61,9 @@
     },
     "unnecessary_return": true,
     "unreachable_code": true,
+    // Disabled: abaplint cannot trace table references from CDS views (.asddls)
+    // or BDEF files (.asbdef) — only from ABAP source. Every table used solely
+    // via CDS or BDEF would require an exclusion entry, defeating the purpose.
     "unused_ddic": false,
     "unused_methods": {},
     "unused_types": {
@@ -117,6 +120,8 @@
     "constructor_visibility_public": true,
     "modify_only_own_db_tables": true,
     "cyclic_oo": true,
+    // Disabled: experimental rule with false positives — does not recognize
+    // early RETURN as a valid FOR ALL ENTRIES emptiness guard.
     "unsecure_fae": false,
     "call_transaction_authority_check": true,
     "dangerous_statement": {
@@ -144,6 +149,8 @@
       "ignoreExceptions": true,
       "ignoreGlobalDefinition": true
     },
+    // RAP behavior handler locals use CDS entity aliases (CamelCase) which
+    // cannot be lowercased — they must match the BDEF/CDS definition exactly.
     "keyword_case": {
       "style": "upper",
       "ignoreExceptions": true,

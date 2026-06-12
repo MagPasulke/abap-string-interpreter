@@ -12,7 +12,7 @@
     <item>/package.json</item>
     <item>/.travis.yml</item>
     <item>/.gitlab-ci.yml</item>
-    <item>/abaplint.json</item>
+     <item>/abaplint.jsonc</item>
     <item>/azure-pipelines.yml</item>
     <item>/src/bo/19a955a410e2e5518903bdf6baa818ht.sush.xml</item>
     <item>/src/bo/zasis_ui_ruleset_o4.srvb.xml</item>
