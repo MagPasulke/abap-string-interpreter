@@ -9,8 +9,10 @@ etag master LocalLastChangedAt
 lock master total etag LastChangedAt
 authorization master ( global )
 {
+  field ( readonly:update )
+    ClassName;
   field ( readonly )
-    ClassName, LastChangedBy, LastChangedAt, LocalLastChangedAt;
+    LastChangedBy, LastChangedAt, LocalLastChangedAt;
 
   create;
   update;
