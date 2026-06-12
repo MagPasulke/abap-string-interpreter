@@ -1,6 +1,0 @@
-@EndUserText.label: 'Enhancement Catalog Status'
-define type zasis_enhcat_status: abap.int1 enum {
-      initial_value = initial;
-      active = 1;
-      deprecated = 2;
-}
