@@ -6,7 +6,7 @@ define root view entity ZASIS_I_CUSTLOGCATALOG
 {
   key class_name            as ClassName,
       description           as Description,
-      cast( status as ZASIS_ENHCAT_STATUS preserving type ) as Status,
+      status                as Status,
       @Semantics.user.lastChangedBy: true
       last_changed_by       as LastChangedBy,
       @Semantics.systemDateTime.lastChangedAt: true
