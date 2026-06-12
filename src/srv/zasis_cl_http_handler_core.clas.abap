@@ -40,6 +40,11 @@ CLASS zasis_cl_http_handler_core DEFINITION
         zasis_cx_exc
         zasis_cx_no_auth.
 
+    METHODS handle_export
+      RAISING
+        zasis_cx_exc
+        zasis_cx_no_auth.
+
 ENDCLASS.
 
 
@@ -57,6 +62,12 @@ CLASS zasis_cl_http_handler_core IMPLEMENTATION.
         DATA(response_body) = ||.
         CASE _request->get_method( ).
           WHEN zasis_constants=>http_method-get.
+            _validator->extract_ruleset_id( ).
+            DATA(resource) = _validator->path_elements[ _validator->num_path_elements - 1 ].
+            IF resource = zasis_constants=>export-resource_path.
+              handle_export( ).
+              RETURN.
+            ENDIF.
             response_body = handle_get( ).
 
           WHEN zasis_constants=>http_method-post.
@@ -136,6 +147,24 @@ CLASS zasis_cl_http_handler_core IMPLEMENTATION.
       items  = CORRESPONDING #( ruleset->items ) ).
 
     result = /ui2/cl_json=>serialize( data = responsebody ).
+  ENDMETHOD.
+
+  METHOD handle_export.
+    DATA(ruleset_id) = _validator->extract_ruleset_id( ).
+
+    DATA(ruleset) = zasis_cl_ruleset_factory=>get_ruleset_by_rulesetid( ruleset_id ).
+
+    DATA(export_data) = NEW zasis_cl_export_mapper( )->map( ruleset ).
+
+    DATA(json) = /ui2/cl_json=>serialize( data = export_data ).
+
+    DATA(filename) = |{ ruleset->header-rulesetid }.json|.
+
+    _response->set_header_field( name  = 'Content-Type'
+                                 value = zasis_constants=>content_type-application_json ).
+    _response->set_header_field( name  = 'Content-Disposition'
+                                 value = |attachment; filename="{ filename }"| ).
+    _response->set_body_text( json ).
   ENDMETHOD.
 
 ENDCLASS.

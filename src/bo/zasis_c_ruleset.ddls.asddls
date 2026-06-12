@@ -17,5 +17,8 @@ provider contract transactional_query as projection on ZASIS_I_RULESET
     @Semantics.mimeType: true
     MimeType,
     FileName,
+    @ObjectModel.virtualElementCalculatedBy: 'ABAP:ZASIS_CL_CALC_EXPORT_URL'
+    @EndUserText.label: 'Export'
+    virtual ExportUrl : abap.string( 256 ),
     /* Associations */
     _Items : redirected to composition child ZASIS_C_RULESETITEM }  // Make association public

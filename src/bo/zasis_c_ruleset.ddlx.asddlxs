@@ -39,4 +39,8 @@ annotate entity ZASIS_C_RULESET with
   @UI.identification: [{ position: 20 }]
   Attachment;
 
+  @UI.lineItem: [{ position: 30, type: #WITH_URL, url: 'ExportUrl', label: 'Export' }]
+  @UI.identification: [{ position: 30, type: #WITH_URL, url: 'ExportUrl', label: 'Export' }]
+  ExportUrl;
+
 }

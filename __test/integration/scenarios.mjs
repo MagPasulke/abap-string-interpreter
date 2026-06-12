@@ -162,6 +162,55 @@ export function methodTests(describe, it, assert, request, ruleSetId) {
   });
 }
 
+export function exportTests(describe, it, assert, request, ruleSetId) {
+  describe('GET /ruleSetExport', () => {
+
+    it(`${ruleSetId} returns 200 with export JSON schema`, async () => {
+      const { status, body } = await request('GET', `/ruleSetExport/${ruleSetId}`);
+      assert.equal(status, 200);
+      assert.ok(body.SCHEMA_VERSION || body.schema_version, 'Expected schema_version');
+      assert.equal((body.SCHEMA_VERSION || body.schema_version).trim(), '1.0');
+      assert.equal((body.RULESETID || body.rulesetid).trim(), ruleSetId);
+      const items = body.ITEMS || body.items;
+      assert.ok(items, 'Expected items array');
+      assert.ok(items.length >= 2, 'Expected at least 2 items');
+    });
+
+    it('Export items use human-readable type MATCH', async () => {
+      const { body } = await request('GET', `/ruleSetExport/${ruleSetId}`);
+      const items = body.ITEMS || body.items;
+      const matchItem = items.find(i =>
+        (i.INTERPRETATION_TYPE || i.interpretation_type).trim() === 'MATCH');
+      assert.ok(matchItem, 'Expected at least one MATCH item');
+    });
+
+    it('Export has Content-Disposition attachment header', async () => {
+      const { headers } = await request('GET', `/ruleSetExport/${ruleSetId}`);
+      const disposition = headers?.['content-disposition'] || '';
+      assert.ok(disposition.includes('attachment'), 'Expected Content-Disposition: attachment');
+      assert.ok(disposition.includes('.json'), 'Expected .json in filename');
+    });
+
+    it('Export does not contain UUID field', async () => {
+      const { body } = await request('GET', `/ruleSetExport/${ruleSetId}`);
+      assert.equal(body.RULESETUUID, undefined);
+      assert.equal(body.rulesetuuid, undefined);
+      const header = body.HEADER || body.header;
+      assert.equal(header, undefined, 'Export should not have a header sub-object');
+    });
+
+    it('Unknown RuleSet returns 400 with structured error', async () => {
+      const { status, body } = await request('GET', '/ruleSetExport/UNKNOWN_RULESET_XYZ');
+      assert.equal(status, 400);
+      assert.ok(body.ERROR || body.error, 'Expected error envelope');
+      const error = body.ERROR || body.error;
+      assert.ok((error.CODE || error.code).includes('ZASIS_MSGS'), 'Expected ZASIS_MSGS code');
+      assert.equal(error.STATUS || error.status, '400');
+    });
+
+  });
+}
+
 /**
  * Helper: extract the error object from a response body, handling both
  * uppercase (transpiled /ui2/cl_json) and lowercase (real SAP) key casing.

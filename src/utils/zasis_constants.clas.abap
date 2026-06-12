@@ -31,6 +31,23 @@ CLASS zasis_constants DEFINITION
         event_producer_if_name TYPE string VALUE `ZASIS_IF_EVENT_PRODUCER`,
       END OF ruleset_execution.
 
+    "! Human-readable type identifiers for export JSON.
+    "! We use hardcoded constants instead of domain fixed value descriptions
+    "! because the export schema is a stable contract that must not change
+    "! based on logon language. Domain descriptions are language-dependent
+    "! and could be translated, which would break import compatibility.
+    CONSTANTS:
+      BEGIN OF export_type,
+        match   TYPE c LENGTH 7 VALUE 'MATCH',
+        replace TYPE c LENGTH 7 VALUE 'REPLACE',
+      END OF export_type.
+
+    CONSTANTS:
+      BEGIN OF export,
+        schema_version TYPE c LENGTH 5 VALUE '1.0',
+        resource_path  TYPE string VALUE 'ruleSetExport',
+      END OF export.
+
   PROTECTED SECTION.
   PRIVATE SECTION.
 ENDCLASS.
