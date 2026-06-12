@@ -17,6 +17,12 @@ CLASS lhc_custlogcatalog IMPLEMENTATION.
         ID 'ZASIS_RULE' DUMMY
         ID 'ACTVT'      FIELD '01'.
       result-%create = COND #( WHEN sy-subrc = 0 THEN if_abap_behv=>auth-allowed ELSE if_abap_behv=>auth-unauthorized ).
+      IF result-%create = if_abap_behv=>auth-unauthorized.
+        APPEND VALUE #( %msg = NEW zasis_cx_ruleset_ui( textid   = zasis_cx_ruleset_ui=>no_auth
+                                                        severity = if_abap_behv_message=>severity-error
+                                                        action   = |Create| ) )
+               TO reported-custlogcatalog.
+      ENDIF.
     ENDIF.
 
     IF requested_authorizations-%update = if_abap_behv=>mk-on.
@@ -24,6 +30,12 @@ CLASS lhc_custlogcatalog IMPLEMENTATION.
         ID 'ZASIS_RULE' DUMMY
         ID 'ACTVT'      FIELD '02'.
       result-%update = COND #( WHEN sy-subrc = 0 THEN if_abap_behv=>auth-allowed ELSE if_abap_behv=>auth-unauthorized ).
+      IF result-%update = if_abap_behv=>auth-unauthorized.
+        APPEND VALUE #( %msg = NEW zasis_cx_ruleset_ui( textid   = zasis_cx_ruleset_ui=>no_auth
+                                                        severity = if_abap_behv_message=>severity-error
+                                                        action   = |Update| ) )
+               TO reported-custlogcatalog.
+      ENDIF.
     ENDIF.
 
     IF requested_authorizations-%delete = if_abap_behv=>mk-on.
@@ -31,6 +43,12 @@ CLASS lhc_custlogcatalog IMPLEMENTATION.
         ID 'ZASIS_RULE' DUMMY
         ID 'ACTVT'      FIELD '06'.
       result-%delete = COND #( WHEN sy-subrc = 0 THEN if_abap_behv=>auth-allowed ELSE if_abap_behv=>auth-unauthorized ).
+      IF result-%delete = if_abap_behv=>auth-unauthorized.
+        APPEND VALUE #( %msg = NEW zasis_cx_ruleset_ui( textid   = zasis_cx_ruleset_ui=>no_auth
+                                                        severity = if_abap_behv_message=>severity-error
+                                                        action   = |Delete| ) )
+               TO reported-custlogcatalog.
+      ENDIF.
     ENDIF.
 
   ENDMETHOD.
