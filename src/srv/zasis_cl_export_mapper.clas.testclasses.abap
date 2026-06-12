@@ -136,7 +136,7 @@ CLASS ltcl_export_mapper IMPLEMENTATION.
 
   METHOD excludes_uuid.
     DATA(ruleset) = NEW zasis_cl_ruleset(
-      header = VALUE #( rulesetuuid = 'SHOULD_NOT_APPEAR' rulesetid = 'TEST01' )
+      header = VALUE #( rulesetuuid = 'AABBCCDD11223344' rulesetid = 'TEST01' )
       items  = VALUE #( ( interpretationitm = 1 interpretation_type = '1' ) ) ).
 
     DATA(result) = cut->map( ruleset ).
