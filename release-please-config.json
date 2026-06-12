@@ -3,6 +3,56 @@
     ".": {
       "release-type": "node",
       "bump-minor-pre-major": true,
+      "changelog-sections": [
+        {
+          "type": "feat",
+          "section": "Features"
+        },
+        {
+          "type": "fix",
+          "section": "Bug Fixes"
+        },
+        {
+          "type": "docs",
+          "section": "Documentation"
+        },
+        {
+          "type": "chore",
+          "section": "Development & Tooling"
+        },
+        {
+          "type": "build",
+          "section": "Development & Tooling"
+        },
+        {
+          "type": "ci",
+          "section": "Development & Tooling"
+        },
+        {
+          "type": "test",
+          "section": "Development & Tooling"
+        },
+        {
+          "type": "perf",
+          "section": "Performance Improvements",
+          "hidden": true
+        },
+        {
+          "type": "revert",
+          "section": "Reverts",
+          "hidden": true
+        },
+        {
+          "type": "style",
+          "section": "Styles",
+          "hidden": true
+        },
+        {
+          "type": "refactor",
+          "section": "Code Refactoring",
+          "hidden": true
+        }
+      ],
       "extra-files": [
         "src/zasis_if_version.intf.abap"
       ]
