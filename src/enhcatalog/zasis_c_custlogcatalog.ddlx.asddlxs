@@ -28,6 +28,11 @@ annotate entity ZASIS_C_CUSTLOGCATALOG with
   @UI.selectionField: [{ position: 30 }]
   @UI.lineItem: [{ position: 30 }]
   @UI.identification: [{ position: 30 }]
+  @Consumption.valueHelpDefinition:
+  [{ entity: { name: 'ZASIS_I_DOMAIN_FIX_VALUES', element: 'low' },
+     additionalBinding: [{ element: 'domain_name',
+                           localConstant: 'ZASIS_ENHCAT_STAT', usage: #FILTER }],
+     distinctValues: true }]
   Status;
 
   @UI.hidden: true
