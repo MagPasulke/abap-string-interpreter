@@ -71,7 +71,7 @@ CLASS zasis_cx_ruleset_ui DEFINITION
                  attr4 TYPE scx_attrname VALUE '',
                END OF custom_logic_no_intf.
 
-    CONSTANTS: BEGIN OF custom_logic_not_active,
+    CONSTANTS: BEGIN OF custom_logic_not_active ##NEEDED,
                  msgid TYPE symsgid      VALUE 'ZASIS_MSGS',
                  msgno TYPE symsgno      VALUE '018',
                  attr1 TYPE scx_attrname VALUE 'CLASSNAME',
@@ -80,7 +80,7 @@ CLASS zasis_cx_ruleset_ui DEFINITION
                  attr4 TYPE scx_attrname VALUE '',
                END OF custom_logic_not_active.
 
-    CONSTANTS: BEGIN OF catalog_entry_in_use,
+    CONSTANTS: BEGIN OF catalog_entry_in_use ##NEEDED,
                  msgid TYPE symsgid      VALUE 'ZASIS_MSGS',
                  msgno TYPE symsgno      VALUE '019',
                  attr1 TYPE scx_attrname VALUE 'CLASSNAME',

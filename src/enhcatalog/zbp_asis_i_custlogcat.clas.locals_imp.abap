@@ -1,10 +1,10 @@
 CLASS lhc_custlogcatalog DEFINITION INHERITING FROM cl_abap_behavior_handler.
   PRIVATE SECTION.
-    METHODS get_global_authorizations FOR GLOBAL AUTHORIZATION
+    METHODS get_global_authorizations FOR GLOBAL AUTHORIZATION ##CALLED
       IMPORTING REQUEST requested_authorizations FOR CustLogCatalog RESULT result.
-    METHODS checkclassimplementsinterface FOR VALIDATE ON SAVE
+    METHODS checkclassimplementsinterface FOR VALIDATE ON SAVE ##CALLED
       IMPORTING keys FOR CustLogCatalog~checkClassImplementsInterface.
-    METHODS checknotreferencedOnDelete FOR VALIDATE ON SAVE
+    METHODS checknotreferencedOnDelete FOR VALIDATE ON SAVE ##CALLED
       IMPORTING keys FOR CustLogCatalog~checkNotReferencedOnDelete.
 ENDCLASS.
 
