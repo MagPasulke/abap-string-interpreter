@@ -1,5 +1,4 @@
 managed implementation in class zbp_asis_i_ruleset unique;
-strict ( 2 );
 with draft;
 
 define behavior for ZASIS_I_RULESET alias RuleSet
