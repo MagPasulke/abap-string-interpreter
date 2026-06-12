@@ -11,11 +11,28 @@ ENDCLASS.
 CLASS lhc_custlogcatalog IMPLEMENTATION.
 
   METHOD get_global_authorizations.
-    AUTHORITY-CHECK OBJECT 'ZASIS_GRL'
-      ID 'ZASIS_RULE' DUMMY
-      ID 'ACTVT' FIELD '02'.
-    result-%update = COND #( WHEN sy-subrc = 0 THEN if_abap_behv=>auth-allowed ELSE if_abap_behv=>auth-unauthorized ).
-    result-%delete = result-%update.
+
+    IF requested_authorizations-%create = if_abap_behv=>mk-on.
+      AUTHORITY-CHECK OBJECT 'ZASIS_GRL'
+        ID 'ZASIS_RULE' DUMMY
+        ID 'ACTVT'      FIELD '01'.
+      result-%create = COND #( WHEN sy-subrc = 0 THEN if_abap_behv=>auth-allowed ELSE if_abap_behv=>auth-unauthorized ).
+    ENDIF.
+
+    IF requested_authorizations-%update = if_abap_behv=>mk-on.
+      AUTHORITY-CHECK OBJECT 'ZASIS_GRL'
+        ID 'ZASIS_RULE' DUMMY
+        ID 'ACTVT'      FIELD '02'.
+      result-%update = COND #( WHEN sy-subrc = 0 THEN if_abap_behv=>auth-allowed ELSE if_abap_behv=>auth-unauthorized ).
+    ENDIF.
+
+    IF requested_authorizations-%delete = if_abap_behv=>mk-on.
+      AUTHORITY-CHECK OBJECT 'ZASIS_GRL'
+        ID 'ZASIS_RULE' DUMMY
+        ID 'ACTVT'      FIELD '06'.
+      result-%delete = COND #( WHEN sy-subrc = 0 THEN if_abap_behv=>auth-allowed ELSE if_abap_behv=>auth-unauthorized ).
+    ENDIF.
+
   ENDMETHOD.
 
   METHOD checkclassimplementsinterface.
