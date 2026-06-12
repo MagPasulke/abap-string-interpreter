@@ -14,9 +14,6 @@ CLASS lhc_custlogcatalog IMPLEMENTATION.
     AUTHORITY-CHECK OBJECT 'ZASIS_GRL'
       ID 'ZASIS_RULE' DUMMY
       ID 'ACTVT' FIELD '02'.
-    IF sy-subrc <> 0.
-      result-%fail-cause = if_abap_behv=>cause-unauthorized.
-    ENDIF.
     result-%update = COND #( WHEN sy-subrc = 0 THEN if_abap_behv=>auth-allowed ELSE if_abap_behv=>auth-unauthorized ).
     result-%delete = result-%update.
   ENDMETHOD.
