@@ -7,4 +7,4 @@ define view entity ZASIS_I_CUSTLOGCAT_VH
       Description
 }
 where
-  Status = #active
+  Status = ZASIS_ENHCAT_STATUS.#active
