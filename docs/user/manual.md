@@ -21,6 +21,7 @@
 5. [HTTP API Reference](#http-api-reference)
    - [Execute RuleSet — POST /ruleSetExecution/{ruleSetId}](#execute-ruleset)
    - [Retrieve RuleSet — GET /ruleSet/{ruleSetId}](#retrieve-ruleset)
+   - [Export RuleSet — GET /ruleSetExport/{ruleSetId}](#export-ruleset)
    - [Error Responses](#error-responses)
 5. [Custom Logic](#custom-logic)
    - [Catalog registration and status](#catalog-registration-and-status)
@@ -384,6 +385,74 @@ Same error format as the POST endpoint.
 
 ---
 
+### Export RuleSet
+
+**`GET /ruleSetExport/{ruleSetId}`**
+
+Returns the RuleSet configuration as a downloadable JSON file. Use this endpoint to back up a RuleSet, migrate it between systems, or inspect its structure outside the Fiori UI.
+
+The export intentionally excludes internal database UUIDs. The response is a stable, schema-versioned document whose `interpretation_type` values are always the language-independent strings `MATCH` or `REPLACE` — not the numeric internal codes — so the file remains portable regardless of logon language.
+
+The Fiori maintenance screen also shows an **Export** link in the list and detail views, which calls this endpoint and triggers a browser download.
+
+#### Path Parameters
+
+| Parameter   | Description                    |
+|------------|--------------------------------|
+| `ruleSetId` | The ID of the RuleSet to export |
+
+#### Response — 200 OK
+
+The response body is a JSON object with the following structure:
+
+```json
+{
+  "SCHEMA_VERSION": "1.0",
+  "RULESETID": "BARCODE_01",
+  "ITEMS": [
+    {
+      "INTPRETATIONTARGET": "MaterialNo",
+      "INTERPRETATIONRULE": "(?<=<A7X>).*?(?=<B52H>)",
+      "INTERPRETATION_TYPE": "MATCH",
+      "OFFSET_PRE": "0",
+      "OFFSET_POST": "0",
+      "REPLACEMENT_STRING": "",
+      "CUSTOM_LOGIC": ""
+    },
+    {
+      "INTPRETATIONTARGET": "DeliveryNote",
+      "INTERPRETATIONRULE": "(?<=<B52H>).*?(?=<End>)",
+      "INTERPRETATION_TYPE": "MATCH",
+      "OFFSET_PRE": "0",
+      "OFFSET_POST": "0",
+      "REPLACEMENT_STRING": "",
+      "CUSTOM_LOGIC": ""
+    }
+  ]
+}
+```
+
+| Field              | Description                                                                           |
+|-------------------|---------------------------------------------------------------------------------------|
+| `SCHEMA_VERSION`  | Export schema version (`1.0`). Increment signals a breaking change in field structure. |
+| `RULESETID`       | The RuleSet identifier.                                                               |
+| `ITEMS`           | Ordered list of rule items. Order matches runtime execution order.                     |
+| `INTERPRETATION_TYPE` | Human-readable type: `MATCH` or `REPLACE`.                                        |
+
+The response also includes the HTTP header:
+
+```
+Content-Disposition: attachment; filename="<ruleSetId>.json"
+```
+
+This causes browsers and HTTP clients configured for download to save the file as `<ruleSetId>.json`.
+
+#### Response — 400 / 403
+
+Same error format as the other GET endpoint. Returns 400 if the RuleSet does not exist or the path is malformed, and 403 if the calling user lacks the required read authorization.
+
+---
+
 ### Error Responses
 
 All errors follow the same envelope structure:
@@ -508,7 +577,7 @@ ZASIS uses a dedicated authorization object (`ZASIS_GRL`) to control access to R
 | Authorization Check | Triggered by                              |
 |--------------------|-------------------------------------------|
 | Execute            | Every call to `POST /ruleSetExecution/{ruleSetId}` |
-| Read               | Every call to `GET /ruleSet/{ruleSetId}`  |
+| Read               | Every call to `GET /ruleSet/{ruleSetId}` and `GET /ruleSetExport/{ruleSetId}` |
 | Maintain           | Saving changes via the Fiori application  |
 
 The same authorization object is also used for the **Custom Logic Catalog**. Users who register, change, or retire custom logic entries need the corresponding display/create/change/delete activities in addition to RuleSet permissions.
@@ -564,3 +633,11 @@ If the UI reports that a catalog entry is still in use, remove that custom logic
 ### Context not appearing in response
 
 Context is only returned if it was sent in the request body. Confirm the `context` array is included and well-formed JSON.
+
+### Export returns 400 — Unknown RuleSet
+
+Verify the `ruleSetId` in the URL exactly matches the ID in the Fiori application (case-sensitive).
+
+### Export link not visible in Fiori UI
+
+The **Export** link is rendered as a URL field in the RuleSet list and detail views. If it is not visible, confirm the user has the Read activity in authorization object `ZASIS_GRL` for the relevant RuleSet. Users without read access do not see the export link.
