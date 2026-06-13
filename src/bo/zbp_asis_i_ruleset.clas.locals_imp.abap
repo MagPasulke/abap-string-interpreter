@@ -91,9 +91,11 @@ CLASS lhc_rulesetitem IMPLEMENTATION.
     ENDIF.
 
     " Bulk read catalog entries for all referenced custom logic classes
-    SELECT ClassName, Status FROM zasis_i_custlogcatalog
+    " Note: SELECT from DB table intentionally bypasses DCL to see all entries
+    " regardless of current user's display authorization for the catalog.
+    SELECT class_name AS ClassName, status AS Status FROM zasis_custlogcat
       FOR ALL ENTRIES IN @rulesetitems
-      WHERE ClassName = @rulesetitems-CustomLogic
+      WHERE class_name = @rulesetitems-CustomLogic
       INTO TABLE @DATA(catalog_entries).
 
     IF sy-subrc <> 0.
@@ -120,7 +122,7 @@ CLASS lhc_rulesetitem IMPLEMENTATION.
         CONTINUE.
       ENDIF.
 
-      IF entry-Status <> 1. " 1 = active
+      IF entry-Status <> zasis_constants=>enhcat_status-active.
         APPEND VALUE #( %tky = rulesetitem-%tky ) TO failed-rulesetitem.
 
         APPEND VALUE #( %tky = rulesetitem-%tky

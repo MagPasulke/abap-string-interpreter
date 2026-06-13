@@ -3,7 +3,7 @@
  <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
   <asx:values>
    <DEVC>
-    <CTEXT>ABAP String Interpreter - Catalogs for custom logic and even</CTEXT>
+    <CTEXT>ASIS - Enhancement Catalogs</CTEXT>
     <PACKKIND>5</PACKKIND>
     <SRV_CHECK>X</SRV_CHECK>
    </DEVC>

@@ -101,9 +101,11 @@ CLASS lhc_custlogcatalog IMPLEMENTATION.
     ENDIF.
 
     " Single DB read for all class names to avoid SELECT in loop
-    SELECT CustomLogic FROM zasis_i_rulesetitem
+    " Note: SELECT from DB table intentionally bypasses DCL to see all references
+    " regardless of current user's authorization for RuleSetItems.
+    SELECT custom_logic AS CustomLogic FROM zasis_rulesetitm
       FOR ALL ENTRIES IN @catalogs
-      WHERE CustomLogic = @catalogs-ClassName
+      WHERE custom_logic = @catalogs-ClassName
       INTO TABLE @DATA(referenced).
 
     IF sy-subrc <> 0.

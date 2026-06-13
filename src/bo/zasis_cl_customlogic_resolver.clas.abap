@@ -31,7 +31,7 @@ CLASS zasis_cl_customlogic_resolver IMPLEMENTATION.
         classname = class_name ).
     ENDIF.
 
-    IF status <> '1'. " 1 = active (domain ZASIS_ENHCAT_STAT)
+    IF status <> zasis_constants=>enhcat_status-active.
       RAISE EXCEPTION NEW zasis_cx_exc(
         textid    = zasis_cx_exc=>error_custom_log_processing
         classname = class_name ).

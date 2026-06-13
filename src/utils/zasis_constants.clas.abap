@@ -43,6 +43,12 @@ CLASS zasis_constants DEFINITION
       END OF export_type.
 
     CONSTANTS:
+      BEGIN OF enhcat_status,
+        active     TYPE c LENGTH 1 VALUE '1',
+        deprecated TYPE c LENGTH 1 VALUE '2',
+      END OF enhcat_status.
+
+    CONSTANTS:
       BEGIN OF export,
         schema_version TYPE c LENGTH 5 VALUE '1.0',
         resource_path  TYPE string VALUE 'ruleSetExport',
