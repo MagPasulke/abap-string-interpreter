@@ -23,6 +23,7 @@
    - [Retrieve RuleSet — GET /ruleSet/{ruleSetId}](#retrieve-ruleset)
    - [Error Responses](#error-responses)
 5. [Custom Logic](#custom-logic)
+   - [Catalog registration and status](#catalog-registration-and-status)
 6. [Event Producers](#event-producers)
 7. [Authorization](#authorization)
 8. [Troubleshooting](#troubleshooting)
@@ -77,7 +78,7 @@ Each RuleSet contains an ordered list of **Rule Items**. Every item defines:
 | `OffsetPre`           | Characters to skip from the **start** of the regex match (MATCH only)       |
 | `RightTrim`           | Characters to trim from the **end** of the regex match (MATCH only)         |
 | `ReplacementString`   | The replacement value used with REPLACE rules                                 |
-| `CustomLogic`         | Optional: ABAP class name implementing `ZASIS_IF_CUSTOMLOGIC` (overrides regex) |
+| `CustomLogic`         | Optional: registered custom logic implementation (overrides regex) |
 | `EventProducer`       | Optional: ABAP class name implementing `ZASIS_IF_EVENT_PRODUCER`             |
 
 Rules are executed **in the order they are defined**. The result of one rule does not feed into the next; every rule operates on the original input string.
@@ -160,6 +161,7 @@ Within a saved RuleSet:
 1. Open the RuleSet and navigate to the **Rule Items** section.
 2. Click **Add**.
 3. Fill in the fields (see [Rule Items](#rule-items) table above).
+   - If you use **Custom Logic**, select an entry from the value help. Only catalog entries with status **Active** are offered.
 4. Order items using the sequence controls — the execution order matches the display order.
 5. Save. Changes take effect immediately on the next API call (the cache is invalidated on save).
 
@@ -415,6 +417,28 @@ When a Rule Item has a **CustomLogic** class assigned, the standard MATCH/REPLAC
 - Results depend on multiple input fields or lookup tables.
 - Post-processing of a regex match is required.
 
+### Catalog registration and status
+
+Custom logic implementations are managed in a dedicated **Custom Logic Catalog**. Before a Rule Item can use a custom logic implementation, an administrator must create a catalog entry with:
+
+- the implementation class name
+- a short description
+- a status
+
+Available statuses:
+
+| Status | Meaning |
+|--------|---------|
+| `Active` | Can be selected in Rule Items and executed at runtime |
+| `Deprecated` | Kept for reference only; cannot be assigned to Rule Items and is rejected at runtime |
+
+Operational consequences:
+
+- Only **Active** catalog entries appear in the Rule Item value help.
+- Saving a Rule Item fails if the referenced custom logic is not registered or is not **Active**.
+- Execution fails with an application error if a RuleSet still references a catalog entry that is no longer **Active**.
+- A catalog entry cannot be deleted while any Rule Item still references it.
+
 ### Implementation
 
 Create an ABAP class that implements the interface `ZASIS_IF_CUSTOMLOGIC`:
@@ -448,7 +472,9 @@ Raise `zasis_cx_exc` to signal an unrecoverable error; this will abort the entir
 
 ### Registration
 
-In the RuleSet configuration, enter the fully qualified ABAP class name in the **Custom Logic** field of the rule item. The class resolver validates that the class implements `ZASIS_IF_CUSTOMLOGIC` before calling it.
+First register the implementation in the **Custom Logic Catalog**. Then, in the RuleSet configuration, select the catalog entry in the **Custom Logic** field of the Rule Item.
+
+The catalog validates that the implementation class exists and implements `ZASIS_IF_CUSTOMLOGIC`. RuleSet maintenance validates that the selected catalog entry exists and is **Active** before the RuleSet can be saved.
 
 ---
 
@@ -484,6 +510,8 @@ ZASIS uses a dedicated authorization object (`ZASIS_GRL`) to control access to R
 | Execute            | Every call to `POST /ruleSetExecution/{ruleSetId}` |
 | Read               | Every call to `GET /ruleSet/{ruleSetId}`  |
 | Maintain           | Saving changes via the Fiori application  |
+
+The same authorization object is also used for the **Custom Logic Catalog**. Users who register, change, or retire custom logic entries need the corresponding display/create/change/delete activities in addition to RuleSet permissions.
 
 Users without the required authorization receive a `403 Forbidden` response on API calls, or see no data in the Fiori application.
 
@@ -521,11 +549,17 @@ If API returns `ZASIS_MSGS/017`, request payload could not be read by HTTP runti
 - Check reverse proxy, API gateway, or client logs for truncated body, early disconnect, or transfer-encoding issues.
 - If error persists, contact system administrator and provide full response payload plus timestamp for backend log analysis.
 
-### Custom logic class not found or not called
+### Custom logic is not selectable or not called
 
+- Confirm the implementation is registered in the **Custom Logic Catalog**.
+- Confirm the catalog entry status is **Active**. `Deprecated` entries are intentionally blocked for assignment and runtime execution.
 - Confirm the class name is spelled correctly and fully qualified.
 - Confirm the class implements `ZASIS_IF_CUSTOMLOGIC` exactly (not a sub-interface or local copy).
 - Activate and transport the class to the target system.
+
+### Custom logic catalog entry cannot be deleted
+
+If the UI reports that a catalog entry is still in use, remove that custom logic from all Rule Items first, save those RuleSets, and then delete the catalog entry.
 
 ### Context not appearing in response
 
