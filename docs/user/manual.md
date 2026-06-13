@@ -17,6 +17,7 @@
    - [Creating a RuleSet](#creating-a-ruleset)
    - [Adding Rule Items](#adding-rule-items)
    - [Testing a RuleSet from the UI](#testing-a-ruleset-from-the-ui)
+   - [Copying a RuleSet](#copying-a-ruleset)
 4. [ABAP API](#abap-api)
 5. [HTTP API Reference](#http-api-reference)
    - [Execute RuleSet — POST /ruleSetExecution/{ruleSetId}](#execute-ruleset)
@@ -176,6 +177,39 @@ The Fiori maintenance screen provides a **Test RuleSet** action that lets you ru
 4. Confirm. The UI displays one result message per rule item, showing the extracted value or `no match`.
 
 This is useful for verifying regex patterns and offset values during configuration.
+
+### Copying a RuleSet
+
+The Fiori maintenance screen provides a **Copy RuleSet** action that creates a new RuleSet by duplicating an existing one. The action is available both in the RuleSet list view (toolbar) and in the RuleSet detail view.
+
+**When to use:** Copy is the fastest way to create a new RuleSet that shares most of its rules with an existing one — for example, to create a variant for a different plant or scanner type.
+
+**Steps:**
+
+1. Select a RuleSet in the list, or open it in the detail view.
+2. Click **Copy RuleSet**.
+3. Fill in the dialog:
+
+   | Field | Description |
+   |---|---|
+   | **New RuleSet ID** | Unique identifier for the new RuleSet (max 10 characters). Must not already exist. |
+   | **Copy Event Producer** | If checked, the Event Producer class assignment is copied to each rule item. If unchecked, Event Producer is cleared on all items in the copy. |
+   | **Copy Custom Logic** | If checked, the Custom Logic class assignment is copied to each rule item. If unchecked, Custom Logic is cleared on all items in the copy. |
+
+4. Confirm. The new RuleSet is created as a draft and opened for editing.
+
+**What is copied:**
+
+- All rule items (target field, interpretation rule, type, offsets, replacement string)
+- Event Producer assignments — only if **Copy Event Producer** is checked
+- Custom Logic assignments — only if **Copy Custom Logic** is checked
+
+**What is not copied:**
+
+- The source RuleSet ID (you must provide a new one)
+- File attachments
+
+The copy is created as an active draft. Review and adjust the rule items if needed, then save to activate the new RuleSet.
 
 ---
 
