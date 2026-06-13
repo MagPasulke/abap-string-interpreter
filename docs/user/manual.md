@@ -437,6 +437,7 @@ The response body is a JSON object with the following structure:
 | `SCHEMA_VERSION`  | Export schema version (`1.0`). Increment signals a breaking change in field structure. |
 | `RULESETID`       | The RuleSet identifier.                                                               |
 | `ITEMS`           | Ordered list of rule items. Order matches runtime execution order.                     |
+| `INTPRETATIONTARGET` | The target field name (note: inherited typo in field name from the database structure). |
 | `INTERPRETATION_TYPE` | Human-readable type: `MATCH` or `REPLACE`.                                        |
 
 The response also includes the HTTP header:
