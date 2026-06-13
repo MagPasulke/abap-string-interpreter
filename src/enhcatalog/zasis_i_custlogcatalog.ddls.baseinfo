@@ -2,9 +2,6 @@
   "BASEINFO": {
     "FROM": [
       "ZASIS_CUSTLOGCAT"
-    ],
-    "ASSOCIATED": [
-      "ZASIS_I_ENHCATSTATTEXT"
     ]
   }
 }

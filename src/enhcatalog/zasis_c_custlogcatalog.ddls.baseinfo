@@ -2,9 +2,6 @@
   "BASEINFO": {
     "FROM": [
       "ZASIS_I_CUSTLOGCATALOG"
-    ],
-    "BASE": [
-      "ZASIS_I_CUSTLOGCATALOG"
     ]
   }
 }
