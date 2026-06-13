@@ -10,7 +10,11 @@ define root view entity ZASIS_C_CUSTLOGCATALOG
   key ClassName,
       @Search.defaultSearchElement: true
       Description,
+      @ObjectModel.text.element: [ 'StatusText' ]
       Status,
+      @ObjectModel.virtualElementCalculatedBy: 'ABAP:ZASIS_CL_ENHCATSTATTEXT'
+      @Semantics.text: true
+      virtual StatusText : abap.char( 20 ),
       LastChangedBy,
       LastChangedAt,
       LocalLastChangedAt
