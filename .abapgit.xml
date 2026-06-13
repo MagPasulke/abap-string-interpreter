@@ -21,6 +21,7 @@
     <item>/src/enhcatalog/969b1071582cc72909bdf2dda97c01ht.sush.xml</item>
     <item>/src/enhcatalog/zasis_ui_custcatalog_o4.srvb.xml</item>
     <item>/src/enhcatalog/zasis_ui_custcatalog_o4.g4ba.xml</item>
+    <item>/src/bo/zasis_ui_ruleset_o4.g4ba.xml</item>
    </IGNORE>
   </DATA>
  </asx:values>
