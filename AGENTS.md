@@ -42,8 +42,7 @@ Only enter this workflow when the user signals intent to **implement something**
    - If fail → attempt one fix cycle; if still failing, report errors to user and wait for guidance
 8. **Repeat steps 5–7** for each logical unit of work (multiple commits are encouraged for traceability)
 9. **Ask user whether to sync to SAP and run ABAP Unit tests** — use `adt_gitpull` (optionally with `checkErrors=true`) + `adt_rununit`. Never run without explicit user confirmation.
-10. **Create session summary** as the final commit (using `session-summary` skill)
-11. **Mark PR ready for review**
+10. **Mark PR ready for review**
     - PR description includes: "⚠️ Please sync to SAP system via abapGit and run ABAP Unit tests before merging."
 
 This applies to ALL changes — code, documentation, skills, configuration. No exceptions.
@@ -73,57 +72,13 @@ This applies to ALL changes — code, documentation, skills, configuration. No e
 ```
 src/                          Root package (ZASIS)
 ├── app/                      Application / UI layer (placeholder for future UI components)
-├── auth/                     Authorization — auth checks, access control (DCL), auth objects
-├── bo/                       Business Objects — core domain logic & RAP service
-├── dm/                       Data Model — database tables, domains, data elements, CDS views
-├── srv/                      HTTP Service — REST API handler (GET/POST for RuleSet operations)
-└── utils/                    Shared utilities — constants, exceptions, domain value helpers
+├── auth/                     Authorization — auth checks (zasis_cl_auth_checker), auth objects (SUSO/AUTH/SUSC), DCL access control for all CDS views, zasis_cx_no_auth exception
+├── bo/                       Business Objects — interpreter engine (zasis_cl_interpreter), ruleset container + factory, RAP managed BO with draft (zbp_asis_i_ruleset), OData V4 service (zasis_ui_ruleset), interfaces zasis_if_interpreter / zasis_if_ruleset / zasis_if_customlogic
+├── dm/                       Data Model — DB tables (rulesethd, rulesetitm, ruleset_refs), CDS interface views, domains/data elements, table types for interpreter results
+├── enhcatalog/               Enhancement Catalogs — RAP managed BO with draft for registering custom logic implementations (zasis_custlogcat), Fiori-annotated consumption view, OData V4 service (zasis_ui_custlogcatalog), package interface exposing catalog to other packages
+├── srv/                      HTTP Service — REST handler (zasis_cl_http_handler) routing GET/POST for RuleSet retrieval and string interpretation, request validation
+└── utils/                    Shared utilities — constants (zasis_constants), custom exception (zasis_cx_exc / ZASIS_MSGS), domain fixed-value query provider, class validator
 ```
-
-### dm (Data Model)
-
-Database schema and type definitions:
-
-- **Tables**: `zasis_rulesethd` (RuleSet header), `zasis_rulesetitm` (RuleSet items/rules), `zasis_ruleset_refs` (cache)
-- **CDS Views**: `zasis_i_ruleset` (composite root), `zasis_i_rulesetheader`, `zasis_i_rulesetitem`
-- **Domains/Data Elements**: Types for UUID, RuleSet ID, regex patterns, offsets, target fields, interpretation types (MATCH=1, REPLACE=2)
-- **Table Types**: `zasis_tt_rulesetitm`, `zasis_tt_interpretationresult`, `zasis_tt_rulesetrefs`
-
-### bo (Business Objects)
-
-Core domain logic, RAP behavior, and consumption layer:
-
-- **`zasis_cl_interpreter`** — Main execution engine; interprets strings against rulesets using regex MATCH/REPLACE rules
-- **`zasis_cl_ruleset`** — Immutable ruleset container (header + items)
-- **`zasis_cl_ruleset_factory`** — Factory with in-memory caching and auth checks
-- **`zbp_asis_i_ruleset`** — RAP Behavior Implementation for managed entity with draft
-- **Consumption CDS**: `zasis_c_ruleset`, `zasis_c_rulesetitem` (Fiori Elements annotations)
-- **Service Definition**: `zasis_ui_ruleset.srvd` — OData V4 service exposing RuleSet and RuleSetItem
-- **Interfaces**: `zasis_if_interpreter`, `zasis_if_ruleset`, `zasis_if_customlogic`
-
-### auth (Authorization)
-
-Authorization layer:
-
-- **`zasis_cl_auth_checker`** — Authorization check implementation
-- **`zasis_if_auth_checker`** — Authorization checker interface
-- **`zasis_cx_no_auth`** — Authorization exception
-- **Access Control (DCL)**: `zasis_ac_ruleset`, `zasis_ac_rulesetheader`, `zasis_ac_rulesetitm`, `zasis_ac_c_ruleset`, `zasis_ac_c_rulesetitm`
-- **Auth Objects**: `zasis_grl` (SUSO), `zasis_rule` (AUTH), `zasi` (SUSC)
-
-### srv (HTTP Service)
-
-REST API for external consumers:
-
-- **`zasis_cl_http_handler`** — Routes GET (retrieve RuleSet) and POST (execute RuleSet) requests
-- Local request validator for path parsing and content-type checks
-
-### utils (Utilities)
-
-- **`zasis_constants`** — Static constants (rule types, HTTP methods, content types)
-- **`zasis_cx_exc`** — Custom exception class with T100 messages (invalid route, unknown ruleset, etc.)
-- **`zasis_cl_get_domain_fix_values`** — RAP query provider for domain fixed values
-- **`zasis_cl_class_validator`** — Class validation utility
 
 ---
 
@@ -194,5 +149,11 @@ The project has three test layers, each covering different concerns. For a full 
 - **When to write which tests**: Use the **`create-tests`** skill for detailed guidance on where to add/adapt tests for different kinds of changes.
 
 
+---
 
+## Prohibitions and Safeguards
+
+- **Do not modify `abaplint.json` or `abap_transpile.json`** unless the user explicitly instructs it. These files define the project's linting rules and transpilation configuration and must not be changed as a side effect of other work.
+- **Disabling, muting, or bypassing linter checks is strictly forbidden.** This includes adding rule overrides, ignore comments, or any configuration changes intended to silence a failing check rather than fix it. Tests and lint rules exist to enforce correctness — circumventing them defeats their purpose.
+- **When a lint, typecheck, or unit test fails: fix the root cause in the ABAP source code first.** Do not reach for configuration changes as a quick fix. If the issue genuinely cannot be resolved in the code (e.g. a false positive with no workaround), stop and seek guidance from the user before making any tooling changes.
 ---
