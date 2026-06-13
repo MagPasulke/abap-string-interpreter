@@ -1,5 +1,5 @@
 @AccessControl.authorizationCheck: #MANDATORY
-@EndUserText.label: 'ASIS - Custom Logic Catalog (Consumption)'
+@EndUserText.label: 'ASIS - Custom Logic Catalog (Cons.)'
 @Search.searchable: true
 @Metadata.allowExtensions: true
 define root view entity ZASIS_C_CUSTLOGCATALOG
