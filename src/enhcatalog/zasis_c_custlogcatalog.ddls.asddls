@@ -11,7 +11,6 @@ define root view entity ZASIS_C_CUSTLOGCATALOG
       @Search.defaultSearchElement: true
       Description,
       Status,
-      _StatusText : redirected to ZASIS_I_ENHCATSTATTEXT,
       LastChangedBy,
       LastChangedAt,
       LocalLastChangedAt

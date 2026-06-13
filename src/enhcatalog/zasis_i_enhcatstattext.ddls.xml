@@ -6,7 +6,7 @@
     <DDLNAME>ZASIS_I_ENHCATSTATTEXT</DDLNAME>
     <DDLANGUAGE>E</DDLANGUAGE>
     <DDTEXT>ASIS - Catalog Status Domain Text</DDTEXT>
-    <SOURCE_TYPE>W</SOURCE_TYPE>
+    <SOURCE_TYPE>V</SOURCE_TYPE>
    </DDLS>
   </asx:values>
  </asx:abap>

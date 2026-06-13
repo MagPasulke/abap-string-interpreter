@@ -3,9 +3,6 @@
     "FROM": [
       "ZASIS_I_CUSTLOGCATALOG"
     ],
-    "ASSOCIATED": [
-      "ZASIS_I_ENHCATSTATTEXT"
-    ],
     "BASE": [
       "ZASIS_I_CUSTLOGCATALOG"
     ]
