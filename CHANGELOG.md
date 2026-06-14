@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.7.1](https://github.com/MagPasulke/abap-string-interpreter/compare/abap-string-interpreter-v0.7.0...abap-string-interpreter-v0.7.1) (2026-06-14)
+
+
+### Documentation
+
+* restructure README and introduce Technical Reference ([7985d55](https://github.com/MagPasulke/abap-string-interpreter/commit/7985d556761b74270803848e3ba36d50d89fc75d))
+
 ## [0.7.0](https://github.com/MagPasulke/abap-string-interpreter/compare/abap-string-interpreter-v0.6.1...abap-string-interpreter-v0.7.0) (2026-06-13)
 
 
