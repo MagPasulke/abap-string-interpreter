@@ -67,7 +67,10 @@ CLASS zasis_cl_get_domain_fix_values IMPLEMENTATION.
           ) TO result.
         ENDLOOP.
 
-        DATA(max_index) = COND #( WHEN top IS NOT INITIAL THEN top + skip ELSE 0 ).
+        DATA(max_index) = 0.
+        IF top IS NOT INITIAL.
+          max_index = top + skip.
+        ENDIF.
 
         SELECT * FROM @result AS data_source_fields
            WHERE (filter_sql)
