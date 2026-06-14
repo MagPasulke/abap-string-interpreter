@@ -38,8 +38,16 @@ abaplint runs as the first step of `npm test` and as a pre-merge gate in CI. It 
 
 ### ICF Shim (`express-icf-shim`)
 
-The ICF shim is a bridge that allows the transpiled `ZASIS_CL_HTTP_HANDLER_CORE` to handle real HTTP requests in Node.js. It works as follows:
+The ICF shim is a bridge that allows the transpiled `ZASIS_CL_HTTP_HANDLER` — the classic SICF handler implementing `IF_HTTP_EXTENSION` — to handle real HTTP requests in Node.js. `ZASIS_CL_HTTP_HANDLER_CORE` is a framework-agnostic abstraction that both entry-point handlers delegate to; the shim exercises the full stack by driving it through the SICF handler. It works as follows:
 
+```
+HTTP request
+  → Express (Node.js HTTP server)
+    → express-icf-shim (adapts Express req/res to IF_HTTP_EXTENSION contract)
+      → Transpiled ZASIS_CL_HTTP_HANDLER (SICF entry point)
+        → ZASIS_CL_HTTP_HANDLER_CORE (routing, validation, interpreter)
+          → In-memory SQLite (via @abaplint/database-sqlite)
+            → HTTP response
 ```
 HTTP request
   → Express (Node.js HTTP server)

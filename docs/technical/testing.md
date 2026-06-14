@@ -73,11 +73,12 @@ Scenarios covered include: Match and Replace extraction, no-match behaviour, inv
 HTTP request
   → Express
     → ICF shim (express-icf-shim)
-      → ZASIS_CL_HTTP_HANDLER_CORE (transpiled)
-        → ZASIS_CL_RULESET_FACTORY (SQLite via @abaplint/database-sqlite)
-          → ZASIS_CL_INTERPRETER (transpiled)
-            → /UI2/CL_JSON (transpiled)
-              → HTTP response
+      → ZASIS_CL_HTTP_HANDLER (SICF entry point, transpiled)
+        → ZASIS_CL_HTTP_HANDLER_CORE (routing, validation, interpreter)
+          → ZASIS_CL_RULESET_FACTORY (SQLite via @abaplint/database-sqlite)
+            → ZASIS_CL_INTERPRETER (transpiled)
+              → /UI2/CL_JSON (transpiled)
+                → HTTP response
 ```
 
 **Scenarios covered:**
