@@ -1,0 +1,8 @@
+# 2026-06-14 PR-105 restructure-readme-and-technical-reference
+
+**Date:** 2026-06-14
+**Title:** Restructure README and introduce Technical Reference
+
+## Summary
+
+Restructured project documentation by reducing the README to a short intro, feature table, quick start example (updated to include context in both request and response), and two links (User Manual, Technical Reference), and introduced a new `docs/technical/` folder with an index page linking to eight sub-pages written from scratch: `architecture.md` (package structure, all three HTTP handler classes, data model, execution logic with correct `match()`/`replace()` pcre= description), `off-stack-development.md` (motivation, toolchain, ICF shim, what can/cannot be tested off-stack, planned pipeline automation), `testing.md` (consolidating the former `docs/test-layer-comparison.md` and `docs/icf-shim-integration-tests.md`), `cicd.md` (all four GitHub Actions workflows), `installation.md` (both HTTP handler paths — Cloud HTTP Service and SICF — plus correct service binding instructions noting the SRVB is gitignored and must be created manually), `authorization.md`, and `event-producer-bgpf-migration.md` (moved from `docs/` root). The accidentally tracked `ZASIS_UI_CUSTCATALOG_O4.srvb.xml` was removed from the repository via `git rm`. A roadmap note referencing issue #88 (planned cloud/on-prem release separation) was added to both the README and installation docs. The contributing.md was created and then removed at user request (to be written later). All changes are documentation-only; `npm test` passes with 0 lint issues and all unit tests green.
