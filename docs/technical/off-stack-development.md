@@ -88,7 +88,6 @@ This setup allows the full HTTP handler stack — routing, request validation, R
 | Real HANA database behavior | SQLite semantics differ; CDS views cannot be evaluated |
 | CDS view access control (DCL) | Requires a real ABAP kernel |
 | RAP behavior (validations, actions, draft) | RAP framework is not available in the transpiler runtime |
-| PCRE regex parameter | `@abaplint/runtime` does not currently implement the `pcre =` parameter |
 | ICF node registration and activation | Requires SAP system administration |
 
 These gaps are closed by the HTTP integration test suite (`npm run sap-test`, `npm run sap-auth-test`) and by running ABAP Unit tests on the real SAP system via ADT after syncing via abapGit.
