@@ -104,4 +104,6 @@ A typical change follows this flow:
 4. Commit and push — CI runs the same checks automatically
 5. When ready: sync to SAP via abapGit (`adt_gitpull`) and run ABAP Unit tests on-stack (`adt_rununit`)
 
-Steps 1–4 require no SAP connection. Step 5 is the final gate before merge.
+Steps 1–4 require no SAP connection. Step 5 is the current final gate before merge.
+
+> **Planned:** Step 5 is a temporary workaround. The target workflow is a fully automated pipeline that syncs the feature branch to SAP, runs all ABAP Unit tests on-stack, and only allows merge to `main` on green — with no manual IDE syncs required.
