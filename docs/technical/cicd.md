@@ -69,8 +69,29 @@ Merging the Release PR triggers a GitHub Release with the corresponding tag.
 - The list of changed files
 - A structured prompt for the agent describing what to update and how
 
-An idempotency guard prevents duplicate issues from being created for the same PR.
+An idempotency guard (keyed on the label `docs:user-manual-pending`) prevents duplicate issues from being created for the same PR. After creating the issue, a second step assigns it to the `copilot-swe-agent[bot]` using the `COPILOT_PAT` secret.
 
 **Why this workflow?** The user manual documents behaviour from the end-user perspective. Rather than requiring developers to update it manually as part of every PR, this workflow decouples documentation updates from feature work. The label-based trigger means only PRs that change user-facing behaviour produce a docs issue.
 
 **Retroactive backfill:** If the label was added after a PR was merged, the workflow can be triggered manually with the PR number and optionally the `force` flag to bypass the label check.
+
+---
+
+## Technical Docs Update Workflow (`update-technical-docs.yml`)
+
+**Trigger:** When a merged PR carries the `docs:technical` label, or manually via `workflow_dispatch` with a PR number.
+
+**What it does:** Creates a GitHub Issue assigned to a Copilot SWE agent with instructions to update the relevant files under `docs/technical/` based on the changes in the merged PR. The issue includes:
+- The PR title and number
+- The list of changed files
+- A structured prompt for the agent describing which doc files to update (architecture, testing, CI/CD, installation, authorization, off-stack development) and how
+
+An idempotency guard (keyed on the label `docs:technical-pending`) prevents duplicate issues from being created for the same PR. After creating the issue, a second step assigns it to the `copilot-swe-agent[bot]` using the `COPILOT_PAT` secret.
+
+**Why this workflow?** Technical documentation covers contributor and integrator concerns: package architecture, test infrastructure, CI/CD pipelines, and installation procedures. Keeping it in sync with code changes is important but easily overlooked during PR review. This workflow automates the tracking of that obligation via a label-based trigger — if a PR changes something architecturally significant, the author labels it `docs:technical` and an issue is automatically created for the agent to update the relevant doc files.
+
+**Label semantics:**
+- `docs:technical` — applied to a PR to signal that technical documentation needs updating. Triggers issue creation on merge.
+- `docs:technical-pending` — applied automatically to the generated issue. Used as the idempotency key to prevent duplicate issues for the same PR.
+
+**Retroactive backfill:** If the label was added after a PR was merged, the workflow can be triggered manually with the PR number. The optional `force` flag bypasses the label check entirely, which is intended only for exceptional cases.
