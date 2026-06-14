@@ -1,4 +1,4 @@
-name: update-user-manual
+name: update-technical-docs
 
 on:
   pull_request:
@@ -10,7 +10,7 @@ on:
         required: true
         type: number
       force:
-        description: 'Skip the docs:user-manual label check (use only for exceptional cases)'
+        description: 'Skip the docs:technical label check (use only for exceptional cases)'
         required: false
         type: boolean
         default: false
@@ -27,7 +27,7 @@ jobs:
     if: >
       github.event_name == 'workflow_dispatch' ||
       (github.event.pull_request.merged == true &&
-       contains(github.event.pull_request.labels.*.name, 'docs:user-manual'))
+       contains(github.event.pull_request.labels.*.name, 'docs:technical'))
 
     runs-on: ubuntu-latest
     timeout-minutes: 5
@@ -57,10 +57,10 @@ jobs:
                 return;
               }
 
-              const hasLabel = pr.labels.some(l => l.name === 'docs:user-manual');
+              const hasLabel = pr.labels.some(l => l.name === 'docs:technical');
               if (!hasLabel && !force) {
                 core.setFailed(
-                  `PR #${prNumber} does not have the 'docs:user-manual' label. ` +
+                  `PR #${prNumber} does not have the 'docs:technical' label. ` +
                   `Add the label to the PR or re-run with force=true to bypass this check.`
                 );
                 return;
@@ -70,12 +70,11 @@ jobs:
             }
 
             // ── Idempotency guard ────────────────────────────────────────────
-            // Avoid creating a second issue if the workflow is re-run for the same PR
             const existingIssues = await github.rest.issues.listForRepo({
               owner: context.repo.owner,
               repo:  context.repo.repo,
               state: 'open',
-              labels: 'docs:user-manual-pending',
+              labels: 'docs:technical-pending',
               per_page: 50,
             });
 
@@ -100,11 +99,11 @@ jobs:
 
             // ── Build issue body ─────────────────────────────────────────────
             const body = `\
-            ## Task: Update User Manual
+            ## Task: Update Technical Documentation
 
-            This issue was automatically created because PR #${pr.number} — **"${pr.title}"** — was merged with the \`docs:user-manual\` label.
+            This issue was automatically created because PR #${pr.number} — **"${pr.title}"** — was merged with the \`docs:technical\` label.
 
-            **Your goal:** Update \`docs/user/manual.md\` to reflect any user-visible changes introduced by that PR.
+            **Your goal:** Update the relevant files in \`docs/technical/\` to reflect any changes to architecture, testing, CI/CD, installation, authorization, or other technical concerns introduced by that PR.
 
             ---
 
@@ -123,29 +122,42 @@ jobs:
             ### Instructions
 
             1. **Read the changed files** listed above to understand what was added, modified, or removed.
-            2. **Read \`docs/user/manual.md\`** in full to understand the current state of the manual.
-            3. **Determine which sections of the manual are affected** by the PR changes:
-               - New ABAP classes or interfaces that expose user-visible behavior → add/update the relevant concept or API section.
-               - Changed HTTP routes or request/response shapes → update the HTTP API reference.
-               - New or removed rule types, offset semantics, custom logic patterns → update the corresponding section.
-               - Internal refactors with no user impact → no manual change needed; close this issue with a comment explaining why.
+            2. **Read the existing technical docs** in \`docs/technical/\` to understand the current state:
+               - \`index.md\` — table of contents
+               - \`architecture.md\` — package structure, components, execution flow
+               - \`off-stack-development.md\` — developing/testing without SAP
+               - \`testing.md\` — test layers (unit, ICF shim, SAP integration)
+               - \`cicd.md\` — GitHub Actions workflows
+               - \`installation.md\` — abapGit install + HTTP service activation
+               - \`authorization.md\` — auth object, activity codes, enforcement
+            3. **Determine which technical doc files are affected** by the PR changes:
+               - New or restructured packages/classes → update \`architecture.md\`
+               - Changed test infrastructure, new test patterns → update \`testing.md\`
+               - New or modified GitHub Actions workflows → update \`cicd.md\`
+               - Changed installation/setup procedures → update \`installation.md\`
+               - Changed authorization model → update \`authorization.md\`
+               - New off-stack tooling or dev workflow changes → update \`off-stack-development.md\`
+               - Topic doesn't fit any existing file → create a new \`.md\` file and add it to \`index.md\`
+               - Internal refactors with no impact on technical documentation → no change needed; close this issue with a comment explaining why.
             4. **Write or update content** following these authoring rules:
-               - **Audience**: administrators and developers integrating ZASIS into their landscape. Assume familiarity with SAP/ABAP but not with ZASIS internals.
+               - **Audience**: both contributors to this repo AND external system integrators deploying ZASIS. Match the existing tone of each file — contributor-focused files (e.g., \`architecture.md\`) can use class names and internal details; integrator-focused files (e.g., \`installation.md\`) should remain more accessible.
                - **Tone**: clear, technical, direct. No marketing language.
-               - **Scope**: user-visible behavior only. Do not expose ABAP class names, abapGit internals, CI/CD details, or test infrastructure.
+               - **Scope**: technical internals, development workflows, CI/CD, testing infrastructure. Do NOT update user-facing documentation (\`docs/user/manual.md\`) — that has its own workflow.
                - **Structure**: preserve existing section headings unless a structural change is clearly warranted. Add new sections at the appropriate level.
-               - **Examples**: include concrete request/response examples for any API changes.
                - **Accuracy**: only document behavior that actually exists in the codebase. Do not speculate or document planned features.
-            5. **Create a branch** named \`docs/user-manual-pr-${pr.number}\` and **open a PR** targeting \`main\` with the updated \`docs/user/manual.md\`.
-            6. **PR title**: \`docs: update user manual for PR #${pr.number} — ${pr.title}\`
-            7. **PR description** must include \`Fixes #ISSUE_NUMBER\` (this issue's number) so the issue is automatically closed when the PR merges.
+            5. **Keep \`docs/technical/index.md\` in sync**: if you add, remove, or rename any file in \`docs/technical/\`, update the table of contents in \`index.md\`.
+            6. **Do NOT modify \`AGENTS.md\`** — it is maintained separately as an agent-instruction file, not a documentation artifact.
+            7. **Create a branch** named \`docs/technical-pr-${pr.number}\` and **open a PR** targeting \`main\` with the updated technical docs.
+            8. **PR title**: \`docs: update technical docs for PR #${pr.number} — ${pr.title}\`
+            9. **PR description** must include \`Fixes #ISSUE_NUMBER\` (this issue's number) so the issue is automatically closed when the PR merges.
 
             ---
 
             ### Definition of Done
 
-            - [ ] \`docs/user/manual.md\` updated (or issue closed with documented reason for no change)
-            - [ ] PR opened against \`main\` referencing this issue
+            - [ ] Relevant \`docs/technical/\` files updated (or issue closed with documented reason for no change)
+            - [ ] \`docs/technical/index.md\` updated if files were added/removed/renamed
+            - [ ] PR opened against \`main\` with \`Fixes #ISSUE_NUMBER\` in description
             - [ ] Content reviewed for accuracy against the actual source code
             `;
 
@@ -153,9 +165,9 @@ jobs:
             const issue = await github.rest.issues.create({
               owner: context.repo.owner,
               repo:  context.repo.repo,
-              title: `docs: update user manual for PR #${pr.number} — ${pr.title}`,
+              title: `docs: update technical docs for PR #${pr.number} — ${pr.title}`,
               body:  body.replace(/^ {12}/gm, ''), // strip template indentation
-              labels: ['docs:user-manual-pending'],
+              labels: ['docs:technical-pending'],
             });
 
             core.setOutput('issue_number', issue.data.number);
