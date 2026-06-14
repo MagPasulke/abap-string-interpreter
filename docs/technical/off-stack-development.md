@@ -6,16 +6,13 @@ This page explains why that approach was chosen, how it works technically, and w
 
 ---
 
-## The Problem with Classic ABAP Development
+## Why Off-Stack?
 
-Traditional ABAP development is tightly coupled to a running SAP system. Code lives in the system, tests run in the system, and CI typically means deploying to a system and hoping it compiles. This creates several friction points:
+ABAP development traditionally runs on a SAP system — code lives there, tests run there, and the system is the development environment. ZASIS takes a different approach: as much of the development and testing loop as possible runs off-stack, on a developer's local machine or in CI.
 
-- Each developer needs access to a shared or personal SAP instance
-- Code changes require upload (via abapGit or ADT) before they can be tested
-- CI pipelines that require SAP access are slow, expensive, and hard to parallelize
-- Pull request reviews cannot run tests automatically without SAP credentials in the pipeline
+This approach is a deliberate choice to tap into the tooling and processes that modern web and cloud development offer — fast feedback loops, standard CI pipelines, pull request-based test gates, and a rich ecosystem of open-source tooling. The abaplint project makes this possible by providing a transpiler, a runtime, and a static analysis engine that run ABAP outside of a SAP system.
 
-ZASIS takes a different path: as much of the development and testing loop as possible runs off-stack, treating the SAP system as the final integration environment rather than the primary development environment.
+The SAP system remains the authoritative environment for final validation and production. Off-stack testing covers what it can; on-stack validation closes the gaps.
 
 ---
 
