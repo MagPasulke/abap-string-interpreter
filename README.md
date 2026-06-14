@@ -87,3 +87,9 @@ Context is optional — omit it and the `CONTEXT` array in the response will be 
 
 - **[User Manual](docs/user/manual.md)** — configuration guide, API reference, ABAP samples, and troubleshooting
 - **[Technical Reference](docs/technical/index.md)** — architecture, off-stack development, testing, CI/CD, installation, and contributing
+
+---
+
+## Roadmap Note
+
+The current release contains artifacts for both ABAP Cloud and on-premise installations. A clean separation into dedicated cloud and on-premise release variants — each shipping only the relevant artifacts — is planned. See [issue #88](https://github.com/MagPasulke/abap-string-interpreter/issues/88).
