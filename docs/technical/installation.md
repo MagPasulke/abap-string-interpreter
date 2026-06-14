@@ -6,7 +6,7 @@ This page describes how to install ZASIS into a SAP system and activate its acce
 
 ## Prerequisites
 
-- SAP ABAP Platform 2022 or higher (ABAP Cloud / ABAP Developer Trial or on-premise with equivalent release)
+- SAP ABAP Platform 2023 / SAP BASIS 758 (ABAP Cloud Developer Trial or on-premise with equivalent release)
 - [abapGit](https://docs.abapgit.org/user-guide/getting-started/install.html) installed in the target system
 - A user with sufficient authorizations to create packages, install repository objects, and activate services
 
