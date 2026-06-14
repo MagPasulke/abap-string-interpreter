@@ -85,9 +85,9 @@ Rule types are stored as a domain value in `ZASIS_RULEITEM_TYPE`:
 
 When `ZASIS_CL_INTERPRETER` processes a string, it iterates over all items of the loaded RuleSet in sequence. For each item:
 
-**Match** — Calls `FIND FIRST OCCURRENCE OF REGEX rule IN string SUBMATCHES result`. If a match is found, `OFFSET_PRE` characters are removed from the left and `OFFSET_POST` characters from the right of the result. If the trimmed result is empty or no match was found, the item yields no output.
+**Match** — Calls the built-in `match( val = input pcre = rule )` function. If a match is found, `OFFSET_PRE` characters are removed from the left and `OFFSET_POST` characters from the right of the result using string offset/length syntax. If the result is empty or no match was found, the item yields no output.
 
-**Replace** — Calls `REPLACE ALL OCCURRENCES OF REGEX rule IN string WITH replacement`. If the result differs from the original input, it is returned as the interpretation result. If the string is unchanged after replacement (no match), the item yields no output.
+**Replace** — Calls the built-in `replace( val = input pcre = rule with = replacement_string )` function. Because `replace()` returns the original string unchanged when no match is found, the interpreter compares the result to the original input: if they differ, the result is returned; if they are equal, the item yields no output. Known limitation: if the replacement produces the same string as the input (e.g. regex `A` with replacement `A` on `ABC`), it is falsely treated as no-match.
 
 **Custom Logic** — If the `CustomLogic` field is filled, the interpreter resolves the named class dynamically and calls its `EXECUTE` method. The class must implement `ZASIS_IF_CUSTOMLOGIC`. Regular Match/Replace processing is skipped for that item.
 
