@@ -420,11 +420,8 @@ CLASS ltcl_zasis_cl_interpreter IMPLEMENTATION.
     " When
     TRY.
         cut->execute(
-          EXPORTING
             string_to_be_interpreted = |<TAG>Value1|
             ruleset                  = ruleset
-          RECEIVING
-            output    = DATA(result)
         ).
       CATCH zasis_cx_exc zasis_cx_no_auth INTO DATA(exc).
         cl_abap_unit_assert=>fail( msg = |Unexpected exception: { exc->get_text( ) }| ).
@@ -453,11 +450,8 @@ CLASS ltcl_zasis_cl_interpreter IMPLEMENTATION.
     " When
     TRY.
         cut->execute(
-          EXPORTING
             string_to_be_interpreted = |<TAG>Value1|
             ruleset                  = ruleset
-          RECEIVING
-            output    = DATA(result)
         ).
       CATCH zasis_cx_exc zasis_cx_no_auth INTO DATA(exc).
         cl_abap_unit_assert=>fail( msg = |Unexpected exception: { exc->get_text( ) }| ).
@@ -486,11 +480,8 @@ CLASS ltcl_zasis_cl_interpreter IMPLEMENTATION.
     " When
     TRY.
         cut->execute(
-          EXPORTING
             string_to_be_interpreted = |<TAG>Value1|
             ruleset                  = ruleset
-          RECEIVING
-            output    = DATA(result)
         ).
       CATCH zasis_cx_exc zasis_cx_no_auth INTO DATA(exc).
         cl_abap_unit_assert=>fail( msg = |Unexpected exception: { exc->get_text( ) }| ).
@@ -519,11 +510,8 @@ CLASS ltcl_zasis_cl_interpreter IMPLEMENTATION.
     " When
     TRY.
         cut->execute(
-          EXPORTING
             string_to_be_interpreted = |<B>ResultValue|
             ruleset                  = ruleset
-          RECEIVING
-            output    = DATA(result)
         ).
       CATCH zasis_cx_exc zasis_cx_no_auth INTO DATA(exc).
         cl_abap_unit_assert=>fail( msg = |Unexpected exception: { exc->get_text( ) }| ).
@@ -602,12 +590,9 @@ CLASS ltcl_zasis_cl_interpreter IMPLEMENTATION.
     " When
     TRY.
         cut->execute(
-          EXPORTING
             string_to_be_interpreted = |<TAG>Value1|
             ruleset                  = ruleset
             context                  = context
-          RECEIVING
-            output    = DATA(result)
         ).
       CATCH zasis_cx_exc zasis_cx_no_auth INTO DATA(exc).
         cl_abap_unit_assert=>fail( msg = |Unexpected exception: { exc->get_text( ) }| ).
@@ -729,12 +714,9 @@ CLASS ltcl_zasis_cl_interpreter IMPLEMENTATION.
     " When
     TRY.
         cut->execute(
-          EXPORTING
             string_to_be_interpreted = |<TAG>Value1|
             ruleset                  = ruleset
             context                  = context
-          RECEIVING
-            output    = DATA(result)
         ).
       CATCH zasis_cx_exc zasis_cx_no_auth INTO DATA(exc).
         cl_abap_unit_assert=>fail( msg = |Unexpected exception: { exc->get_text( ) }| ).
@@ -772,11 +754,8 @@ CLASS ltcl_zasis_cl_interpreter IMPLEMENTATION.
     " When - no context parameter passed
     TRY.
         cut->execute(
-          EXPORTING
             string_to_be_interpreted = |<TAG>Value1|
             ruleset                  = ruleset
-          RECEIVING
-            output    = DATA(result)
         ).
       CATCH zasis_cx_exc zasis_cx_no_auth INTO DATA(exc).
         cl_abap_unit_assert=>fail( msg = |Unexpected exception: { exc->get_text( ) }| ).
@@ -817,12 +796,9 @@ CLASS ltcl_zasis_cl_interpreter IMPLEMENTATION.
     " When
     TRY.
         cut->execute(
-          EXPORTING
             string_to_be_interpreted = |<A>Val1<B>Val2|
             ruleset                  = ruleset
             context                  = context
-          RECEIVING
-            output    = DATA(result)
         ).
       CATCH zasis_cx_exc zasis_cx_no_auth INTO DATA(exc).
         cl_abap_unit_assert=>fail( msg = |Unexpected exception: { exc->get_text( ) }| ).
@@ -1246,12 +1222,9 @@ CLASS ltcl_zasis_cl_interpreter IMPLEMENTATION.
     " When
     TRY.
         cut->execute(
-          EXPORTING
             string_to_be_interpreted = |InputString|
             ruleset                  = ruleset
             context                  = context
-          RECEIVING
-            output    = DATA(result)
         ).
       CATCH zasis_cx_exc zasis_cx_no_auth INTO DATA(exc).
         cl_abap_unit_assert=>fail( msg = |Unexpected exception: { exc->get_text( ) }| ).
@@ -1297,11 +1270,8 @@ CLASS ltcl_zasis_cl_interpreter IMPLEMENTATION.
     " When
     TRY.
         cut->execute(
-          EXPORTING
             string_to_be_interpreted = |<A>Val1<B>Val2|
             ruleset                  = ruleset
-          RECEIVING
-            output    = DATA(result)
         ).
       CATCH zasis_cx_exc zasis_cx_no_auth INTO DATA(exc).
         cl_abap_unit_assert=>fail( msg = |Unexpected exception: { exc->get_text( ) }| ).
@@ -1346,11 +1316,8 @@ CLASS ltcl_zasis_cl_interpreter IMPLEMENTATION.
     " When
     TRY.
         cut->execute(
-          EXPORTING
             string_to_be_interpreted = |InputString|
             ruleset                  = ruleset
-          RECEIVING
-            output    = DATA(result)
         ).
       CATCH zasis_cx_exc zasis_cx_no_auth INTO DATA(exc).
         cl_abap_unit_assert=>fail( msg = |Unexpected exception: { exc->get_text( ) }| ).
@@ -1381,11 +1348,8 @@ CLASS ltcl_zasis_cl_interpreter IMPLEMENTATION.
     " When / Then
     TRY.
         cut->execute(
-          EXPORTING
             string_to_be_interpreted = ||
             ruleset                  = ruleset
-          RECEIVING
-            output    = DATA(result)
         ).
         cl_abap_unit_assert=>fail( msg = |Expected zasis_cx_exc but no exception was raised| ).
       CATCH zasis_cx_exc INTO DATA(exc).

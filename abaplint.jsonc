@@ -71,7 +71,6 @@
     },
     "unused_variables": {
       "exclude": [
-        "zasis_cl_interpreter.clas.testclasses.abap",
         "zasis_cl_get_domain_fix_values.clas.abap"
       ],
       "skipAbstract": true
