@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.7.1](https://github.com/MagPasulke/abap-string-interpreter/compare/abap-string-interpreter-v0.7.0...abap-string-interpreter-v0.7.1) (2026-06-14)
+
+
+### Documentation
+
+* restructure README and introduce Technical Reference ([7985d55](https://github.com/MagPasulke/abap-string-interpreter/commit/7985d556761b74270803848e3ba36d50d89fc75d))
+* update cicd.md for update-technical-docs workflow (PR [#107](https://github.com/MagPasulke/abap-string-interpreter/issues/107)) ([#109](https://github.com/MagPasulke/abap-string-interpreter/issues/109)) ([7fefa15](https://github.com/MagPasulke/abap-string-interpreter/commit/7fefa150d539d351fe502a6dadbd826b41fd4aad))
+
+
+### Development & Tooling
+
+* **docs:** add technical docs update workflow and fix issue closure ([#107](https://github.com/MagPasulke/abap-string-interpreter/issues/107)) ([e437cf3](https://github.com/MagPasulke/abap-string-interpreter/commit/e437cf301735300cef83075b95f01b6e60162661))
+* **opencode:** add /ponytail-review command for over-engineering review ([#111](https://github.com/MagPasulke/abap-string-interpreter/issues/111)) ([b1c0139](https://github.com/MagPasulke/abap-string-interpreter/commit/b1c01394178d77b09f59cf7cf6eb7496920b7fe4))
+
 ## [0.7.0](https://github.com/MagPasulke/abap-string-interpreter/compare/abap-string-interpreter-v0.6.1...abap-string-interpreter-v0.7.0) (2026-06-13)
 
 
