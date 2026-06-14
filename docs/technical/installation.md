@@ -91,6 +91,8 @@ This handler adapts `IF_HTTP_REQUEST` / `IF_HTTP_RESPONSE` and delegates to the 
 
 Both handlers share identical business logic via `ZASIS_CL_HTTP_HANDLER_CORE`.
 
+> **Planned:** A clean separation between a cloud release (containing only cloud-compatible artifacts) and an on-premise release (containing only on-premise artifacts) is planned for a future version — see [issue #88](https://github.com/MagPasulke/abap-string-interpreter/issues/88). From that point on, each release variant will ship only the artifacts relevant to its target environment.
+
 ---
 
 ## Verifying the Installation
