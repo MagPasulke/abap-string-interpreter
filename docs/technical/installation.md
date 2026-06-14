@@ -34,11 +34,12 @@ The service definition `ZASIS_UI_RULESET` is installed via abapGit. The correspo
 
 **Enhancement Catalog UI** (for registering custom logic implementations):
 
-The service binding `ZASIS_UI_CUSTCATALOG_O4` is included in the repository and installed via abapGit:
+The service definition `ZASIS_UI_CUSTLOGCATALOG` is installed via abapGit. The service binding must be created manually, the same way as for the RuleSet UI:
 
-1. In ADT, locate the service binding `ZASIS_UI_CUSTCATALOG_O4`.
-2. Click **Publish** to activate it.
-3. The Enhancement Catalog UI is now available via the published service URL.
+1. In ADT, create a new **OData V4 UI** service binding bound to the service definition `ZASIS_UI_CUSTLOGCATALOG`.
+2. Give it a name of your choice (e.g. `ZASIS_UI_CUSTCATALOG_O4`).
+3. Click **Publish** to activate it.
+4. The Enhancement Catalog UI is now available via the published service URL.
 
 ---
 
