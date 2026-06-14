@@ -21,8 +21,6 @@ CLASS zasis_cl_get_domain_fix_values IMPLEMENTATION.
     DATA business_data_line TYPE zasis_i_domain_fix_values.
     DATA(top)     = io_request->get_paging( )->get_page_size( ).
     DATA(skip)    = io_request->get_paging( )->get_offset( ).
-    DATA(requested_fields)  = io_request->get_requested_elements( ).
-    DATA(sort_order)    = io_request->get_sort_elements( ).
 
     DATA domain_name  TYPE sxco_ad_object_name.
 
