@@ -19,8 +19,6 @@ This page describes how to install ZASIS into a SAP system and activate its acce
 3. Assign a target package (e.g. `ZASIS`) and pull the repository.
 4. Activate all objects after the pull completes.
 
-If activation errors occur, run an ATC syntax check to identify the root cause before retrying.
-
 ---
 
 ## Step 2: Activate the Fiori UI (OData V4 Service Binding)
