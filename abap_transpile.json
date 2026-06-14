@@ -21,7 +21,17 @@
   "output_folder": "output",
   "libs": [
     { "url": "https://github.com/open-abap/open-abap-core" },
-    { "url": "https://github.com/open-abap/express-icf-shim" }
+    { "url": "https://github.com/open-abap/express-icf-shim" },
+    { "url": "https://github.com/open-abap/open-abap-gui" },
+    { "url": "https://github.com/open-abap/open-abap-rap" },
+    { "url": "https://github.com/open-abap/open-abap-xco" },
+    { "url": "https://github.com/open-abap/open-abap-rest" },
+    { "url": "https://github.com/open-abap/open-abap-adt" },
+    { "url": "https://github.com/open-abap/open-abap-seo" },
+    { "url": "https://github.com/open-abap/open-abap-lock" },
+    { "url": "https://github.com/open-abap/open-abap-jobs" },
+    { "url": "https://github.com/open-abap/open-abap-ci" },
+    { "url": "https://github.com/open-abap/open-abap-proxy" }
   ],
   "write_unit_tests": true,
   "write_source_map": true,
