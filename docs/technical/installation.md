@@ -1,0 +1,96 @@
+# Installation
+
+This page describes how to install ZASIS into a SAP system and activate its access points.
+
+---
+
+## Prerequisites
+
+- SAP ABAP Platform 2022 or higher (ABAP Cloud / ABAP Developer Trial or on-premise with equivalent release)
+- [abapGit](https://docs.abapgit.org/user-guide/getting-started/install.html) installed in the target system
+- A user with sufficient authorizations to create packages, install repository objects, and activate services
+
+---
+
+## Step 1: Install via abapGit
+
+1. Open abapGit in your SAP system (transaction `ZABAPGIT` or the ADT abapGit plugin).
+2. Create a new online repository pointing to this repository's URL.
+3. Assign a target package (e.g. `ZASIS`) and pull the repository.
+4. Activate all objects after the pull completes.
+
+If activation errors occur, run an ATC syntax check to identify the root cause before retrying.
+
+---
+
+## Step 2: Activate the Fiori UI (OData V4 Service Binding)
+
+1. In ADT or SE80, locate the service binding `ZASIS_UI_RULESET_O4`.
+2. Open it and click **Publish** (or **Activate Local Business Configuration** if required by your system).
+3. The Fiori Elements RuleSet maintenance UI is now available via the published service URL.
+
+Repeat for `ZASIS_UI_CUSTLOGCATALOG_O4` if you intend to use the Enhancement Catalog UI for registering custom logic.
+
+---
+
+## Step 3: Activate the HTTP REST API
+
+ZASIS provides two HTTP handler entry points. Choose the one that matches your system type and configuration.
+
+### Option A: Cloud HTTP Service (Recommended for ABAP Cloud / BTP)
+
+This option uses the cloud-native HTTP service framework (`IF_HTTP_SERVICE_EXTENSION`).
+
+1. In ADT, locate the HTTP Service object `ZASIS_EXT_API_CLD`.
+2. Activate it.
+3. The service is now reachable at the path configured in the service definition.
+
+Handler class: **`ZASIS_CL_HTTP_HANDLER_CLD`**
+
+This handler adapts `IF_WEB_HTTP_REQUEST` / `IF_WEB_HTTP_RESPONSE` and delegates to the shared core handler. All adapter calls are wrapped in error handling that returns HTTP 500 on I/O failures.
+
+---
+
+### Option B: Classic SICF Node (On-Premise / ABAP Platform)
+
+This option uses the classic Internet Communication Framework (`IF_HTTP_EXTENSION`).
+
+1. Open transaction `SICF`.
+2. Navigate to `default_host` (or a sub-path of your choice).
+3. Create a new service node — for example, `zasis_ext_api`.
+4. In the service node properties, assign the handler class **`ZASIS_CL_HTTP_HANDLER`**.
+5. Activate the service node.
+6. The HTTP API is now reachable at the configured ICF path (e.g. `/sap/bc/zasis_ext_api`).
+
+Handler class: **`ZASIS_CL_HTTP_HANDLER`**
+
+This handler adapts `IF_HTTP_REQUEST` / `IF_HTTP_RESPONSE` and delegates to the same shared core handler. Adapter calls are not individually wrapped — exceptions from the SAP ICF layer propagate to the ICF runtime.
+
+---
+
+## Comparison: Cloud HTTP Service vs SICF
+
+| Aspect | Cloud HTTP Service (`_CLD`) | SICF (`ZASIS_CL_HTTP_HANDLER`) |
+|---|---|---|
+| SAP interface | `IF_HTTP_SERVICE_EXTENSION` | `IF_HTTP_EXTENSION` |
+| Activation | ADT — activate HTTP Service object | SICF transaction — create and activate node |
+| Suitable for | ABAP Cloud, BTP ABAP Environment | On-premise ABAP Platform |
+| Adapter error handling | Wrapped — I/O errors return HTTP 500 | Unwrapped — I/O exceptions propagate |
+| Body read method | `GET_TEXT()` | `GET_CDATA()` |
+| Path header field | `~path` | `~path_info` |
+
+Both handlers share identical business logic via `ZASIS_CL_HTTP_HANDLER_CORE`.
+
+---
+
+## Verifying the Installation
+
+After activating the HTTP service, send a test request:
+
+```bash
+curl -u <user>:<password> \
+  -X GET \
+  https://<host>/<path>/ruleSet/<yourRuleSetId>
+```
+
+A `200 OK` response with the RuleSet JSON confirms the service is active and authorization is working. A `400` with an error envelope indicates the RuleSet ID was not found (expected if no RuleSets have been created yet). A `403` indicates an authorization issue — check that the user has the `ZASIS_GRL` authorization object assigned.
