@@ -23,11 +23,17 @@ This page describes how to install ZASIS into a SAP system and activate its acce
 
 ## Step 2: Activate the Fiori UI (OData V4 Service Binding)
 
+**RuleSet Maintenance UI:**
+
 1. In ADT or SE80, locate the service binding `ZASIS_UI_RULESET_O4`.
 2. Open it and click **Publish** (or **Activate Local Business Configuration** if required by your system).
 3. The Fiori Elements RuleSet maintenance UI is now available via the published service URL.
 
-Repeat for `ZASIS_UI_CUSTLOGCATALOG_O4` if you intend to use the Enhancement Catalog UI for registering custom logic.
+**Enhancement Catalog UI** (for registering custom logic implementations):
+
+1. Locate the service binding `ZASIS_UI_CUSTLOGCATALOG_O4`.
+2. Open it and publish it the same way.
+3. The Enhancement Catalog UI is now available via its published service URL.
 
 ---
 
