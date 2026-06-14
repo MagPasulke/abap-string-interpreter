@@ -76,6 +76,7 @@ CLASS zasis_cl_get_domain_fix_values IMPLEMENTATION.
 
         SELECT * FROM @result AS data_source_fields
            WHERE (filter_sql)
+           ORDER BY domain_name "supress abaplint finding
            INTO TABLE @result
            UP TO @max_index ROWS ##SUBRC_OK.
 

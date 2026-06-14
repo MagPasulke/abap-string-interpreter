@@ -93,7 +93,6 @@
     "select_add_order_by": {
       "skipForAllEntries": true,
       "exclude": [
-        "zasis_cl_get_domain_fix_values.clas.abap"
       ]
     },
     "select_performance": {
