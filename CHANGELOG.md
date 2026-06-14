@@ -9,22 +9,12 @@
 
 ### Features
 
-* add ABAP Doc comments to all public methods and interfaces ([#45](https://github.com/MagPasulke/abap-string-interpreter/issues/45)) ([71ed870](https://github.com/MagPasulke/abap-string-interpreter/commit/71ed87007bd4efe8a3b12e3ddbe45776148ea1af))
-* add adt_gitpull custom tool for OpenCode ([#58](https://github.com/MagPasulke/abap-string-interpreter/issues/58)) ([d66cc31](https://github.com/MagPasulke/abap-string-interpreter/commit/d66cc3196d29ea201cdfa10ab9b75cffe17fcc5e))
-* add adt_rununit OpenCode tool for remote ABAP unit test execution ([#62](https://github.com/MagPasulke/abap-string-interpreter/issues/62)) ([a5e0b15](https://github.com/MagPasulke/abap-string-interpreter/commit/a5e0b15e63dc63d6ed67e400f1063161e84dafe7))
 * add copy ruleset factory action ([#85](https://github.com/MagPasulke/abap-string-interpreter/issues/85)) ([1634710](https://github.com/MagPasulke/abap-string-interpreter/commit/1634710993ff16e65b3baeb40a1f103524d41f8a))
-* add docs:user-manual label automation + seed initial user manual ([#69](https://github.com/MagPasulke/abap-string-interpreter/issues/69)) ([223dc41](https://github.com/MagPasulke/abap-string-interpreter/commit/223dc419b8513dfc762951ac761a79a8a3fe6317))
 * add interpretation context passing to event producer and custom logic ([#17](https://github.com/MagPasulke/abap-string-interpreter/issues/17)) ([d03151d](https://github.com/MagPasulke/abap-string-interpreter/commit/d03151d6bf0f479da1293a0394455f501a99daf7)), closes [#12](https://github.com/MagPasulke/abap-string-interpreter/issues/12)
-* add naming & hygiene abaplint rules (closes [#29](https://github.com/MagPasulke/abap-string-interpreter/issues/29)) ([#39](https://github.com/MagPasulke/abap-string-interpreter/issues/39)) ([17bf657](https://github.com/MagPasulke/abap-string-interpreter/commit/17bf65750030942a64bc9cdf739a7d351243f82e))
-* add version interface and pre-commit version sync hook ([#25](https://github.com/MagPasulke/abap-string-interpreter/issues/25)) ([b616039](https://github.com/MagPasulke/abap-string-interpreter/commit/b6160393f648a58c54e2e944ad0cb5d1e7ca9b8b))
-* deploy-sap workflow — auto abapGit pull after CI passes on main ([#59](https://github.com/MagPasulke/abap-string-interpreter/issues/59)) ([7f42251](https://github.com/MagPasulke/abap-string-interpreter/commit/7f42251e1a4a609fd436aa3a7331c54ef81a00a8))
-* enhance adt_gitpull to support pulling from different branches ([#65](https://github.com/MagPasulke/abap-string-interpreter/issues/65)) ([5b1fc4c](https://github.com/MagPasulke/abap-string-interpreter/commit/5b1fc4c7161cb3be786483de5800d5ef9bb87113))
 * **enhcatalog:** add Custom Logic Catalog BO with RAP managed draft ([6b3ee9a](https://github.com/MagPasulke/abap-string-interpreter/commit/6b3ee9a88deba9becbce46c5b4bb086a5ae60aa3)), closes [#77](https://github.com/MagPasulke/abap-string-interpreter/issues/77)
 * export ruleset as JSON file ([#89](https://github.com/MagPasulke/abap-string-interpreter/issues/89)) ([06b2a65](https://github.com/MagPasulke/abap-string-interpreter/commit/06b2a6533c50c2036c5b8fdcc9ba9cc52cfd3d8d))
 * **http:** accept and forward interpretation context from POST body ([#24](https://github.com/MagPasulke/abap-string-interpreter/issues/24)) ([3528e37](https://github.com/MagPasulke/abap-string-interpreter/commit/3528e371871b3099b7e85133a3ec9260927a66c6))
 * include interpretation context in interpreter result ([#54](https://github.com/MagPasulke/abap-string-interpreter/issues/54)) ([9ed13b1](https://github.com/MagPasulke/abap-string-interpreter/commit/9ed13b17e9ac87a22e648bbad70839bae6e7f19e))
-* **lint:** add performance abaplint rules ([#34](https://github.com/MagPasulke/abap-string-interpreter/issues/34)) ([3d8728b](https://github.com/MagPasulke/abap-string-interpreter/commit/3d8728b2922c1a64a7e83a28e9a4b5c385d913b5))
-* refactor custom logic to instance-based resolver pattern ([#19](https://github.com/MagPasulke/abap-string-interpreter/issues/19)) ([5185449](https://github.com/MagPasulke/abap-string-interpreter/commit/518544903cd680732b7b8be50bac34e63514a692))
 * **srv:** add ABAP Cloud HTTP handler with adapter pattern ([#74](https://github.com/MagPasulke/abap-string-interpreter/issues/74)) ([dcb6830](https://github.com/MagPasulke/abap-string-interpreter/commit/dcb6830be26e4efae4a7455fb49cad2a1f8c79b6))
 
 
@@ -51,6 +41,8 @@
 
 ### Documentation
 
+* add ABAP Doc comments to all public methods and interfaces ([#45](https://github.com/MagPasulke/abap-string-interpreter/issues/45)) ([71ed870](https://github.com/MagPasulke/abap-string-interpreter/commit/71ed87007bd4efe8a3b12e3ddbe45776148ea1af))
+* add docs:user-manual label automation + seed initial user manual ([#69](https://github.com/MagPasulke/abap-string-interpreter/issues/69)) ([223dc41](https://github.com/MagPasulke/abap-string-interpreter/commit/223dc419b8513dfc762951ac761a79a8a3fe6317))
 * add pre-release breaking changes notice and update README screenshots ([#3](https://github.com/MagPasulke/abap-string-interpreter/issues/3)) ([3bdfaab](https://github.com/MagPasulke/abap-string-interpreter/commit/3bdfaab2115df175a3e840ec1c03db7cd137e54b))
 * add session summary for context passing feature ([#12](https://github.com/MagPasulke/abap-string-interpreter/issues/12)) ([f9d9956](https://github.com/MagPasulke/abap-string-interpreter/commit/f9d99563e1fbc4b2f9e96706f355625b0e4310f1))
 * add session summary for custom logic resolver refactoring ([c4aefc2](https://github.com/MagPasulke/abap-string-interpreter/commit/c4aefc21fcb307a89455aead8bdbf09823dda217))
@@ -71,6 +63,14 @@
 
 ### Development & Tooling
 
+* add adt_gitpull custom tool for OpenCode ([#58](https://github.com/MagPasulke/abap-string-interpreter/issues/58)) ([d66cc31](https://github.com/MagPasulke/abap-string-interpreter/commit/d66cc3196d29ea201cdfa10ab9b75cffe17fcc5e))
+* add adt_rununit OpenCode tool for remote ABAP unit test execution ([#62](https://github.com/MagPasulke/abap-string-interpreter/issues/62)) ([a5e0b15](https://github.com/MagPasulke/abap-string-interpreter/commit/a5e0b15e63dc63d6ed67e400f1063161e84dafe7))
+* add naming & hygiene abaplint rules (closes [#29](https://github.com/MagPasulke/abap-string-interpreter/issues/29)) ([#39](https://github.com/MagPasulke/abap-string-interpreter/issues/39)) ([17bf657](https://github.com/MagPasulke/abap-string-interpreter/commit/17bf65750030942a64bc9cdf739a7d351243f82e))
+* add version interface and pre-commit version sync hook ([#25](https://github.com/MagPasulke/abap-string-interpreter/issues/25)) ([b616039](https://github.com/MagPasulke/abap-string-interpreter/commit/b6160393f648a58c54e2e944ad0cb5d1e7ca9b8b))
+* deploy-sap workflow — auto abapGit pull after CI passes on main ([#59](https://github.com/MagPasulke/abap-string-interpreter/issues/59)) ([7f42251](https://github.com/MagPasulke/abap-string-interpreter/commit/7f42251e1a4a609fd436aa3a7331c54ef81a00a8))
+* enhance adt_gitpull to support pulling from different branches ([#65](https://github.com/MagPasulke/abap-string-interpreter/issues/65)) ([5b1fc4c](https://github.com/MagPasulke/abap-string-interpreter/commit/5b1fc4c7161cb3be786483de5800d5ef9bb87113))
+* **lint:** add performance abaplint rules ([#34](https://github.com/MagPasulke/abap-string-interpreter/issues/34)) ([3d8728b](https://github.com/MagPasulke/abap-string-interpreter/commit/3d8728b2922c1a64a7e83a28e9a4b5c385d913b5))
+* refactor custom logic to instance-based resolver pattern ([#19](https://github.com/MagPasulke/abap-string-interpreter/issues/19)) ([5185449](https://github.com/MagPasulke/abap-string-interpreter/commit/518544903cd680732b7b8be50bac34e63514a692))
 * **adt:** add check-errors tool for syntax error detection after git pull ([#87](https://github.com/MagPasulke/abap-string-interpreter/issues/87)) ([6ac9fe7](https://github.com/MagPasulke/abap-string-interpreter/commit/6ac9fe792b1ab1a0b08656767d3e6381458f7758))
 * **agents:** update AGENTS.md ([0ed74fb](https://github.com/MagPasulke/abap-string-interpreter/commit/0ed74fbddfc5fabbd721d570a18f7cd67a8afa77))
 * **bytemark:** fakepush to resolve bytemark ([#80](https://github.com/MagPasulke/abap-string-interpreter/issues/80)) ([d611bd3](https://github.com/MagPasulke/abap-string-interpreter/commit/d611bd30cfc17dc80bad687ac422d0380e16872c))
