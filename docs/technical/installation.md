@@ -93,16 +93,3 @@ Both handlers share identical business logic via `ZASIS_CL_HTTP_HANDLER_CORE`.
 
 > **Planned:** A clean separation between a cloud release (containing only cloud-compatible artifacts) and an on-premise release (containing only on-premise artifacts) is planned for a future version — see [issue #88](https://github.com/MagPasulke/abap-string-interpreter/issues/88). From that point on, each release variant will ship only the artifacts relevant to its target environment.
 
----
-
-## Verifying the Installation
-
-After activating the HTTP service, send a test request:
-
-```bash
-curl -u <user>:<password> \
-  -X GET \
-  https://<host>/<path>/ruleSet/<yourRuleSetId>
-```
-
-A `200 OK` response with the RuleSet JSON confirms the service is active and authorization is working. A `400` with an error envelope indicates the RuleSet ID was not found (expected if no RuleSets have been created yet). A `403` indicates an authorization issue — check that the user has the `ZASIS_GRL` authorization object assigned.
