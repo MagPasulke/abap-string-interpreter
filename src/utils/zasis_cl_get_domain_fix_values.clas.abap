@@ -95,9 +95,10 @@ CLASS zasis_cl_get_domain_fix_values IMPLEMENTATION.
 
   METHOD respond_empty.
 
+    DATA empty TYPE TABLE OF zasis_i_domain_fix_values.
     TRY.
         io_response->set_total_number_of_records( 0 ).
-        io_response->set_data( VALUE zasis_i_domain_fix_values( ) ).
+        io_response->set_data( empty ).
       CATCH cx_rap_query_response_set_twic.
         "response already set — ignore
     ENDTRY.
