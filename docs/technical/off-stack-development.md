@@ -102,7 +102,7 @@ A typical change follows this flow:
 2. Run `npm test` — lint + transpile + unit tests, all off-stack (~2–5 seconds)
 3. Run `npm run icf-test` for HTTP handler changes — full stack integration, off-stack (~400ms)
 4. Commit and push — CI runs the same checks automatically
-5. When ready: sync to SAP via abapGit (`adt_gitpull`) and run ABAP Unit tests on-stack (`adt_rununit`)
+5. When ready: sync to SAP via abapGit (`adt_gitpull` OpenCode tool) and run ABAP Unit tests on-stack (`adt_rununit` OpenCode tool)
 
 Steps 1–4 require no SAP connection. Step 5 is the current final gate before merge.
 
