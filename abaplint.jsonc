@@ -149,7 +149,7 @@
     // cannot be lowercased — they must match the BDEF/CDS definition exactly.
     "keyword_case": {
       "style": "upper",
-      "severity": "Warning",
+      "severity": "Info",
       "ignoreExceptions": false,
       "ignoreLowerClassImplmentationStatement": true,
       "ignoreGlobalClassDefinition": false,
@@ -158,8 +158,6 @@
       "ignoreGlobalInterface": false,
       "ignoreKeywords": [],
       "exclude": [
-        "zbp_asis_i_ruleset.clas.locals_imp.abap",
-        "zbp_asis_i_custlogcat.clas.locals_imp.abap"
       ]
     },
     "method_parameter_names": {
