@@ -149,7 +149,8 @@
     // cannot be lowercased — they must match the BDEF/CDS definition exactly.
     "keyword_case": {
       "style": "upper",
-      "ignoreExceptions": true,
+      "severity": "Warning",
+      "ignoreExceptions": false,
       "ignoreLowerClassImplmentationStatement": true,
       "ignoreGlobalClassDefinition": false,
       "ignoreGlobalClassBoundaries": false,
