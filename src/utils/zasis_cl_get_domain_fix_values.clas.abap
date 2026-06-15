@@ -29,7 +29,6 @@ CLASS zasis_cl_get_domain_fix_values IMPLEMENTATION.
     DATA(sort_order)       = io_request->get_sort_elements( ) ##NEEDED.
 
     TRY.
-        DATA(filter_sql)    = io_request->get_filter( )->get_as_sql_string( ).
         DATA(filter_ranges) = io_request->get_filter( )->get_as_ranges( ).
 
         READ TABLE filter_ranges WITH KEY name = 'DOMAIN_NAME'
@@ -75,7 +74,7 @@ CLASS zasis_cl_get_domain_fix_values IMPLEMENTATION.
         ENDIF.
 
         SELECT domain_name, pos, low, high, description FROM @result AS data_source_fields
-           WHERE (filter_sql)
+           WHERE domain_name IN @domain_name_filter-range
            ORDER BY domain_name "supress abaplint finding
            INTO TABLE @result
            UP TO @max_index ROWS ##SUBRC_OK.

@@ -122,7 +122,6 @@
     "call_transaction_authority_check": true,
     "dangerous_statement": {
       "exclude": [
-        "zasis_cl_get_domain_fix_values.clas.abap"
       ],
       "severity": "Error",
       "execSQL": true,
@@ -158,6 +157,8 @@
       "ignoreGlobalInterface": false,
       "ignoreKeywords": [],
       "exclude": [
+        "zbp_asis_i_ruleset.clas.locals_imp.abap",
+        "zbp_asis_i_custlogcat.clas.locals_imp.abap"
       ]
     },
     "method_parameter_names": {
