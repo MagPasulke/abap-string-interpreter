@@ -15,7 +15,13 @@
   },
   "rules": {
     "check_syntax": false, // todo, this must be enabled
+    "unknown_types": false, // todo, this must be enabled
 
+    "begin_end_names": true,
+    "check_text_elements": true,
+    "ambiguous_statement": true,
+    "names_no_dash": true,
+    "add_test_attributes": true,
     "prefer_inline": true,
     "line_break_multiple_parameters": true,
     "abapdoc" :true,
