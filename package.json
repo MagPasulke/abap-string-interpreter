@@ -18,8 +18,8 @@
   "devDependencies": {
     "@abaplint/cli": "^2.119.31",
     "@abaplint/database-sqlite": "^2.11.78",
-    "@abaplint/runtime": "^2.13.29",
-    "@abaplint/transpiler-cli": "^2.13.29",
+    "@abaplint/runtime": "^2.13.30",
+    "@abaplint/transpiler-cli": "^2.13.30",
     "@types/node": "^25.9.3",
     "abap-adt-api": "^8.4.1",
     "express": "^4.22.2",
