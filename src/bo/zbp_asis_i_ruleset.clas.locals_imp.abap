@@ -2,14 +2,14 @@ CLASS lhc_rulesetitem DEFINITION INHERITING FROM cl_abap_behavior_handler.
 
   PRIVATE SECTION."
 
-    METHODS checkIsValidRegex FOR VALIDATE ON SAVE
-      IMPORTING keys FOR RuleSetItem~checkIsValidRegex.
+    METHODS checkIsValidRegex FOR VALIDATE ON SAVE ##CALLED
+      IMPORTING keys FOR RuleSetItem~checkIsValidRegex. ##CALLED
     METHODS checkEventProducer FOR VALIDATE ON SAVE
-      IMPORTING keys FOR RuleSetItem~checkEventProducer.
+      IMPORTING keys FOR RuleSetItem~checkEventProducer. ##CALLED
     METHODS checkCustomLogic FOR VALIDATE ON SAVE
-      IMPORTING keys FOR RuleSetItem~checkCustomLogic.
+      IMPORTING keys FOR RuleSetItem~checkCustomLogic. ##CALLED
     METHODS precheck_update FOR PRECHECK
-      IMPORTING entities FOR UPDATE RuleSetItem.
+      IMPORTING entities FOR UPDATE RuleSetItem ##CALLED.
 
 ENDCLASS.
 
@@ -26,7 +26,7 @@ CLASS lhc_rulesetitem IMPLEMENTATION.
 
     LOOP AT rulesetitems INTO DATA(rulesetitem).
       TRY.
-          DATA(regex) = cl_abap_regex=>create_pcre( pattern = rulesetitem-InterpretationRule ).
+          DATA(regex) = cl_abap_regex=>create_pcre( pattern = rulesetitem-InterpretationRule ) ##NEEDED. 
 
         CATCH cx_sy_regex cx_sy_invalid_regex_operation.
 
@@ -141,7 +141,7 @@ CLASS lhc_rulesetitem IMPLEMENTATION.
       IF entity-%control-InterpretationRule EQ '01' AND entity-%control-InterpretationRule IS NOT INITIAL. " was updated, not deleted.
 
         TRY.
-            DATA(regex) = cl_abap_regex=>create_pcre( pattern = entity-InterpretationRule ).
+            DATA(regex) = cl_abap_regex=>create_pcre( pattern = entity-InterpretationRule ) ##NEEDED. 
 
           CATCH cx_sy_invalid_regex.
 
@@ -166,16 +166,16 @@ ENDCLASS.
 CLASS lhc_ZASIS_I_RULESET DEFINITION INHERITING FROM cl_abap_behavior_handler.
   PRIVATE SECTION."
 
-    METHODS get_global_authorizations  FOR GLOBAL AUTHORIZATION
-      IMPORTING REQUEST requested_authorizations FOR ruleset RESULT result.
+    METHODS get_global_authorizations  FOR GLOBAL AUTHORIZATION ##CALLED
+      IMPORTING REQUEST requested_authorizations FOR ruleset RESULT result. ##CALLED
     METHODS get_instance_features FOR INSTANCE FEATURES
-      IMPORTING keys REQUEST requested_features FOR ruleset RESULT result.
-    METHODS checkuniquerulesetid FOR VALIDATE ON SAVE
-      IMPORTING keys FOR ruleset~checkuniquerulesetid.
-    METHODS testRuleSet FOR MODIFY
-      IMPORTING keys FOR ACTION ruleset~testRuleSet.
+      IMPORTING keys REQUEST requested_features FOR ruleset RESULT result ##NEEDED. ##NEEDED 
+    METHODS checkuniquerulesetid FOR VALIDATE ON SAVE ##CALLED
+      IMPORTING keys FOR ruleset~checkuniquerulesetid. 
+    METHODS testRuleSet FOR MODIFY ##CALLED
+      IMPORTING keys FOR ACTION ruleset~testRuleSet. 
     METHODS copyRuleSet FOR MODIFY
-      IMPORTING keys FOR ACTION ruleset~copyRuleSet.
+      IMPORTING keys FOR ACTION ruleset~copyRuleSet ##CALLED.
 
 ENDCLASS.
 

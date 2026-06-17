@@ -79,10 +79,8 @@
     // or BDEF files (.asbdef) — only from ABAP source. Every table used solely
     // via CDS or BDEF would require an exclusion entry, defeating the purpose.
     "unused_ddic": false,
-    "unused_methods": {},
-    "unused_types": {
-      "exclude": []
-    },
+    "unused_methods": true,
+    "unused_types": true,
     "unused_variables": {
       "exclude": [
       ],
