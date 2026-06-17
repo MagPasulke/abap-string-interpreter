@@ -5,7 +5,7 @@
   "scripts": {
     "unit": "node -e \"fs=require('fs');fs.rmSync('output',{recursive:true,force:true})\" && abap_transpile && echo RUNNING && node output/index.mjs",
     "typecheck": "tsc --noEmit --esModuleInterop --module nodenext --moduleResolution nodenext --target esnext --types node --allowImportingTsExtensions scripts/*.ts .opencode/tools/*.ts",
-    "typecheck:ci": "tsc --noEmit --ignoreConfig --esModuleInterop --module nodenext --moduleResolution nodenext --target esnext --types node --allowImportingTsExtensions scripts/*.ts",
+    "typecheck:ci": "tsc --project tsconfig.ci.json",
     "lint": "abaplint abaplint.jsonc",
     "test": "npm run lint && npm run typecheck:ci && npm run unit",
     "icf-test": "node --test __test/integration/icf.test.mjs",
