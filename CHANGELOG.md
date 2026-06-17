@@ -1,5 +1,16 @@
 # Changelog
 
+## [0.7.2](https://github.com/MagPasulke/abap-string-interpreter/compare/abap-string-interpreter-v0.7.1...abap-string-interpreter-v0.7.2) (2026-06-17)
+
+
+### Development & Tooling
+
+* deps + abaplint pragmas ([0577fdf](https://github.com/MagPasulke/abap-string-interpreter/commit/0577fdff8f2a387fcdd581446446a746b4c804f4))
+* **deps:** update deps & lint config ([d715ebb](https://github.com/MagPasulke/abap-string-interpreter/commit/d715ebb43b792343f14afa38654f62492fe514b7))
+* **deps:** update dev dependencies to latest ([#112](https://github.com/MagPasulke/abap-string-interpreter/issues/112)) ([47b18b2](https://github.com/MagPasulke/abap-string-interpreter/commit/47b18b234d23d72ef8de3bbcbda5b82a0d5ef52a))
+* **transpile:** shorten exclude list and tighten abaplint rules ([55d6fca](https://github.com/MagPasulke/abap-string-interpreter/commit/55d6fcac21c06ff66b00f38247f7fbdff203cfb7))
+* update deps + enable rules ([#119](https://github.com/MagPasulke/abap-string-interpreter/issues/119)) ([e597828](https://github.com/MagPasulke/abap-string-interpreter/commit/e59782805e33413184e413debcb6d4bbf70838b5))
+
 ## [0.7.1](https://github.com/MagPasulke/abap-string-interpreter/compare/abap-string-interpreter-v0.7.0...abap-string-interpreter-v0.7.1) (2026-06-14)
 
 
