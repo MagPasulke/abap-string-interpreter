@@ -26,7 +26,7 @@ CLASS zasis_cl_calc_export_url IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD if_sadl_exit_calc_element_read~calculate.
-    DATA calculated TYPE STANDARD TABLE OF zasis_c_ruleset WITH DEFAULT KEY.
+    DATA calculated TYPE STANDARD TABLE OF zasis_c_ruleset.
     calculated = CORRESPONDING #( it_original_data ).
 
     LOOP AT calculated ASSIGNING FIELD-SYMBOL(<row>).

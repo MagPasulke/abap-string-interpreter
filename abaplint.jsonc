@@ -30,7 +30,7 @@
     "add_test_attributes": true,
     "prefer_inline": true,
     "line_break_multiple_parameters": true,
-    "abapdoc" :true,
+    "abapdoc": true,
     "prefer_corresponding": true,
     "prefer_is_not": true,
     "prefer_raise_exception_new": true,
@@ -82,8 +82,7 @@
     "unused_methods": true,
     "unused_types": true,
     "unused_variables": {
-      "exclude": [
-      ],
+      "exclude": [],
       "skipAbstract": true
     },
     "uncaught_exception": true,
@@ -104,15 +103,13 @@
     "sql_escape_host_variables": true,
     "select_add_order_by": {
       "skipForAllEntries": true,
-      "exclude": [
-      ]
+      "exclude": []
     },
     "select_performance": {
       "endSelect": true,
       "selectStar": true,
       "starOkayIfFewColumns": 10,
-      "exclude": [
-      ]
+      "exclude": []
     },
     "db_operation_in_loop": true,
     "line_length": {
@@ -133,8 +130,7 @@
     "unsecure_fae": false,
     "call_transaction_authority_check": true,
     "dangerous_statement": {
-      "exclude": [
-      ],
+      "exclude": [],
       "severity": "Error",
       "execSQL": true,
       "kernelCall": true,
@@ -213,8 +209,22 @@
       "expectedConstant": "^LC_[A-Z0-9_]+$",
       "expectedFS": "^<[a-z][a-zA-Z0-9_]*>$"
     },
-    "align_parameters" : true,
-    "align_pseudo_comments" : true,
-    "align_type_expressions" : true
+    "align_parameters": true,
+    "align_pseudo_comments": true,
+    "align_type_expressions": true,
+    "allowed_object_naming": true,
+    "avoid_use": {
+      "exclude": [],
+      "severity": "Error",
+      "skipQuickFix": false,
+      "define": true,
+      "statics": true,
+      "defaultKey": true,
+      "break": true,
+      "testSeams": true,
+      "describeLines": true,
+      "exportToMemory": true,
+      "exportToDatabase": true
+    }
   }
 }
