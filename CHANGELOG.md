@@ -1,5 +1,14 @@
 # Changelog
 
+## [0.7.3](https://github.com/MagPasulke/abap-string-interpreter/compare/abap-string-interpreter-v0.7.2...abap-string-interpreter-v0.7.3) (2026-06-24)
+
+
+### Development & Tooling
+
+* abaplint_activate_rules ([#125](https://github.com/MagPasulke/abap-string-interpreter/issues/125)) ([3562166](https://github.com/MagPasulke/abap-string-interpreter/commit/3562166431165d5f11420472daf09b279f556537))
+* **ci:** fix typecheck:ci glob failure on Windows ([#121](https://github.com/MagPasulke/abap-string-interpreter/issues/121)) ([0e16e17](https://github.com/MagPasulke/abap-string-interpreter/commit/0e16e1779c7383934a08618c87a0ac33b1831794))
+* update deps ([#124](https://github.com/MagPasulke/abap-string-interpreter/issues/124)) ([a67b375](https://github.com/MagPasulke/abap-string-interpreter/commit/a67b375f3d76c0fc95ece3ade3f728ee5985459c))
+
 ## [0.7.2](https://github.com/MagPasulke/abap-string-interpreter/compare/abap-string-interpreter-v0.7.1...abap-string-interpreter-v0.7.2) (2026-06-17)
 
 
