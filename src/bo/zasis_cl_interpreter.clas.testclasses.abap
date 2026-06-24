@@ -189,7 +189,7 @@ CLASS ltcl_zasis_cl_interpreter IMPLEMENTATION.
             string_to_be_interpreted = |<Start><A7X>MyMaterialNumber<B52H>MyDeliveryNote<End>|
             ruleset                  = ruleset
           RECEIVING
-            output    = DATA(result)
+            output                   = DATA(result)
         ).
       CATCH zasis_cx_exc zasis_cx_no_auth INTO DATA(exc).
         cl_abap_unit_assert=>fail( msg = |Unexpected exception: { exc->get_text( ) }| ).
@@ -414,7 +414,7 @@ CLASS ltcl_zasis_cl_interpreter IMPLEMENTATION.
         cl_abap_unit_assert=>fail( msg = |Test setup failed: { setup_exc->get_text( ) }| ).
     ENDTRY.
 
-    DATA(cut) = NEW zasis_cl_interpreter( auth_checker = auth_mock
+    DATA(cut) = NEW zasis_cl_interpreter( auth_checker             = auth_mock
                                            event_producer_resolver = ev_resolver_mock ).
 
     " When
@@ -444,7 +444,7 @@ CLASS ltcl_zasis_cl_interpreter IMPLEMENTATION.
         cl_abap_unit_assert=>fail( msg = |Test setup failed: { setup_exc->get_text( ) }| ).
     ENDTRY.
 
-    DATA(cut) = NEW zasis_cl_interpreter( auth_checker = auth_mock
+    DATA(cut) = NEW zasis_cl_interpreter( auth_checker             = auth_mock
                                            event_producer_resolver = ev_resolver_mock ).
 
     " When
@@ -474,7 +474,7 @@ CLASS ltcl_zasis_cl_interpreter IMPLEMENTATION.
         cl_abap_unit_assert=>fail( msg = |Test setup failed: { setup_exc->get_text( ) }| ).
     ENDTRY.
 
-    DATA(cut) = NEW zasis_cl_interpreter( auth_checker = auth_mock
+    DATA(cut) = NEW zasis_cl_interpreter( auth_checker             = auth_mock
                                            event_producer_resolver = ev_resolver_mock ).
 
     " When
@@ -504,7 +504,7 @@ CLASS ltcl_zasis_cl_interpreter IMPLEMENTATION.
         cl_abap_unit_assert=>fail( msg = |Test setup failed: { setup_exc->get_text( ) }| ).
     ENDTRY.
 
-    DATA(cut) = NEW zasis_cl_interpreter( auth_checker = auth_mock
+    DATA(cut) = NEW zasis_cl_interpreter( auth_checker             = auth_mock
                                            event_producer_resolver = ev_resolver_mock ).
 
     " When
@@ -544,7 +544,7 @@ CLASS ltcl_zasis_cl_interpreter IMPLEMENTATION.
         cl_abap_unit_assert=>fail( msg = |Test setup failed: { setup_exc->get_text( ) }| ).
     ENDTRY.
 
-    DATA(cut) = NEW zasis_cl_interpreter( auth_checker = auth_mock
+    DATA(cut) = NEW zasis_cl_interpreter( auth_checker             = auth_mock
                                            event_producer_resolver = ev_resolver_mock ).
 
     " When - should NOT raise, exception is swallowed
@@ -554,7 +554,7 @@ CLASS ltcl_zasis_cl_interpreter IMPLEMENTATION.
             string_to_be_interpreted = |<TAG>Value1|
             ruleset                  = ruleset
           RECEIVING
-            output    = DATA(result)
+            output                   = DATA(result)
         ).
       CATCH zasis_cx_exc zasis_cx_no_auth INTO DATA(exc).
         cl_abap_unit_assert=>fail( msg = |Unexpected exception: { exc->get_text( ) }| ).
@@ -584,7 +584,7 @@ CLASS ltcl_zasis_cl_interpreter IMPLEMENTATION.
         cl_abap_unit_assert=>fail( msg = |Test setup failed: { setup_exc->get_text( ) }| ).
     ENDTRY.
 
-    DATA(cut) = NEW zasis_cl_interpreter( auth_checker = auth_mock
+    DATA(cut) = NEW zasis_cl_interpreter( auth_checker             = auth_mock
                                            event_producer_resolver = ev_resolver_mock ).
 
     " When
@@ -626,9 +626,9 @@ CLASS ltcl_zasis_cl_interpreter IMPLEMENTATION.
         cl_abap_unit_assert=>fail( msg = |Test setup failed: { setup_exc->get_text( ) }| ).
     ENDTRY.
 
-    DATA(cut) = NEW zasis_cl_interpreter( auth_checker         = auth_mock
+    DATA(cut) = NEW zasis_cl_interpreter( auth_checker             = auth_mock
                                            event_producer_resolver = ev_resolver_mock
-                                           customlogic_resolver = cl_resolver_mock ).
+                                           customlogic_resolver    = cl_resolver_mock ).
 
     " When
     TRY.
@@ -637,7 +637,7 @@ CLASS ltcl_zasis_cl_interpreter IMPLEMENTATION.
             string_to_be_interpreted = |<TAG>Value1|
             ruleset                  = ruleset
           RECEIVING
-            output    = DATA(result_cl)
+            output                   = DATA(result_cl)
         ).
       CATCH zasis_cx_exc zasis_cx_no_auth INTO DATA(exc).
         cl_abap_unit_assert=>fail( msg = |Unexpected exception: { exc->get_text( ) }| ).
@@ -669,9 +669,9 @@ CLASS ltcl_zasis_cl_interpreter IMPLEMENTATION.
         cl_abap_unit_assert=>fail( msg = |Test setup failed: { setup_exc->get_text( ) }| ).
     ENDTRY.
 
-    DATA(cut) = NEW zasis_cl_interpreter( auth_checker         = auth_mock
+    DATA(cut) = NEW zasis_cl_interpreter( auth_checker             = auth_mock
                                            event_producer_resolver = ev_resolver_mock
-                                           customlogic_resolver = cl_resolver_mock ).
+                                           customlogic_resolver    = cl_resolver_mock ).
 
     " When / Then - should raise zasis_cx_exc
     TRY.
@@ -707,9 +707,9 @@ CLASS ltcl_zasis_cl_interpreter IMPLEMENTATION.
         cl_abap_unit_assert=>fail( msg = |Test setup failed: { setup_exc->get_text( ) }| ).
     ENDTRY.
 
-    DATA(cut) = NEW zasis_cl_interpreter( auth_checker         = auth_mock
+    DATA(cut) = NEW zasis_cl_interpreter( auth_checker             = auth_mock
                                            event_producer_resolver = ev_resolver_mock
-                                           customlogic_resolver = cl_resolver_mock ).
+                                           customlogic_resolver    = cl_resolver_mock ).
 
     " When
     TRY.
@@ -748,7 +748,7 @@ CLASS ltcl_zasis_cl_interpreter IMPLEMENTATION.
         cl_abap_unit_assert=>fail( msg = |Test setup failed: { setup_exc->get_text( ) }| ).
     ENDTRY.
 
-    DATA(cut) = NEW zasis_cl_interpreter( auth_checker = auth_mock
+    DATA(cut) = NEW zasis_cl_interpreter( auth_checker             = auth_mock
                                            event_producer_resolver = ev_resolver_mock ).
 
     " When - no context parameter passed
@@ -790,7 +790,7 @@ CLASS ltcl_zasis_cl_interpreter IMPLEMENTATION.
         cl_abap_unit_assert=>fail( msg = |Test setup failed: { setup_exc->get_text( ) }| ).
     ENDTRY.
 
-    DATA(cut) = NEW zasis_cl_interpreter( auth_checker = auth_mock
+    DATA(cut) = NEW zasis_cl_interpreter( auth_checker             = auth_mock
                                            event_producer_resolver = ev_resolver_mock ).
 
     " When
@@ -832,7 +832,7 @@ CLASS ltcl_zasis_cl_interpreter IMPLEMENTATION.
         cl_abap_unit_assert=>fail( msg = |Test setup failed: { setup_exc->get_text( ) }| ).
     ENDTRY.
 
-    DATA(cut) = NEW zasis_cl_interpreter( auth_checker            = auth_mock
+    DATA(cut) = NEW zasis_cl_interpreter( auth_checker             = auth_mock
                                            event_producer_resolver = ev_resolver_mock
                                            customlogic_resolver    = cl_resolver_mock ).
 
@@ -843,7 +843,7 @@ CLASS ltcl_zasis_cl_interpreter IMPLEMENTATION.
             string_to_be_interpreted = |InputString|
             ruleset                  = ruleset
           RECEIVING
-            output    = DATA(result)
+            output                   = DATA(result)
         ).
       CATCH zasis_cx_exc zasis_cx_no_auth INTO DATA(exc).
         cl_abap_unit_assert=>fail( msg = |Unexpected exception: { exc->get_text( ) }| ).
@@ -877,7 +877,7 @@ CLASS ltcl_zasis_cl_interpreter IMPLEMENTATION.
         cl_abap_unit_assert=>fail( msg = |Test setup failed: { setup_exc->get_text( ) }| ).
     ENDTRY.
 
-    DATA(cut) = NEW zasis_cl_interpreter( auth_checker            = auth_mock
+    DATA(cut) = NEW zasis_cl_interpreter( auth_checker             = auth_mock
                                            event_producer_resolver = ev_resolver_mock
                                            customlogic_resolver    = cl_resolver_mock ).
 
@@ -888,7 +888,7 @@ CLASS ltcl_zasis_cl_interpreter IMPLEMENTATION.
             string_to_be_interpreted = |InputString|
             ruleset                  = ruleset
           RECEIVING
-            output    = DATA(result)
+            output                   = DATA(result)
         ).
       CATCH zasis_cx_exc zasis_cx_no_auth INTO DATA(exc).
         cl_abap_unit_assert=>fail( msg = |Unexpected exception: { exc->get_text( ) }| ).
@@ -921,7 +921,7 @@ CLASS ltcl_zasis_cl_interpreter IMPLEMENTATION.
 
     cl_mock->return_value = |CustomForItem2|.
 
-    DATA(cut) = NEW zasis_cl_interpreter( auth_checker            = auth_mock
+    DATA(cut) = NEW zasis_cl_interpreter( auth_checker             = auth_mock
                                            event_producer_resolver = ev_resolver_mock
                                            customlogic_resolver    = cl_resolver_mock ).
 
@@ -932,7 +932,7 @@ CLASS ltcl_zasis_cl_interpreter IMPLEMENTATION.
             string_to_be_interpreted = |<A>Val1|
             ruleset                  = ruleset
           RECEIVING
-            output    = DATA(result)
+            output                   = DATA(result)
         ).
       CATCH zasis_cx_exc zasis_cx_no_auth INTO DATA(exc).
         cl_abap_unit_assert=>fail( msg = |Unexpected exception: { exc->get_text( ) }| ).
@@ -968,7 +968,7 @@ CLASS ltcl_zasis_cl_interpreter IMPLEMENTATION.
         cl_abap_unit_assert=>fail( msg = |Test setup failed: { setup_exc->get_text( ) }| ).
     ENDTRY.
 
-    DATA(cut) = NEW zasis_cl_interpreter( auth_checker            = auth_mock
+    DATA(cut) = NEW zasis_cl_interpreter( auth_checker             = auth_mock
                                            event_producer_resolver = ev_resolver_mock
                                            customlogic_resolver    = cl_resolver_mock ).
 
@@ -979,7 +979,7 @@ CLASS ltcl_zasis_cl_interpreter IMPLEMENTATION.
             string_to_be_interpreted = |InputString|
             ruleset                  = ruleset
           RECEIVING
-            output    = DATA(result)
+            output                   = DATA(result)
         ).
       CATCH zasis_cx_exc zasis_cx_no_auth INTO DATA(exc).
         cl_abap_unit_assert=>fail( msg = |Unexpected exception: { exc->get_text( ) }| ).
@@ -1006,7 +1006,7 @@ CLASS ltcl_zasis_cl_interpreter IMPLEMENTATION.
         cl_abap_unit_assert=>fail( msg = |Test setup failed: { setup_exc->get_text( ) }| ).
     ENDTRY.
 
-    DATA(cut) = NEW zasis_cl_interpreter( auth_checker            = auth_mock
+    DATA(cut) = NEW zasis_cl_interpreter( auth_checker             = auth_mock
                                            event_producer_resolver = ev_resolver_mock ).
 
     " When
@@ -1016,7 +1016,7 @@ CLASS ltcl_zasis_cl_interpreter IMPLEMENTATION.
             string_to_be_interpreted = |<TAG>Hello|
             ruleset                  = ruleset
           RECEIVING
-            output    = DATA(result)
+            output                   = DATA(result)
         ).
       CATCH zasis_cx_exc zasis_cx_no_auth INTO DATA(exc).
         cl_abap_unit_assert=>fail( msg = |Unexpected exception: { exc->get_text( ) }| ).
@@ -1056,7 +1056,7 @@ CLASS ltcl_zasis_cl_interpreter IMPLEMENTATION.
         cl_abap_unit_assert=>fail( msg = |Test setup failed: { setup_exc->get_text( ) }| ).
     ENDTRY.
 
-    DATA(cut) = NEW zasis_cl_interpreter( auth_checker            = auth_mock
+    DATA(cut) = NEW zasis_cl_interpreter( auth_checker             = auth_mock
                                            event_producer_resolver = ev_resolver_mock
                                            customlogic_resolver    = cl_resolver_mock ).
 
@@ -1067,7 +1067,7 @@ CLASS ltcl_zasis_cl_interpreter IMPLEMENTATION.
             string_to_be_interpreted = |<A>Val1<TAG>RestOfString|
             ruleset                  = ruleset
           RECEIVING
-            output    = DATA(result)
+            output                   = DATA(result)
         ).
       CATCH zasis_cx_exc zasis_cx_no_auth INTO DATA(exc).
         cl_abap_unit_assert=>fail( msg = |Unexpected exception: { exc->get_text( ) }| ).
@@ -1112,7 +1112,7 @@ CLASS ltcl_zasis_cl_interpreter IMPLEMENTATION.
             string_to_be_interpreted = |<Start><B52H>MyDeliveryNote<End>|
             ruleset                  = ruleset
           RECEIVING
-            output    = DATA(result)
+            output                   = DATA(result)
         ).
       CATCH zasis_cx_exc zasis_cx_no_auth INTO DATA(exc).
         cl_abap_unit_assert=>fail( msg = |Unexpected exception: { exc->get_text( ) }| ).
@@ -1145,7 +1145,7 @@ CLASS ltcl_zasis_cl_interpreter IMPLEMENTATION.
             string_to_be_interpreted = |AB|
             ruleset                  = ruleset
           RECEIVING
-            output    = DATA(result)
+            output                   = DATA(result)
         ).
       CATCH zasis_cx_exc zasis_cx_no_auth INTO DATA(exc).
         cl_abap_unit_assert=>fail( msg = |Unexpected exception: { exc->get_text( ) }| ).
@@ -1181,7 +1181,7 @@ CLASS ltcl_zasis_cl_interpreter IMPLEMENTATION.
             string_to_be_interpreted = |HelloWorld|
             ruleset                  = ruleset
           RECEIVING
-            output    = DATA(result)
+            output                   = DATA(result)
         ).
       CATCH zasis_cx_exc zasis_cx_no_auth INTO DATA(exc).
         cl_abap_unit_assert=>fail( msg = |Unexpected exception: { exc->get_text( ) }| ).
@@ -1215,7 +1215,7 @@ CLASS ltcl_zasis_cl_interpreter IMPLEMENTATION.
         cl_abap_unit_assert=>fail( msg = |Test setup failed: { setup_exc->get_text( ) }| ).
     ENDTRY.
 
-    DATA(cut) = NEW zasis_cl_interpreter( auth_checker            = auth_mock
+    DATA(cut) = NEW zasis_cl_interpreter( auth_checker             = auth_mock
                                            event_producer_resolver = ev_resolver_mock
                                            customlogic_resolver    = cl_resolver_mock ).
 
@@ -1264,7 +1264,7 @@ CLASS ltcl_zasis_cl_interpreter IMPLEMENTATION.
         cl_abap_unit_assert=>fail( msg = |Test setup failed: { setup_exc->get_text( ) }| ).
     ENDTRY.
 
-    DATA(cut) = NEW zasis_cl_interpreter( auth_checker            = auth_mock
+    DATA(cut) = NEW zasis_cl_interpreter( auth_checker             = auth_mock
                                            event_producer_resolver = ev_resolver_mock ).
 
     " When
@@ -1309,7 +1309,7 @@ CLASS ltcl_zasis_cl_interpreter IMPLEMENTATION.
         cl_abap_unit_assert=>fail( msg = |Test setup failed: { setup_exc->get_text( ) }| ).
     ENDTRY.
 
-    DATA(cut) = NEW zasis_cl_interpreter( auth_checker            = auth_mock
+    DATA(cut) = NEW zasis_cl_interpreter( auth_checker             = auth_mock
                                            event_producer_resolver = ev_resolver_mock
                                            customlogic_resolver    = cl_resolver_mock ).
 
@@ -1342,7 +1342,7 @@ CLASS ltcl_zasis_cl_interpreter IMPLEMENTATION.
         cl_abap_unit_assert=>fail( msg = |Test setup failed: { setup_exc->get_text( ) }| ).
     ENDTRY.
 
-    DATA(cut) = NEW zasis_cl_interpreter( auth_checker = auth_mock
+    DATA(cut) = NEW zasis_cl_interpreter( auth_checker             = auth_mock
                                            event_producer_resolver = ev_resolver_mock ).
 
     " When / Then
@@ -1388,7 +1388,7 @@ CLASS ltcl_zasis_cl_interpreter IMPLEMENTATION.
             ruleset                  = ruleset
             context                  = context
           RECEIVING
-            output    = DATA(result)
+            output                   = DATA(result)
         ).
       CATCH zasis_cx_exc zasis_cx_no_auth INTO DATA(exc).
         cl_abap_unit_assert=>fail( msg = |Unexpected exception: { exc->get_text( ) }| ).
@@ -1437,7 +1437,7 @@ CLASS ltcl_zasis_cl_interpreter IMPLEMENTATION.
             string_to_be_interpreted = |<TAG>Value1|
             ruleset                  = ruleset
           RECEIVING
-            output    = DATA(result)
+            output                   = DATA(result)
         ).
       CATCH zasis_cx_exc zasis_cx_no_auth INTO DATA(exc).
         cl_abap_unit_assert=>fail( msg = |Unexpected exception: { exc->get_text( ) }| ).

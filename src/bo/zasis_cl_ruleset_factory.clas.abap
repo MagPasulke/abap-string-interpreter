@@ -56,12 +56,12 @@ CLASS zasis_cl_ruleset_factory IMPLEMENTATION.
       INTO @DATA(rulesetheader).
     IF sy-subrc <> 0.
       RAISE EXCEPTION NEW zasis_cx_exc(
-        textid   = zasis_cx_exc=>unknown_ruleset
-        ruleset  = ruleset_id
+        textid  = zasis_cx_exc=>unknown_ruleset
+        ruleset = ruleset_id
       ).
     ENDIF.
 
-    SELECT * FROM zasis_rulesetitm "#EC SELECT_PERFORMANCE
+    SELECT * FROM zasis_rulesetitm              "#EC SELECT_PERFORMANCE
       WHERE rulesetuuid = @rulesetheader-rulesetuuid
       ORDER BY interpretationitm
       INTO CORRESPONDING FIELDS OF TABLE @rulesetitems.
@@ -69,8 +69,8 @@ CLASS zasis_cl_ruleset_factory IMPLEMENTATION.
     IF sy-subrc <> 0.
 
       RAISE EXCEPTION NEW zasis_cx_exc(
-        textid   = zasis_cx_exc=>unknown_ruleset
-        ruleset  = ruleset_id
+        textid  = zasis_cx_exc=>unknown_ruleset
+        ruleset = ruleset_id
       ).
 
     ENDIF.

@@ -148,7 +148,8 @@
       "insertTextpool": true,
       "deleteDynpro": true,
       "exportDynpro": true,
-      "dynamicSQL": true
+      "dynamicSQL": true,
+      "ignoreRAPQueryProvider": true
     },
     "smim_consistency": true,
     "space_before_colon": true,
@@ -211,6 +212,8 @@
       "expectedData": "^(?!(lv_|lt_|ls_|lo_|lr_|lx_|iv_|it_|is_|io_|ir_|ev_|et_|es_|eo_|er_|cv_|ct_|cs_|co_|cr_|mv_|mt_|ms_|mo_|mr_|mx_|gv_|gt_|gs_|go_|gr_))[a-z][a-zA-Z0-9_]*$",
       "expectedConstant": "^LC_[A-Z0-9_]+$",
       "expectedFS": "^<[a-z][a-zA-Z0-9_]*>$"
-    }
+    },
+    "align_parameters" : true,
+    "align_pseudo_comments" : true
   }
 }

@@ -370,16 +370,16 @@ CLASS lhc_ZASIS_I_RULESET IMPLEMENTATION.
       TRY.
           DATA(source) = source_rulesets[ KEY entity COMPONENTS RuleSetUUID = key-%tky-RuleSetUUID ].
         CATCH cx_sy_itab_line_not_found.
-          APPEND VALUE #( %cid = key-%cid
-                          %tky = key-%tky
+          APPEND VALUE #( %cid  = key-%cid
+                          %tky  = key-%tky
                           %fail = VALUE #( cause = if_abap_behv=>cause-not_found ) )
                  TO failed-ruleset.
           CONTINUE.
       ENDTRY.
 
       " Prepare new RuleSet header
-      APPEND VALUE #( %cid      = key-%cid
-                      %data     = VALUE #( RuleSetId = key-%param-new_ruleset_id ) )
+      APPEND VALUE #( %cid  = key-%cid
+                      %data = VALUE #( RuleSetId = key-%param-new_ruleset_id ) )
              TO rulesets.
 
       " Prepare items for create-by-association
