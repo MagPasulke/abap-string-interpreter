@@ -18,7 +18,7 @@ INTERFACE zasis_if_http_request
   "! Returns the value of the specified header field
   METHODS get_header_field
     IMPORTING
-      name          TYPE string
+      name         TYPE string
     RETURNING
       VALUE(value) TYPE string
     RAISING

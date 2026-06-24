@@ -14,9 +14,9 @@ CLASS zasis_cl_interpreter DEFINITION
     "! @parameter customlogic_resolver    | Resolver for custom logic classes; defaults to zasis_cl_customlogic_resolver
     METHODS constructor
       IMPORTING
-        auth_checker           TYPE REF TO zasis_if_auth_checker OPTIONAL
+        auth_checker            TYPE REF TO zasis_if_auth_checker OPTIONAL
         event_producer_resolver TYPE REF TO zasis_if_ev_producer_resolver OPTIONAL
-        customlogic_resolver   TYPE REF TO zasis_if_customlogic_resolver OPTIONAL.
+        customlogic_resolver    TYPE REF TO zasis_if_customlogic_resolver OPTIONAL.
 
   PROTECTED SECTION.
   PRIVATE SECTION.
@@ -74,11 +74,11 @@ CLASS zasis_cl_interpreter IMPLEMENTATION.
       "in case custom logic is assigned, no need for regular processing
       IF rulesetitem-custom_logic IS NOT INITIAL.
 
-        single_interpret_result = call_custom_logic(  custom_logic_class       = rulesetitem-custom_logic
-                                                          ruleset_ref             = ruleset
-                                                          current_rule_item       = rulesetitem
+        single_interpret_result = call_custom_logic(  custom_logic_class           = rulesetitem-custom_logic
+                                                          ruleset_ref              = ruleset
+                                                          current_rule_item        = rulesetitem
                                                           string_to_be_interpreted = string_to_be_interpreted
-                                                          context                 = context ).
+                                                          context                  = context ).
 
       ELSE.
 
@@ -132,7 +132,7 @@ CLASS zasis_cl_interpreter IMPLEMENTATION.
         ENDIF.
 
         IF rulesetitem-event_producer IS NOT INITIAL.
-          call_event_producer( event_producer_class  = rulesetitem-event_producer
+          call_event_producer( event_producer_class      = rulesetitem-event_producer
                                    ruleset_ref           = ruleset
                                    interpretation_itm    = rulesetitem-interpretationitm
                                    interpretation_result = <result_line>
