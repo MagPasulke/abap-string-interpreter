@@ -12,9 +12,9 @@ CLASS zasis_cl_ruleset_factory DEFINITION
     "! @parameter ruleset_ref  | Reference to the loaded or cached RuleSet instance
     "! @raising   zasis_cx_exc     | Raised when the RuleSet does not exist or has no items
     "! @raising   zasis_cx_no_auth | Raised when the user lacks read authorization for the RuleSet
-    CLASS-METHODS get_ruleset_by_rulesetid IMPORTING ruleset_id       TYPE zasis_ruleset_id
-                                                      auth_checker     TYPE REF TO zasis_if_auth_checker OPTIONAL
-                              RETURNING VALUE(ruleset_ref) TYPE REF TO zasis_if_ruleset
+    CLASS-METHODS get_ruleset_by_rulesetid IMPORTING ruleset_id   TYPE zasis_ruleset_id
+                                                     auth_checker TYPE REF TO zasis_if_auth_checker OPTIONAL
+                              RETURNING VALUE(ruleset_ref)        TYPE REF TO zasis_if_ruleset
                               RAISING   zasis_cx_exc
                                         zasis_cx_no_auth.
 

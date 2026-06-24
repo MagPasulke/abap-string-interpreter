@@ -14,9 +14,9 @@ CLASS zasis_cl_interpreter DEFINITION
     "! @parameter customlogic_resolver    | Resolver for custom logic classes; defaults to zasis_cl_customlogic_resolver
     METHODS constructor
       IMPORTING
-        auth_checker           TYPE REF TO zasis_if_auth_checker OPTIONAL
+        auth_checker            TYPE REF TO zasis_if_auth_checker OPTIONAL
         event_producer_resolver TYPE REF TO zasis_if_ev_producer_resolver OPTIONAL
-        customlogic_resolver   TYPE REF TO zasis_if_customlogic_resolver OPTIONAL.
+        customlogic_resolver    TYPE REF TO zasis_if_customlogic_resolver OPTIONAL.
 
   PROTECTED SECTION.
   PRIVATE SECTION.
