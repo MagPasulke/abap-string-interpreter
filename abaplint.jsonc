@@ -14,8 +14,8 @@
     "errorNamespace": "^(Z|Y|LCL_|TY_|LIF_)"
   },
   "rules": {
-    "check_syntax": false,
-    "unknown_types": false,
+    "check_syntax": true,
+    "unknown_types": true,
     "begin_end_names": true,
     "begin_single_include": true,
     "aff_and_xml": true,
