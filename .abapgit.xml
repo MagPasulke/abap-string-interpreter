@@ -24,6 +24,9 @@
     <item>/src/catalogs/evtcatalog/zasis_ui_evtprodcat_o4.srvb.xml</item>
     <item>/src/catalogs/evtcatalog/zasis_ui_evtprodcat_o4.g4ba.xml</item>
     <item>/src/bo/zasis_ui_ruleset_o4.g4ba.xml</item>
+    <item>/src/catalogs/evtcatalog/zasis_ui_evtprodcatalog_o4.g4ba.xml</item>
+    <item>/src/catalogs/evtcatalog/zasis_ui_evtprodcatalog_o4.srvb.xml</item>
+    <item>/src/catalogs/evtcatalog/f92ff40a80c6bd480307904a4c26f0ht.sush.xml</item>
    </IGNORE>
   </DATA>
  </asx:values>

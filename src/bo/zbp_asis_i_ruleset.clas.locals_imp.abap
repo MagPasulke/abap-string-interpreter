@@ -26,7 +26,7 @@ CLASS lhc_rulesetitem IMPLEMENTATION.
 
     LOOP AT rulesetitems INTO DATA(rulesetitem).
       TRY.
-          DATA(regex) = cl_abap_regex=>create_pcre( pattern = rulesetitem-InterpretationRule ) ##NEEDED. 
+          DATA(regex) = cl_abap_regex=>create_pcre( pattern = rulesetitem-InterpretationRule ) ##NEEDED.
 
         CATCH cx_sy_regex cx_sy_invalid_regex_operation.
 
@@ -141,7 +141,7 @@ CLASS lhc_rulesetitem IMPLEMENTATION.
       IF entity-%control-InterpretationRule EQ '01' AND entity-%control-InterpretationRule IS NOT INITIAL. " was updated, not deleted.
 
         TRY.
-            DATA(regex) = cl_abap_regex=>create_pcre( pattern = entity-InterpretationRule ) ##NEEDED. 
+            DATA(regex) = cl_abap_regex=>create_pcre( pattern = entity-InterpretationRule ) ##NEEDED.
 
           CATCH cx_sy_invalid_regex.
 
@@ -169,11 +169,11 @@ CLASS lhc_ZASIS_I_RULESET DEFINITION INHERITING FROM cl_abap_behavior_handler.
     METHODS get_global_authorizations  FOR GLOBAL AUTHORIZATION ##CALLED
       IMPORTING REQUEST requested_authorizations FOR ruleset RESULT result. ##CALLED
     METHODS get_instance_features FOR INSTANCE FEATURES
-      IMPORTING keys REQUEST requested_features FOR ruleset RESULT result ##NEEDED. ##NEEDED 
+      IMPORTING keys REQUEST requested_features FOR ruleset RESULT result ##NEEDED. ##NEEDED
     METHODS checkuniquerulesetid FOR VALIDATE ON SAVE ##CALLED
-      IMPORTING keys FOR ruleset~checkuniquerulesetid. 
+      IMPORTING keys FOR ruleset~checkuniquerulesetid.
     METHODS testRuleSet FOR MODIFY ##CALLED
-      IMPORTING keys FOR ACTION ruleset~testRuleSet. 
+      IMPORTING keys FOR ACTION ruleset~testRuleSet.
     METHODS copyRuleSet FOR MODIFY
       IMPORTING keys FOR ACTION ruleset~copyRuleSet ##CALLED.
 
