@@ -1,0 +1,11 @@
+@EndUserText.label: 'ASIS - Access Control for Event Producer Catalog (C)'
+@MappingRole: true
+define role ZASIS_AC_C_EVTPRODCATALOG {
+    grant
+        select
+            on
+                ZASIS_C_EVTPRODCATALOG
+                    where
+                        inheriting conditions from entity ZASIS_I_EVTPRODCATALOG;
+
+}

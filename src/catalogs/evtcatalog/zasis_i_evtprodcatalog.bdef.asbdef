@@ -1,0 +1,41 @@
+managed implementation in class zbp_asis_i_evtprodcat unique;
+strict ( 2 );
+with draft;
+
+define behavior for ZASIS_I_EVTPRODCATALOG alias EvtProdCatalog
+persistent table zasis_evtprodcat
+draft table zasisdr_epcat
+etag master LocalLastChangedAt
+lock master total etag LastChangedAt
+authorization master ( global )
+{
+  field ( readonly:update )
+    ClassName;
+  field ( readonly )
+    LastChangedBy, LastChangedAt, LocalLastChangedAt;
+
+  create;
+  update;
+  delete ( precheck );
+
+  draft action Edit;
+  draft action Activate optimized;
+  draft action Discard;
+  draft action Resume;
+  draft determine action Prepare
+  {
+    validation checkClassImplementsInterface;
+  }
+
+  validation checkClassImplementsInterface on save { field ClassName; create; }
+
+  mapping for zasis_evtprodcat
+  {
+    ClassName          = class_name;
+    Description        = description;
+    Status             = status;
+    LastChangedBy      = last_changed_by;
+    LastChangedAt      = last_changed_at;
+    LocalLastChangedAt = local_last_changed_at;
+  }
+}
