@@ -13,6 +13,7 @@ __test/http/http-client.env.json
 *.iwmo.xml
 *.iwvb.xml
 *.srvb.xml
+*.g4ba.xml
 *.sush.*
 
 # Artefacts

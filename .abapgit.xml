@@ -18,9 +18,11 @@
     <item>/src/bo/19a955a410e2e5518903bdf6baa818ht.sush.xml</item>
     <item>/src/bo/zasis_ui_ruleset_o4.srvb.xml</item>
     <item>/src/srv/26c6e957c80c60f46eee19f9257351ht.sush.xml</item>
-    <item>/src/enhcatalog/969b1071582cc72909bdf2dda97c01ht.sush.xml</item>
-    <item>/src/enhcatalog/zasis_ui_custcatalog_o4.srvb.xml</item>
-    <item>/src/enhcatalog/zasis_ui_custcatalog_o4.g4ba.xml</item>
+    <item>/src/catalogs/enhcatalog/969b1071582cc72909bdf2dda97c01ht.sush.xml</item>
+    <item>/src/catalogs/enhcatalog/zasis_ui_custcatalog_o4.srvb.xml</item>
+    <item>/src/catalogs/enhcatalog/zasis_ui_custcatalog_o4.g4ba.xml</item>
+    <item>/src/catalogs/evtcatalog/zasis_ui_evtprodcat_o4.srvb.xml</item>
+    <item>/src/catalogs/evtcatalog/zasis_ui_evtprodcat_o4.g4ba.xml</item>
     <item>/src/bo/zasis_ui_ruleset_o4.g4ba.xml</item>
    </IGNORE>
   </DATA>
