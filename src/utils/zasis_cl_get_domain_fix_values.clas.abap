@@ -42,7 +42,19 @@ CLASS zasis_cl_get_domain_fix_values IMPLEMENTATION.
 
         DATA(domain_name) = CONV sxco_ad_object_name( domain_name_filter-range[ 1 ]-low ).
 
-        CAST cl_abap_elemdescr( cl_abap_typedescr=>describe_by_name( domain_name ) )->get_ddic_fixed_values(
+        cl_abap_typedescr=>describe_by_name(
+          EXPORTING  p_name         = domain_name
+          RECEIVING  p_descr_ref    = DATA(type_descr)
+          EXCEPTIONS type_not_found = 1
+                     OTHERS         = 2 ).
+
+        IF sy-subrc <> 0.
+          "domain/type does not exist — return empty result instead of dumping
+          respond_empty( io_response ).
+          EXIT.
+        ENDIF.
+
+        CAST cl_abap_elemdescr( type_descr )->get_ddic_fixed_values(
           EXPORTING
             p_langu        = sy-langu
           RECEIVING
