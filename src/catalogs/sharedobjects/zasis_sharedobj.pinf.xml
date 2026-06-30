@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<abapGit version="v1.0.0" serializer="LCL_OBJECT_PINF" serializer_version="v1.0.0">
+ <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
+  <asx:values>
+   <PINF>
+    <ATTRIBUTES>
+     <INTF_NAME>ZASIS_SHAREDOBJ</INTF_NAME>
+     <DESCRIPT>Catalog Shared Objects - Public Interface</DESCRIPT>
+    </ATTRIBUTES>
+    <ELEMENTS>
+     <SCOMELDTLN>
+      <INTF_NAME>ZASIS_SHAREDOBJ</INTF_NAME>
+      <ELEM_TYPE>DOMA</ELEM_TYPE>
+      <ELEM_KEY>ZASIS_CAT_STAT</ELEM_KEY>
+     </SCOMELDTLN>
+     <SCOMELDTLN>
+      <INTF_NAME>ZASIS_SHAREDOBJ</INTF_NAME>
+      <ELEM_TYPE>DTEL</ELEM_TYPE>
+      <ELEM_KEY>ZASIS_CAT_STAT</ELEM_KEY>
+     </SCOMELDTLN>
+     <SCOMELDTLN>
+      <INTF_NAME>ZASIS_SHAREDOBJ</INTF_NAME>
+      <ELEM_TYPE>DTEL</ELEM_TYPE>
+      <ELEM_KEY>ZASIS_CAT_DESCR</ELEM_KEY>
+     </SCOMELDTLN>
+     <SCOMELDTLN>
+      <INTF_NAME>ZASIS_SHAREDOBJ</INTF_NAME>
+      <ELEM_TYPE>CLAS</ELEM_TYPE>
+      <ELEM_KEY>ZASIS_CL_CATSTATTEXT</ELEM_KEY>
+     </SCOMELDTLN>
+    </ELEMENTS>
+   </PINF>
+  </asx:values>
+ </asx:abap>
+</abapGit>

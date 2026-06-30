@@ -3,9 +3,9 @@
  <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
   <asx:values>
    <VSEOCLASS>
-    <CLSNAME>ZASIS_CL_ENHCATSTATTEXT</CLSNAME>
+    <CLSNAME>ZASIS_CL_CATSTATTEXT</CLSNAME>
     <LANGU>E</LANGU>
-    <DESCRIPT>ASIS - Virtual Element for Enh. Catalog Status</DESCRIPT>
+    <DESCRIPT>ASIS - Virtual Element for Catalog Status</DESCRIPT>
     <STATE>1</STATE>
     <CLSCCINCL>X</CLSCCINCL>
     <FIXPT>X</FIXPT>

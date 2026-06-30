@@ -12,7 +12,7 @@ define root view entity ZASIS_C_CUSTLOGCATALOG
       Description,
       @ObjectModel.text.element: [ 'StatusText' ]
       Status,
-      @ObjectModel.virtualElementCalculatedBy: 'ABAP:ZASIS_CL_ENHCATSTATTEXT'
+      @ObjectModel.virtualElementCalculatedBy: 'ABAP:ZASIS_CL_CATSTATTEXT'
       @Semantics.text: true
       virtual StatusText : abap.char( 20 ),
       LastChangedBy,
