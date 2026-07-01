@@ -33,11 +33,11 @@ Authorization checks are performed in the RAP behavior implementation for all cr
 
 ### RAP Behavior (Catalog Maintenance)
 
-Both catalog behavior implementations — `ZBP_ASIS_I_CUSTLOGCAT` and `ZBP_ASIS_I_EVTPRODCAT` — perform global authorization checks for create (`01`), update (`02`), and delete (`06`) using `ZASIS_GRL` (`ZASIS_RULE` with `DUMMY` value).
+Both catalog behavior implementations — `ZBP_ASIS_I_CUSTLOGCAT` and `ZBP_ASIS_I_EVTPRODCAT` — perform entity-level checks (not RuleSet-ID-specific instance checks) for create (`01`), update (`02`), and delete (`06`) using `ZASIS_GRL` with `ZASIS_RULE` set to `DUMMY`.
 
 ### CDS Access Control (DCL)
 
-Catalog and RuleSet CDS entities are protected via DCL roles in `src/auth/` and enforce display activity `03` through `aspect pfcg_auth(...)`. For the separated catalogs introduced in PR #127, this includes:
+Catalog and RuleSet CDS entities are protected via DCL roles in `src/auth/` and enforce display activity `03` through `aspect pfcg_auth(...)`. For the custom logic and event producer catalogs, this includes:
 - `ZASIS_AC_CUSTLOGCATALOG` and `ZASIS_AC_C_CUSTLOGCATALOG`
 - `ZASIS_AC_EVTPRODCATALOG` and `ZASIS_AC_C_EVTPRODCATALOG`
 

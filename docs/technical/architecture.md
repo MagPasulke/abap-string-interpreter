@@ -20,6 +20,8 @@ Within `src/catalogs/`, responsibilities are split into:
 - `evtcatalog/` — RAP BO for registering event producer implementations (`ZASIS_UI_EVTPRODCATALOG`)
 - `sharedobjects/` — shared status/description domain objects and status text virtual element provider
 
+The package layout still enforces layering by separating interpreter/runtime code (`bo`, `srv`, `utils`) from catalog registry objects (`catalogs/*`) and authorization artifacts (`auth`).
+
 ---
 
 ## Core Components
