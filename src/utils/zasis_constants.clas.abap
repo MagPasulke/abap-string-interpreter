@@ -8,9 +8,9 @@ CLASS zasis_constants DEFINITION
     CONSTANTS:
       "! Rule item type MATCH.
       BEGIN OF ruleitem_type,
-        "! Regex MATCH rule — extracts a value from the input string.
+        "! Regex MATCH rule -- extracts a value from the input string.
         match   TYPE zasis_ruleitem_type VALUE `1`,
-        "! REPLACE rule — transforms the input string via substitution.
+        "! REPLACE rule -- transforms the input string via substitution.
         replace TYPE zasis_ruleitem_type VALUE `2`,
       END OF ruleitem_type.
 

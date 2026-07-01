@@ -138,7 +138,7 @@ CLASS ltcl_export_mapper IMPLEMENTATION.
 
     DATA(result) = cut->map( ruleset ).
 
-    " The export structure has no UUID field — this test verifies the schema design.
+    " The export structure has no UUID field -- this test verifies the schema design.
     " If schema_version and rulesetid are populated, UUID is excluded by design.
     cl_abap_unit_assert=>assert_not_initial( result-schema_version ).
     cl_abap_unit_assert=>assert_not_initial( result-rulesetid ).

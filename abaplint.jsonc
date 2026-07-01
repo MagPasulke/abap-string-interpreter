@@ -15,6 +15,58 @@
   },
   "rules": {
     "check_syntax": true,
+    "cds_legacy_view": true,
+    "cds_association_name": true,
+    "cds_comment_style": true,
+    "cds_field_order": true,
+    "cds_naming": {
+      "exclude": [],
+      "severity": "Error",
+      "basicInterfaceView": "ZASIS_I_",
+      "compositeInterfaceView": "ZASIS_I_",
+      "consumptionView": "ZASIS_C_",
+      "basicRestrictedReuseView": "ZASIS_R_",
+      "compositeRestrictedReuseView": "ZASIS_R_",
+      "privateView": "ZASIS_P_",
+      "remoteAPIView": "ZASIS_A_",
+      "viewExtend": "ZASIS_X_",
+      "extensionIncludeView": "ZASIS_E_",
+      "derivationFunction": "ZASIS_F_",
+      "abstractEntity": "ZASIS_A_"
+    },
+    "cloud_types": true,
+    "7bit_ascii": true,
+    "allowed_object_types": {
+      "exclude": [],
+      "severity": "Error",
+      "allowed": []
+    },
+    "chain_mainly_declarations": true,
+    "check_abstract": {
+      "exclude": [
+        "ZBP*",
+        "zasis_constants"
+      ],
+      "severity": "Error"
+    },
+    "check_comments": {
+      "exclude": [
+        "zasis_if_version"
+      ],
+      "allowEndOfLine": false
+    },
+    "no_prefixes": {
+      "exclude": [],
+      "severity": "Error",
+      "data": "^[LGM].?_",
+      "statics": "^S.?_",
+      "fieldSymbols": "^<[LGM].?_",
+      "constants": "^[LGM]?C.?_",
+      "types": "^(?!TY_)[A-Z]{1,2}_",
+      "methodParameters": "^[ICER].?_",
+      "allowIsPrefixBoolean": true,
+      "maxIssuesPerFile": 10
+    },
     "unknown_types": true,
     "begin_end_names": true,
     "begin_single_include": true,

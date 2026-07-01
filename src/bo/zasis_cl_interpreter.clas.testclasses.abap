@@ -861,7 +861,7 @@ CLASS ltcl_zasis_cl_interpreter IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD test_cl_ev_prod_err_no_break.
-    " Given - custom logic succeeds, event producer raises — must be swallowed
+    " Given - custom logic succeeds, event producer raises: must be swallowed
     cl_mock->return_value = |CustomOutput|.
     ev_producer_mock->raise_exception = abap_true.
 
@@ -1125,7 +1125,7 @@ CLASS ltcl_zasis_cl_interpreter IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD test_offset_zeroes_result.
-    " Given - match "AB" (2 chars), offset_pre=1, offset_post=1 → length = 0 → no match
+    " Given - match "AB" (2 chars), offset_pre=1, offset_post=1 : length = 0 : no match
     TRY.
         DATA(ruleset) = NEW zasis_cl_ruleset(
           header = VALUE #( rulesetuuid = '9808AFDDDA' rulesetid = 'UnitTest' )
@@ -1151,7 +1151,7 @@ CLASS ltcl_zasis_cl_interpreter IMPLEMENTATION.
         cl_abap_unit_assert=>fail( msg = |Unexpected exception: { exc->get_text( ) }| ).
     ENDTRY.
 
-    " Then - zero-length result after offsets → no match
+    " Then - zero-length result after offsets : no match
     cl_abap_unit_assert=>assert_equals(
       act = result-results[ 1 ]-interpretationresult
       exp = |no match| ).
