@@ -32,14 +32,23 @@ The service definition `ZASIS_UI_RULESET` is installed via abapGit. The correspo
 3. Click **Publish** to activate it.
 4. The Fiori Elements RuleSet maintenance UI is now available via the published service URL.
 
-**Enhancement Catalog UI** (for registering custom logic implementations):
+**Custom Logic Catalog UI** (for registering custom logic implementations):
 
 The service definition `ZASIS_UI_CUSTLOGCATALOG` is installed via abapGit. The service binding must be created manually, the same way as for the RuleSet UI:
 
 1. In ADT, create a new **OData V4 UI** service binding bound to the service definition `ZASIS_UI_CUSTLOGCATALOG`.
 2. Give it a name of your choice (e.g. `ZASIS_UI_CUSTCATALOG_O4`).
 3. Click **Publish** to activate it.
-4. The Enhancement Catalog UI is now available via the published service URL.
+4. The Custom Logic Catalog UI is now available via the published service URL.
+
+**Event Producer Catalog UI** (for registering event producer implementations):
+
+The service definition `ZASIS_UI_EVTPRODCATALOG` is installed via abapGit. The service binding must be created manually:
+
+1. In ADT, create a new **OData V4 UI** service binding bound to the service definition `ZASIS_UI_EVTPRODCATALOG`.
+2. Give it a name of your choice (e.g. `ZASIS_UI_EVTPRODCATALOG_O4`).
+3. Click **Publish** to activate it.
+4. The Event Producer Catalog UI is now available via the published service URL.
 
 ---
 
@@ -92,4 +101,3 @@ This handler adapts `IF_HTTP_REQUEST` / `IF_HTTP_RESPONSE` and delegates to the 
 Both handlers share identical business logic via `ZASIS_CL_HTTP_HANDLER_CORE`.
 
 > **Planned:** A clean separation between a cloud release (containing only cloud-compatible artifacts) and an on-premise release (containing only on-premise artifacts) is planned for a future version — see [issue #88](https://github.com/MagPasulke/abap-string-interpreter/issues/88). From that point on, each release variant will ship only the artifacts relevant to its target environment.
-

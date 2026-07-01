@@ -1,12 +1,12 @@
 # Authorization
 
-ZASIS enforces authorization at two levels: the RAP behavior layer (Fiori UI) and the runtime layer (ABAP API and HTTP service). Both layers use the same authorization object.
+ZASIS enforces authorization across RAP behavior handlers, CDS access control (DCL), and runtime execution paths (ABAP API and HTTP service). All checks are based on the same authorization object.
 
 ---
 
 ## Authorization Object: `ZASIS_GRL`
 
-The authorization object `ZASIS_GRL` controls access to RuleSets. It has two fields:
+The authorization object `ZASIS_GRL` controls access to RuleSets and catalog maintenance operations. It has two fields:
 
 | Field | Domain | Description |
 |---|---|---|
@@ -17,10 +17,10 @@ The authorization object `ZASIS_GRL` controls access to RuleSets. It has two fie
 
 | Activity | Code | Where enforced |
 |---|---|---|
-| Create | `01` | RAP behavior (Fiori UI) |
-| Change | `02` | RAP behavior (Fiori UI) |
-| Display | `03` | RAP behavior (Fiori UI), HTTP GET |
-| Delete | `06` | RAP behavior (Fiori UI) |
+| Create | `01` | RAP behavior (`ZBP_ASIS_I_RULESET`, `ZBP_ASIS_I_CUSTLOGCAT`, `ZBP_ASIS_I_EVTPRODCAT`) |
+| Change | `02` | RAP behavior (`ZBP_ASIS_I_RULESET`, `ZBP_ASIS_I_CUSTLOGCAT`, `ZBP_ASIS_I_EVTPRODCAT`) |
+| Display | `03` | CDS DCL (`ZASIS_I_*` / `ZASIS_C_*` views), HTTP GET |
+| Delete | `06` | RAP behavior (`ZBP_ASIS_I_RULESET`, `ZBP_ASIS_I_CUSTLOGCAT`, `ZBP_ASIS_I_EVTPRODCAT`) |
 | Execute | `16` | ABAP API (`ZASIS_CL_INTERPRETER`), HTTP POST |
 
 ---
@@ -30,6 +30,16 @@ The authorization object `ZASIS_GRL` controls access to RuleSets. It has two fie
 ### RAP Behavior (`ZBP_ASIS_I_RULESET`)
 
 Authorization checks are performed in the RAP behavior implementation for all create, change, delete, and display operations on RuleSets. The `testRuleSet` action (which executes the interpreter from the Fiori UI) checks activity `16` (Execute).
+
+### RAP Behavior (Catalog Maintenance)
+
+Both catalog behavior implementations — `ZBP_ASIS_I_CUSTLOGCAT` and `ZBP_ASIS_I_EVTPRODCAT` — perform entity-level checks (not RuleSet-ID-specific instance checks) for create (`01`), update (`02`), and delete (`06`) using `ZASIS_GRL` with `ZASIS_RULE` set to `DUMMY`.
+
+### CDS Access Control (DCL)
+
+Catalog and RuleSet CDS entities are protected via DCL roles in `src/auth/` and enforce display activity `03` through `aspect pfcg_auth(...)`. For the custom logic and event producer catalogs, this includes:
+- `ZASIS_AC_CUSTLOGCATALOG` and `ZASIS_AC_C_CUSTLOGCATALOG`
+- `ZASIS_AC_EVTPRODCATALOG` and `ZASIS_AC_C_EVTPRODCATALOG`
 
 ### ABAP API (`ZASIS_CL_INTERPRETER`)
 
