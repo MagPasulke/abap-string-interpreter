@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.8.0](https://github.com/MagPasulke/abap-string-interpreter/compare/abap-string-interpreter-v0.7.3...abap-string-interpreter-v0.8.0) (2026-07-01)
+
+
+### Features
+
+* add separate RAP event producer catalog ([#127](https://github.com/MagPasulke/abap-string-interpreter/issues/127)) ([2aac49e](https://github.com/MagPasulke/abap-string-interpreter/commit/2aac49e7d19fbe52e0fd388c8d4b3e1c3f6e9ae6))
+
+
+### Documentation
+
+* **technical:** align architecture/install/auth docs with split catalog RAP model ([#130](https://github.com/MagPasulke/abap-string-interpreter/issues/130)) ([cda05a7](https://github.com/MagPasulke/abap-string-interpreter/commit/cda05a721c25ab5b9b1dd7a0494058476f2b0a64))
+* update user manual for PR [#127](https://github.com/MagPasulke/abap-string-interpreter/issues/127) — feat: add separate RAP event producer catalog ([#131](https://github.com/MagPasulke/abap-string-interpreter/issues/131)) ([3e09e7c](https://github.com/MagPasulke/abap-string-interpreter/commit/3e09e7c240ce0b8f907be3ce0e5b7785bfaa2622))
+
 ## [0.7.3](https://github.com/MagPasulke/abap-string-interpreter/compare/abap-string-interpreter-v0.7.2...abap-string-interpreter-v0.7.3) (2026-06-24)
 
 
