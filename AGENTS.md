@@ -83,12 +83,6 @@ src/                          Root package (ZASIS)
 └── utils/                    Shared utilities — constants (zasis_constants), custom exception (zasis_cx_exc / ZASIS_MSGS), domain fixed-value query provider, class validator
 ```
 
-> **Packages & folder logic:** `.abapgit.xml` uses `FOLDER_LOGIC = PREFIX`, so the ABAP package name is derived from the folder path (root `ZASIS` → `src/`). Nested folders yield prefixed package names, e.g. `src/catalogs/enhcatalog/` → `ZASIS_CATALOGS_ENHCATALOG`, `src/catalogs/sharedobjects/` → `ZASIS_CATALOGS_SHAREDOBJECTS`. Package names must stay ≤ 30 characters.
->
-> **No package interfaces (PINF):** the project does not use package interfaces. Cross-package usage (e.g. the ruleset value help consuming the catalog value-help views) works at the CDS/ABAP level without serialized PINF/USE declarations. Do not add `*.pinf.xml` objects.
->
-> **On-stack renames/moves need cache attention:** renaming DDIC objects (e.g. domains) or moving objects between packages can leave stale OData service-binding metadata and value-help caches. After such changes, re-publish the affected service binding and refresh the OData metadata cache, otherwise value helps may resolve the old object at runtime.
-
 ---
 
 ## Exception Handling
