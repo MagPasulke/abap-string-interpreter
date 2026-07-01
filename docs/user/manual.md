@@ -81,7 +81,7 @@ Each RuleSet contains an ordered list of **Rule Items**. Every item defines:
 | `RightTrim`           | Characters to trim from the **end** of the regex match (MATCH only)         |
 | `ReplacementString`   | The replacement value used with REPLACE rules                                 |
 | `CustomLogic`         | Optional: registered custom logic implementation (overrides regex) |
-| `EventProducer`       | Optional: ABAP class name implementing `ZASIS_IF_EVENT_PRODUCER`             |
+| `EventProducer`       | Optional: registered event producer implementation (see [Event Producers](#event-producers)) |
 
 Rules are executed **in the order they are defined**. The result of one rule does not feed into the next; every rule operates on the original input string.
 
@@ -588,6 +588,31 @@ An **Event Producer** class is called **after** a rule item produces a successfu
 
 > **Note:** Event producers are **not** called when a rule item produces `no match`.
 
+### Catalog registration and status
+
+Event producer implementations are managed in a dedicated **Event Producer Catalog**. Administrators register event producer classes in the catalog to make them selectable in the Rule Item value help.
+
+Each catalog entry contains:
+
+- the implementation class name
+- a short description
+- a status
+
+Available statuses:
+
+| Status | Meaning |
+|--------|---------|
+| `Active` | Appears in the Rule Item value help and can be selected |
+| `Deprecated` | Kept for reference; does not appear in the value help |
+
+Operational consequences:
+
+- Only **Active** catalog entries appear in the Rule Item value help.
+- When saving a catalog entry, ZASIS validates that the named class exists and implements `ZASIS_IF_EVENT_PRODUCER`. Saving fails if the class is missing or does not implement the interface.
+- A catalog entry cannot be deleted while any Rule Item still references it.
+
+> **Note:** Unlike Custom Logic, the catalog status does not block saving a Rule Item — Rule Item save validation checks only that the class exists and implements the correct interface, not that its catalog entry is Active. To prevent runtime use of a retired implementation, remove it from all Rule Items before setting the catalog entry to Deprecated.
+
 ### Implementation
 
 Create an ABAP class implementing `ZASIS_IF_EVENT_PRODUCER`. The class receives:
@@ -601,7 +626,7 @@ Event producers run synchronously within the same HTTP call. Any `zasis_cx_exc` 
 
 ### Registration
 
-Enter the ABAP class name in the **Event Producer** field of the rule item in the RuleSet configuration.
+First register the implementation in the **Event Producer Catalog** (navigate to the catalog Fiori app, create a new entry with the class name and description, and set status to **Active**). Then, in the RuleSet configuration, select the catalog entry in the **Event Producer** field of the Rule Item.
 
 ---
 
@@ -615,7 +640,7 @@ ZASIS uses a dedicated authorization object (`ZASIS_GRL`) to control access to R
 | Read               | Every call to `GET /ruleSet/{ruleSetId}` and `GET /ruleSetExport/{ruleSetId}` |
 | Maintain           | Saving changes via the Fiori application  |
 
-The same authorization object is also used for the **Custom Logic Catalog**. Users who register, change, or retire custom logic entries need the corresponding display/create/change/delete activities in addition to RuleSet permissions.
+The same authorization object is also used for the **Custom Logic Catalog** and the **Event Producer Catalog**. Users who register, change, or retire custom logic or event producer catalog entries need the corresponding display/create/change/delete activities in addition to RuleSet permissions.
 
 Users without the required authorization receive a `403 Forbidden` response on API calls, or see no data in the Fiori application.
 
@@ -664,6 +689,10 @@ If API returns `ZASIS_MSGS/017`, request payload could not be read by HTTP runti
 ### Custom logic catalog entry cannot be deleted
 
 If the UI reports that a catalog entry is still in use, remove that custom logic from all Rule Items first, save those RuleSets, and then delete the catalog entry.
+
+### Event producer catalog entry cannot be deleted
+
+If the UI reports that an event producer catalog entry is still in use, remove that event producer from all Rule Items first, save those RuleSets, and then delete the catalog entry.
 
 ### Context not appearing in response
 
