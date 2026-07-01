@@ -1,5 +1,6 @@
 @EndUserText.label: 'ASIS - Read Doma fix values'
 @ObjectModel.query.implementedBy: 'ABAP:ZASIS_CL_GET_DOMAIN_FIX_VALUES'
+@ObjectModel.resultSet.sizeCategory: #XS
 define custom entity ZASIS_I_DOMAIN_FIX_VALUES
 {
       @EndUserText.label     : 'domain name'
