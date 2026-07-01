@@ -2,20 +2,23 @@
 
 ## Package Structure
 
-ZASIS follows a layered package structure that separates concerns across six sub-packages under the root `ZASIS` package:
+ZASIS follows a layered package structure that separates concerns across seven sub-packages under the root `ZASIS` package:
 
 ```
 src/
 ├── app/          Fiori / UI placeholders (reserved for future UI components)
 ├── auth/         Authorization — auth checker class, auth objects, DCL access control for CDS views
 ├── bo/           Business objects — interpreter engine, RuleSet container + factory, RAP managed BO, OData V4 service
+├── catalogs/     Catalog package group — custom logic catalog, event producer catalog, and shared catalog objects
 ├── dm/           Data model — DB tables, CDS interface views, domains, data elements, table types
-├── enhcatalog/   Enhancement catalog — RAP BO for registering custom logic implementations, OData V4 service
 ├── srv/          HTTP service — REST handler routing GET/POST for RuleSet retrieval and interpretation
 └── utils/        Shared utilities — constants, custom exception, domain value query provider, class validator
 ```
 
-Each sub-package is exposed selectively to other packages via package interfaces (`PINF`), enforcing clean layering.
+Within `src/catalogs/`, responsibilities are split into:
+- `enhcatalog/` — RAP BO for registering custom logic implementations (`ZASIS_UI_CUSTLOGCATALOG`)
+- `evtcatalog/` — RAP BO for registering event producer implementations (`ZASIS_UI_EVTPRODCATALOG`)
+- `sharedobjects/` — shared status/description domain objects and status text virtual element provider
 
 ---
 
@@ -30,6 +33,8 @@ Each sub-package is exposed selectively to other packages via package interfaces
 | `ZASIS_CL_HTTP_HANDLER` | Classic SICF entry point — adapts `IF_HTTP_EXTENSION` and delegates to core |
 | `ZASIS_CL_HTTP_HANDLER_CLD` | Cloud HTTP Service entry point — adapts `IF_HTTP_SERVICE_EXTENSION` and delegates to core |
 | `ZBP_ASIS_I_RULESET` | RAP behavior — validations, authorization checks, `testRuleSet` action, draft handling |
+| `ZBP_ASIS_I_CUSTLOGCAT` | RAP behavior for custom logic catalog maintenance and class/interface validation |
+| `ZBP_ASIS_I_EVTPRODCAT` | RAP behavior for event producer catalog maintenance and class/interface validation |
 | `ZASIS_IF_CUSTOMLOGIC` | Interface for pluggable custom extraction logic per rule item |
 | `ZASIS_CL_AUTH_CHECKER` | Wraps `AUTHORITY-CHECK` for interpreter and HTTP handler authorization |
 
@@ -59,6 +64,10 @@ The two entry-point handlers each adapt their respective SAP HTTP object model t
 |---|---|
 | `ZASIS_RULESETHD` | RuleSet header — UUID, RuleSetId, name, attachment flag |
 | `ZASIS_RULESETITM` | RuleSet items — regex rule, type, offsets, replacement string, custom logic class name |
+| `ZASIS_CUSTLOGCAT` | Active records for custom logic class registrations |
+| `ZASIS_EVTPRODCAT` | Active records for event producer class registrations |
+| `ZASISDR_CLCAT` | Draft table for custom logic catalog RAP BO |
+| `ZASISDR_EPCAT` | Draft table for event producer catalog RAP BO |
 
 ### Rule Types
 
