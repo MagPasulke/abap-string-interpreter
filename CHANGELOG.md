@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.8.1](https://github.com/MagPasulke/abap-string-interpreter/compare/abap-string-interpreter-v0.8.0...abap-string-interpreter-v0.8.1) (2026-07-01)
+
+
+### Development & Tooling
+
+* **abaplint:** add missing rules and fix non-7bit ASCII in comments ([#133](https://github.com/MagPasulke/abap-string-interpreter/issues/133)) ([1fab66f](https://github.com/MagPasulke/abap-string-interpreter/commit/1fab66f4d572ec34b49a0570fd3331b0887727f7))
+
 ## [0.8.0](https://github.com/MagPasulke/abap-string-interpreter/compare/abap-string-interpreter-v0.7.3...abap-string-interpreter-v0.8.0) (2026-07-01)
 
 
