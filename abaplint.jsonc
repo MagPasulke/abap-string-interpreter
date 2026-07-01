@@ -58,7 +58,8 @@
       "statements": 100,
       "errorWhenEmpty": false,
       "ignoreTestClasses": false,
-      "checkForms": true
+      "checkForms": true,
+      "checkFunctionModules": true
     },
     "definitions_top": {
       "exclude": [],
@@ -167,7 +168,8 @@
       "ignoreKeywords": [],
       "exclude": [
         "zbp_asis_i_ruleset.clas.locals_imp.abap",
-        "zbp_asis_i_custlogcat.clas.locals_imp.abap"
+        "zbp_asis_i_custlogcat.clas.locals_imp.abap",
+        "zbp_asis_i_evtprodcat.clas.locals_imp.abap"
       ]
     },
     "method_parameter_names": {

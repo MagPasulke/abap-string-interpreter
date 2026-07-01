@@ -73,9 +73,12 @@ This applies to ALL changes — code, documentation, skills, configuration. No e
 src/                          Root package (ZASIS)
 ├── app/                      Application / UI layer (placeholder for future UI components)
 ├── auth/                     Authorization — auth checks (zasis_cl_auth_checker), auth objects (SUSO/AUTH/SUSC), DCL access control for all CDS views, zasis_cx_no_auth exception
-├── bo/                       Business Objects — interpreter engine (zasis_cl_interpreter), ruleset container + factory, RAP managed BO with draft (zbp_asis_i_ruleset), OData V4 service (zasis_ui_ruleset), interfaces zasis_if_interpreter / zasis_if_ruleset / zasis_if_customlogic
+├── bo/                       Business Objects — interpreter engine (zasis_cl_interpreter), ruleset container + factory, RAP managed BO with draft (zbp_asis_i_ruleset), OData V4 service (zasis_ui_ruleset), interfaces zasis_if_interpreter / zasis_if_ruleset / zasis_if_customlogic / zasis_if_event_producer
+├── catalogs/                 Catalogs (parent package ZASIS_CATALOGS) — groups the registry BOs and their shared objects
+│   ├── enhcatalog/           Custom Logic Catalog — RAP managed BO with draft for registering custom logic implementations (zasis_custlogcat), Fiori-annotated consumption view, OData V4 service (zasis_ui_custlogcatalog)
+│   ├── evtcatalog/           Event Producer Catalog — RAP managed BO with draft for registering event producer implementations (zasis_evtprodcat), Fiori-annotated consumption view, OData V4 service (zasis_ui_evtprodcatalog)
+│   └── sharedobjects/        Shared catalog objects reused by both catalogs — status domain/data element (ZASIS_CAT_STAT), description data element (ZASIS_CAT_DESCR), status-text virtual element (zasis_cl_catstattext)
 ├── dm/                       Data Model — DB tables (rulesethd, rulesetitm, ruleset_refs), CDS interface views, domains/data elements, table types for interpreter results
-├── enhcatalog/               Enhancement Catalogs — RAP managed BO with draft for registering custom logic implementations (zasis_custlogcat), Fiori-annotated consumption view, OData V4 service (zasis_ui_custlogcatalog), package interface exposing catalog to other packages
 ├── srv/                      HTTP Service — REST handler (zasis_cl_http_handler) routing GET/POST for RuleSet retrieval and string interpretation, request validation
 └── utils/                    Shared utilities — constants (zasis_constants), custom exception (zasis_cx_exc / ZASIS_MSGS), domain fixed-value query provider, class validator
 ```

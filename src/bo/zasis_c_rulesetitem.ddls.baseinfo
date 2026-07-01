@@ -6,6 +6,7 @@
     "ASSOCIATED": [
       "ZASIS_C_RULESET",
       "ZASIS_I_CUSTLOGCATALOG",
+      "ZASIS_I_EVTPRODCATALOG",
       "ZASIS_I_RULESET"
     ],
     "BASE": [

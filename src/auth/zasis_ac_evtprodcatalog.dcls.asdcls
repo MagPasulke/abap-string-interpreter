@@ -1,0 +1,11 @@
+@EndUserText.label: 'ASIS - Access Control for Event Producer Catalog'
+@MappingRole: true
+define role ZASIS_AC_EVTPRODCATALOG {
+    grant
+        select
+            on
+                ZASIS_I_EVTPRODCATALOG
+                    where
+                        (ClassName) = aspect pfcg_auth(ZASIS_GRL, ZASIS_RULE, ACTVT = '03');
+
+}

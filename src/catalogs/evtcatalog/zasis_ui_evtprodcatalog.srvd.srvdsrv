@@ -1,0 +1,4 @@
+@EndUserText.label: 'Event Producer Catalog - UI Service'
+define service ZASIS_UI_EVTPRODCATALOG {
+  expose ZASIS_C_EVTPRODCATALOG as EvtProdCatalog;
+}

@@ -20,8 +20,10 @@ define view entity ZASIS_C_RULESETITEM
           ReplacementString,
           @Consumption.valueHelpDefinition: [{ entity: { name: 'ZASIS_I_CUSTLOGCAT_VH', element: 'ClassName' } }]
           CustomLogic,
+          @Consumption.valueHelpDefinition: [{ entity: { name: 'ZASIS_I_EVTPRODCAT_VH', element: 'ClassName' } }]
           EventProducer,
           /* Associations */
           _Header : redirected to parent ZASIS_C_RULESET,
-          _CustLogCatalog
+          _CustLogCatalog,
+          _EvtProdCatalog
 }

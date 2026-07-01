@@ -1,11 +1,11 @@
 @Metadata.layer: #CUSTOMER
 
 @UI.headerInfo: {
-  typeName: 'Custom Logic Catalog Entry',
-  typeNamePlural: 'Custom Logic Catalog',
+  typeName: 'Event Producer Catalog Entry',
+  typeNamePlural: 'Event Producer Catalog',
   description.value: 'ClassName'
 }
-annotate entity ZASIS_C_CUSTLOGCATALOG with
+annotate entity ZASIS_C_EVTPRODCATALOG with
 {
   @UI.facet: [{
     id: 'CatalogEntry',
@@ -31,7 +31,7 @@ annotate entity ZASIS_C_CUSTLOGCATALOG with
   @Consumption.valueHelpDefinition:
   [{ entity: { name: 'ZASIS_I_DOMAIN_FIX_VALUES', element: 'low' },
      additionalBinding: [{ element: 'domain_name',
-                           localConstant: 'ZASIS_ENHCAT_STAT', usage: #FILTER }],
+                           localConstant: 'ZASIS_CAT_STAT', usage: #FILTER }],
      distinctValues: true }]
   Status;
 

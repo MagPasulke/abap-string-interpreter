@@ -3,13 +3,13 @@
  <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
   <asx:values>
    <DD01V>
-    <DOMNAME>ZASIS_ENHCAT_STAT</DOMNAME>
+    <DOMNAME>ZASIS_CAT_STAT</DOMNAME>
     <DDLANGUAGE>E</DDLANGUAGE>
     <DATATYPE>CHAR</DATATYPE>
     <LENG>000001</LENG>
     <OUTPUTLEN>000001</OUTPUTLEN>
     <VALEXI>X</VALEXI>
-    <DDTEXT>ASIS - Custom Logic Catalog Status</DDTEXT>
+    <DDTEXT>ASIS - Catalog Status</DDTEXT>
     <DOMMASTER>E</DOMMASTER>
    </DD01V>
    <DD07V_TAB>

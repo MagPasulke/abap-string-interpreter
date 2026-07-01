@@ -1,4 +1,4 @@
-CLASS zasis_cl_enhcatstattext DEFINITION
+CLASS zasis_cl_catstattext DEFINITION
   PUBLIC FINAL
   CREATE PUBLIC.
 
@@ -12,18 +12,23 @@ ENDCLASS.
 
 
 
-CLASS zasis_cl_enhcatstattext IMPLEMENTATION.
+CLASS zasis_cl_catstattext IMPLEMENTATION.
 
 
   METHOD if_sadl_exit_calc_element_read~calculate.
 
-    DATA original_data TYPE STANDARD TABLE OF zasis_c_custlogcatalog.
+    TYPES: BEGIN OF ty_stat,
+             status     TYPE zasis_cat_stat,
+             statustext TYPE c LENGTH 20,
+           END OF ty_stat.
+
+    DATA original_data TYPE STANDARD TABLE OF ty_stat.
 
     original_data = CORRESPONDING #( it_original_data ).
 
     SELECT domvalue_l, ddtext
       FROM dd07t
-      WHERE ddlanguage = @sy-langu AND domname = 'ZASIS_ENHCAT_STAT'
+      WHERE ddlanguage = @sy-langu AND domname = 'ZASIS_CAT_STAT'
       ORDER BY domvalue_l
       INTO TABLE @DATA(domain_values).
 

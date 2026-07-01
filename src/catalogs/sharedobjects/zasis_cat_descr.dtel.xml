@@ -3,17 +3,17 @@
  <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
   <asx:values>
    <DD04V>
-    <ROLLNAME>ZASIS_ENHCAT_DESCR</ROLLNAME>
+    <ROLLNAME>ZASIS_CAT_DESCR</ROLLNAME>
     <DDLANGUAGE>E</DDLANGUAGE>
     <HEADLEN>40</HEADLEN>
     <SCRLEN1>10</SCRLEN1>
     <SCRLEN2>20</SCRLEN2>
     <SCRLEN3>40</SCRLEN3>
-    <DDTEXT>Enhancement Catalog Description</DDTEXT>
+    <DDTEXT>Catalog Description</DDTEXT>
     <REPTEXT>Description</REPTEXT>
     <SCRTEXT_S>Descr.</SCRTEXT_S>
     <SCRTEXT_M>Description</SCRTEXT_M>
-    <SCRTEXT_L>Enhancement Catalog Description</SCRTEXT_L>
+    <SCRTEXT_L>Catalog Description</SCRTEXT_L>
     <DTELMASTER>E</DTELMASTER>
     <DATATYPE>CHAR</DATATYPE>
     <LENG>000080</LENG>
