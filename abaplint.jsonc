@@ -58,7 +58,8 @@
       "statements": 100,
       "errorWhenEmpty": false,
       "ignoreTestClasses": false,
-      "checkForms": true
+      "checkForms": true,
+      "checkFunctionModules": true
     },
     "definitions_top": {
       "exclude": [],
