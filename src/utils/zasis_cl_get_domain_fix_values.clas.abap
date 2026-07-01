@@ -11,7 +11,7 @@ CLASS zasis_cl_get_domain_fix_values DEFINITION
 
     METHODS respond_empty
       IMPORTING
-        io_response TYPE REF TO if_rap_query_response.
+        response TYPE REF TO if_rap_query_response.
 
 ENDCLASS.
 
@@ -35,7 +35,7 @@ CLASS zasis_cl_get_domain_fix_values IMPLEMENTATION.
                INTO DATA(domain_name_filter).
 
         IF sy-subrc <> 0.
-          "domain name filter not provided — return empty result
+          "domain name filter not provided : return empty result
           respond_empty( io_response ).
           EXIT.
         ENDIF.
@@ -49,7 +49,7 @@ CLASS zasis_cl_get_domain_fix_values IMPLEMENTATION.
                      OTHERS         = 2 ).
 
         IF sy-subrc <> 0.
-          "domain/type does not exist — return empty result instead of dumping
+          "domain/type does not exist : return empty result instead of dumping
           respond_empty( io_response ).
           EXIT.
         ENDIF.
@@ -65,7 +65,7 @@ CLASS zasis_cl_get_domain_fix_values IMPLEMENTATION.
             OTHERS         = 3 ).
 
         IF sy-subrc > 0.
-          "domain not found or not a DDIC type — return empty result
+          "domain not found or not a DDIC type : return empty result
           respond_empty( io_response ).
           EXIT.
         ENDIF.
@@ -87,7 +87,7 @@ CLASS zasis_cl_get_domain_fix_values IMPLEMENTATION.
 
         SELECT domain_name, pos, low, high, description FROM @result AS data_source_fields
            WHERE domain_name IN @domain_name_filter-range
-           ORDER BY domain_name "supress abaplint finding
+           ORDER BY domain_name 
            INTO TABLE @result
            UP TO @max_index ROWS ##SUBRC_OK.
 
@@ -99,7 +99,7 @@ CLASS zasis_cl_get_domain_fix_values IMPLEMENTATION.
         io_response->set_data( result ).
 
       CATCH cx_rap_query_response_set_twic.
-        "response already set — ignore
+        "response already set : ignore
       CATCH cx_rap_query_filter_no_range cx_sy_move_cast_error.
         respond_empty( io_response ).
     ENDTRY.
@@ -111,10 +111,10 @@ CLASS zasis_cl_get_domain_fix_values IMPLEMENTATION.
 
     DATA empty TYPE TABLE OF zasis_i_domain_fix_values.
     TRY.
-        io_response->set_total_number_of_records( 0 ).
-        io_response->set_data( empty ).
+        response->set_total_number_of_records( 0 ).
+        response->set_data( empty ).
       CATCH cx_rap_query_response_set_twic.
-        "response already set — ignore
+        "response already set : ignore
     ENDTRY.
 
   ENDMETHOD.

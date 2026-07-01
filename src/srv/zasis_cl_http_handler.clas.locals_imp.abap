@@ -2,7 +2,7 @@
 *"* local helper classes, interface definitions and type
 *"* declarations
 
-"! SICF Request Adapter — wraps if_http_request into zasis_if_http_request
+"! SICF Request Adapter -- wraps if_http_request into zasis_if_http_request
 CLASS lcl_sicf_request DEFINITION.
   PUBLIC SECTION.
     INTERFACES zasis_if_http_request.
@@ -33,7 +33,7 @@ CLASS lcl_sicf_request IMPLEMENTATION.
   ENDMETHOD.
 ENDCLASS.
 
-"! SICF Response Adapter — wraps if_http_response into zasis_if_http_response
+"! SICF Response Adapter -- wraps if_http_response into zasis_if_http_response
 CLASS lcl_sicf_response DEFINITION.
   PUBLIC SECTION.
     INTERFACES zasis_if_http_response.

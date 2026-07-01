@@ -1,6 +1,6 @@
 CLASS lhc_rulesetitem DEFINITION INHERITING FROM cl_abap_behavior_handler.
 
-  PRIVATE SECTION."
+  PRIVATE SECTION.
 
     METHODS checkIsValidRegex FOR VALIDATE ON SAVE ##CALLED
       IMPORTING keys FOR RuleSetItem~checkIsValidRegex. ##CALLED
@@ -138,7 +138,8 @@ CLASS lhc_rulesetitem IMPLEMENTATION.
   METHOD precheck_update.
     LOOP AT entities INTO DATA(entity).
 
-      IF entity-%control-InterpretationRule EQ '01' AND entity-%control-InterpretationRule IS NOT INITIAL. " was updated, not deleted.
+      " was updated, not deleted.
+      IF entity-%control-InterpretationRule EQ '01' AND entity-%control-InterpretationRule IS NOT INITIAL.
 
         TRY.
             DATA(regex) = cl_abap_regex=>create_pcre( pattern = entity-InterpretationRule ) ##NEEDED.
@@ -164,7 +165,7 @@ CLASS lhc_rulesetitem IMPLEMENTATION.
 ENDCLASS.
 
 CLASS lhc_ZASIS_I_RULESET DEFINITION INHERITING FROM cl_abap_behavior_handler.
-  PRIVATE SECTION."
+  PRIVATE SECTION.
 
     METHODS get_global_authorizations  FOR GLOBAL AUTHORIZATION ##CALLED
       IMPORTING REQUEST requested_authorizations FOR ruleset RESULT result. ##CALLED
@@ -350,7 +351,7 @@ CLASS lhc_ZASIS_I_RULESET IMPLEMENTATION.
     DATA: rulesets_cba TYPE TABLE FOR CREATE zasis_i_ruleset\_Items,
           rulesets     TYPE TABLE FOR CREATE zasis_i_ruleset.
 
-    " Guard: %cid must be filled for factory actions — without it, CREATE BY association
+    " Guard: %cid must be filled for factory actions -- without it, CREATE BY association
     " would fail silently for source instances that have child items
     ASSERT NOT line_exists( keys[ %cid = '' ] ).
 

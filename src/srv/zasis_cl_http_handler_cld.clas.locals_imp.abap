@@ -2,7 +2,7 @@
 *"* local helper classes, interface definitions and type
 *"* declarations
 
-"! Cloud Request Adapter — wraps if_web_http_request into zasis_if_http_request
+"! Cloud Request Adapter -- wraps if_web_http_request into zasis_if_http_request
 CLASS lcl_cld_request DEFINITION.
   PUBLIC SECTION.
     INTERFACES zasis_if_http_request.
@@ -61,7 +61,7 @@ CLASS lcl_cld_request IMPLEMENTATION.
   ENDMETHOD.
 ENDCLASS.
 
-"! Cloud Response Adapter — wraps if_web_http_response into zasis_if_http_response
+"! Cloud Response Adapter -- wraps if_web_http_response into zasis_if_http_response
 CLASS lcl_cld_response DEFINITION.
   PUBLIC SECTION.
     INTERFACES zasis_if_http_response.

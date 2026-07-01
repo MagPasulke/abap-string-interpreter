@@ -90,7 +90,7 @@ CLASS lhc_custlogcatalog IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD precheck_delete.
-    " Precheck runs BEFORE delete reaches the buffer — block if referenced
+    " Precheck runs BEFORE delete reaches the buffer -- block if referenced
     READ ENTITIES OF zasis_i_custlogcatalog IN LOCAL MODE
          ENTITY CustLogCatalog
          ALL FIELDS WITH CORRESPONDING #( keys )
