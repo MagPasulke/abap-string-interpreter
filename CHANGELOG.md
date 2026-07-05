@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.0.0](https://github.com/MagPasulke/abap-string-interpreter/compare/abap-string-interpreter-v0.8.1...abap-string-interpreter-v1.0.0) (2026-07-05)
+
+
+### Development & Tooling
+
+* release 1.0.0 ([#137](https://github.com/MagPasulke/abap-string-interpreter/issues/137)) ([a3836ef](https://github.com/MagPasulke/abap-string-interpreter/commit/a3836ef78c0446cb926e52bf346ec54a074c5100))
+* update deps ([#135](https://github.com/MagPasulke/abap-string-interpreter/issues/135)) ([3bcc591](https://github.com/MagPasulke/abap-string-interpreter/commit/3bcc591272ca11187afeda367687ab7e722488a1))
+
 ## [0.8.1](https://github.com/MagPasulke/abap-string-interpreter/compare/abap-string-interpreter-v0.8.0...abap-string-interpreter-v0.8.1) (2026-07-01)
 
 
