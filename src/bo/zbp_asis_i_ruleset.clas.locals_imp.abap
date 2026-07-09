@@ -175,6 +175,8 @@ CLASS lhc_ZASIS_I_RULESET DEFINITION INHERITING FROM cl_abap_behavior_handler.
       IMPORTING keys FOR ruleset~checkuniquerulesetid.
     METHODS testRuleSet FOR MODIFY ##CALLED
       IMPORTING keys FOR ACTION ruleset~testRuleSet.
+    METHODS sayHello FOR MODIFY ##CALLED
+      IMPORTING keys FOR ACTION ruleset~sayHello.
     METHODS copyRuleSet FOR MODIFY
       IMPORTING keys FOR ACTION ruleset~copyRuleSet ##CALLED.
 
@@ -341,6 +343,22 @@ CLASS lhc_ZASIS_I_RULESET IMPLEMENTATION.
                  TO reported-ruleset.
 
       ENDTRY.
+
+    ENDLOOP.
+
+  ENDMETHOD.
+
+  METHOD sayHello.
+
+    " Static demo action: greet the value entered in the action popup.
+    " Static actions import %cid and %param (no instance key); the greeting
+    " is reported as a success toast independent of any RuleSet instance.
+    LOOP AT keys INTO DATA(key_row).
+
+      APPEND VALUE #( %msg = new_message_with_text(
+                        severity = if_abap_behv_message=>severity-success
+                        text     = |hello { key_row-%param-greeting_value }| ) )
+             TO reported-ruleset.
 
     ENDLOOP.
 
