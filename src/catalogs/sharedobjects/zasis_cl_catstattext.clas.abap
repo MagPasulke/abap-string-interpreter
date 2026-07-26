@@ -13,10 +13,7 @@ ENDCLASS.
 
 
 CLASS zasis_cl_catstattext IMPLEMENTATION.
-
-
   METHOD if_sadl_exit_calc_element_read~calculate.
-
     TYPES: BEGIN OF ty_stat,
              status     TYPE zasis_cat_stat,
              statustext TYPE c LENGTH 20,
@@ -26,24 +23,21 @@ CLASS zasis_cl_catstattext IMPLEMENTATION.
 
     original_data = CORRESPONDING #( it_original_data ).
 
-    SELECT domvalue_l, ddtext
-      FROM dd07t
-      WHERE ddlanguage = @sy-langu AND domname = 'ZASIS_CAT_STAT'
-      ORDER BY domvalue_l
-      INTO TABLE @DATA(domain_values).
+    CAST cl_abap_elemdescr( cl_abap_typedescr=>describe_by_name( 'ZASIS_CAT_STAT' ) )->get_ddic_fixed_values(
+      EXPORTING  p_langu        = sy-langu
+      RECEIVING  p_fixed_values = DATA(fixed_values)
+      EXCEPTIONS not_found      = 1
+                 no_ddic_type   = 2
+                 OTHERS         = 3 ).
 
-    IF sy-subrc = 0.
+    LOOP AT original_data ASSIGNING FIELD-SYMBOL(<line>).
 
-      LOOP AT original_data ASSIGNING FIELD-SYMBOL(<line>).
+      READ TABLE fixed_values WITH KEY low = <line>-status INTO DATA(domain_value).
+      IF sy-subrc = 0.
+        <line>-statustext = domain_value-ddtext.
+      ENDIF.
 
-        READ TABLE domain_values WITH KEY domvalue_l = <line>-status INTO DATA(domain_value).
-        IF sy-subrc = 0.
-          <line>-statustext = domain_value-ddtext.
-        ENDIF.
-
-      ENDLOOP.
-
-    ENDIF.
+    ENDLOOP.
 
     ct_calculated_data = CORRESPONDING #( original_data ).
   ENDMETHOD.

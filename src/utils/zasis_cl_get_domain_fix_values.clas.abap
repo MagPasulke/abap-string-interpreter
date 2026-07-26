@@ -87,7 +87,7 @@ CLASS zasis_cl_get_domain_fix_values IMPLEMENTATION.
 
         SELECT domain_name, pos, low, high, description FROM @result AS data_source_fields
            WHERE domain_name IN @domain_name_filter-range
-           ORDER BY domain_name 
+           ORDER BY domain_name
            INTO TABLE @result
            UP TO @max_index ROWS ##SUBRC_OK.
 
