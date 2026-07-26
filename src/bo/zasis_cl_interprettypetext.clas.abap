@@ -3,8 +3,6 @@ CLASS zasis_cl_interprettypetext DEFINITION
   CREATE PUBLIC.
 
   PUBLIC SECTION.
-
-    INTERFACES if_sadl_exit .
     INTERFACES if_sadl_exit_calc_element_read .
   PROTECTED SECTION.
   PRIVATE SECTION.
