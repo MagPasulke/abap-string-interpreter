@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.0.1](https://github.com/MagPasulke/abap-string-interpreter/compare/abap-string-interpreter-v1.0.0...abap-string-interpreter-v1.0.1) (2026-10-26)
+
+
+### Bug Fixes
+
+* replace dd07 select by RTTI ([#139](https://github.com/MagPasulke/abap-string-interpreter/issues/139)) ([84fa03e](https://github.com/MagPasulke/abap-string-interpreter/commit/84fa03e265847e9e35b3b89c459c79255c5637fc))
+
+
+### Development & Tooling
+
+* deps ([820e658](https://github.com/MagPasulke/abap-string-interpreter/commit/820e658488cda57c1ee5f0b283ad067dfbc36daf))
+* deps ([c451439](https://github.com/MagPasulke/abap-string-interpreter/commit/c451439dba97dd0accf9cc122ba42a5ed6e7a057))
+
 ## [1.0.0](https://github.com/MagPasulke/abap-string-interpreter/compare/abap-string-interpreter-v0.8.1...abap-string-interpreter-v1.0.0) (2026-07-05)
 
 
