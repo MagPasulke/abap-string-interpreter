@@ -35,7 +35,7 @@ jobs:
     steps:
       - name: Create Copilot docs-update issue
         id: create-docs-issue
-        uses: actions/github-script@v7
+        uses: actions/github-script@f28e40c7f34bde8b3046d885e986cb6290c5673b # v7.1.0
         with:
           script: |
             // ── Resolve PR data ─────────────────────────────────────────────
@@ -175,7 +175,7 @@ jobs:
 
       - name: Assign issue to Copilot agent
         if: steps.create-docs-issue.outputs.issue_number
-        uses: actions/github-script@v7
+        uses: actions/github-script@f28e40c7f34bde8b3046d885e986cb6290c5673b # v7.1.0
         with:
           github-token: ${{ secrets.COPILOT_PAT }}
           script: |
