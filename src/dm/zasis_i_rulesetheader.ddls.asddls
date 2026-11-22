@@ -6,7 +6,7 @@ define view entity ZASIS_I_RULESETHEADER
 {
   key rulesetuuid           as RuleSetUUID,
       rulesetid             as RuleSetId,
-      
+
       attachment            as Attachment,
       @Semantics.mimeType: true
       mimetype              as MimeType,

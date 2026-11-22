@@ -2,24 +2,19 @@
   "input_folder": "src",
   "input_filter": [],
   "exclude_filter": [
-    "\\.bdef\\.",
-    "\\.ddls\\.",
-    "\\.ddlx\\.",
     "\\.dcls\\.",
-    "\\.drty\\.",
-    "\\.srvb\\.",
-    "\\.srvd\\.",
-    "\\.g4ba\\.",
+    "zasis_i_ruleset\\.",
+    "zasis_i_rulesetitem",
     "zbp_",
-    "zasis_cl_interprettypetext",
-    "zasis_cl_get_domain_fix_values"
+    "zasis_cl_interprettypetext"
   ],
   "output_folder": "output",
   "libs": [
     { "url": "https://github.com/open-abap/open-abap-core" },
     { "url": "https://github.com/open-abap/express-icf-shim" },
     { "url": "https://github.com/open-abap/open-abap-rap" },
-    { "url": "https://github.com/open-abap/open-abap-sadl"}
+    { "url": "https://github.com/open-abap/open-abap-sadl"},
+    { "url": "https://github.com/open-abap/open-abap-xco" }
   ],
   "write_unit_tests": true,
   "write_source_map": true,
