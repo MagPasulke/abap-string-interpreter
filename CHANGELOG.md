@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.0.2](https://github.com/MagPasulke/abap-string-interpreter/compare/abap-string-interpreter-v1.0.1...abap-string-interpreter-v1.0.2) (2026-11-22)
+
+
+### Development & Tooling
+
+* add PR title and workflow linting, pin actions to SHAs ([#148](https://github.com/MagPasulke/abap-string-interpreter/issues/148)) ([8d74037](https://github.com/MagPasulke/abap-string-interpreter/commit/8d74037fe896d2289a64169b31b07b3277b3bbd2))
+* **deps:** bump the github-actions group with 4 updates ([#150](https://github.com/MagPasulke/abap-string-interpreter/issues/150)) ([6fbb38c](https://github.com/MagPasulke/abap-string-interpreter/commit/6fbb38c4583ee3a6ba89b884f31ccbcb716c4890))
+
 ## [1.0.1](https://github.com/MagPasulke/abap-string-interpreter/compare/abap-string-interpreter-v1.0.0...abap-string-interpreter-v1.0.1) (2026-11-22)
 
 
