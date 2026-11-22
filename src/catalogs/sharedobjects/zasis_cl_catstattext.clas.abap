@@ -28,6 +28,9 @@ CLASS zasis_cl_catstattext IMPLEMENTATION.
       EXCEPTIONS not_found      = 1
                  no_ddic_type   = 2
                  OTHERS         = 3 ).
+    IF sy-subrc <> 0.
+      RETURN.
+    ENDIF.
 
     LOOP AT original_data ASSIGNING FIELD-SYMBOL(<line>).
 
