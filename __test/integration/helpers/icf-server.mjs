@@ -100,7 +100,7 @@ export async function startServer(quiet) {
   app.set('etag', false);
   app.use(express.raw({type: "*/*"}));
 
-  app.all("/zasis/*", async function (req, res) {
+  app.all("/zasis/{*path}", async function (req, res) {
     await cl_express_icf_shim.run({
       req,
       res,
