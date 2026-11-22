@@ -4,7 +4,6 @@ CLASS zasis_cl_calc_export_url DEFINITION
   CREATE PUBLIC.
 
   PUBLIC SECTION.
-    INTERFACES if_sadl_exit.
     INTERFACES if_sadl_exit_calc_element_read.
   PROTECTED SECTION.
   PRIVATE SECTION.
@@ -26,14 +25,16 @@ CLASS zasis_cl_calc_export_url IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD if_sadl_exit_calc_element_read~calculate.
-    DATA calculated TYPE STANDARD TABLE OF zasis_c_ruleset.
-    calculated = CORRESPONDING #( it_original_data ).
+  ct_calculated_data = CORRESPONDING #( it_original_data ).
 
-    LOOP AT calculated ASSIGNING FIELD-SYMBOL(<row>).
-      <row>-exporturl = |/sap/bc/http/sap/zasis_ext_api_cld/{ zasis_constants=>export-resource_path }/{ <row>-rulesetid }|.
-    ENDLOOP.
+  LOOP AT ct_calculated_data ASSIGNING FIELD-SYMBOL(<row>).
+    ASSIGN COMPONENT 'RULESETID' OF STRUCTURE <row> TO FIELD-SYMBOL(<rulesetid>).
+    CHECK sy-subrc = 0.
+    ASSIGN COMPONENT 'EXPORTURL' OF STRUCTURE <row> TO FIELD-SYMBOL(<exporturl>).
+    CHECK sy-subrc = 0.
 
-    ct_calculated_data = CORRESPONDING #( calculated ).
+    <exporturl> = |/sap/bc/http/sap/zasis_ext_api_cld/{ zasis_constants=>export-resource_path }/{ <rulesetid> }|.
+  ENDLOOP.
   ENDMETHOD.
 
 ENDCLASS.

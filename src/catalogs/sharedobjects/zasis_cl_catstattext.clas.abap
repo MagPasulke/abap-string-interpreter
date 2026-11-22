@@ -4,7 +4,6 @@ CLASS zasis_cl_catstattext DEFINITION
 
   PUBLIC SECTION.
 
-    INTERFACES if_sadl_exit .
     INTERFACES if_sadl_exit_calc_element_read .
   PROTECTED SECTION.
   PRIVATE SECTION.
