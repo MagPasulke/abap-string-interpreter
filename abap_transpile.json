@@ -20,7 +20,6 @@
   "libs": [
     { "url": "https://github.com/open-abap/open-abap-core" },
     { "url": "https://github.com/open-abap/express-icf-shim" },
-    { "url": "https://github.com/open-abap/open-abap-gui" },
     { "url": "https://github.com/open-abap/open-abap-rap" },
     { "url": "https://github.com/open-abap/open-abap-xco" },
     { "url": "https://github.com/open-abap/open-abap-rest" },
