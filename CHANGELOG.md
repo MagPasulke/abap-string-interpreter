@@ -1,5 +1,21 @@
 # Changelog
 
+## [1.0.1](https://github.com/MagPasulke/abap-string-interpreter/compare/abap-string-interpreter-v1.0.0...abap-string-interpreter-v1.0.1) (2026-11-22)
+
+
+### Bug Fixes
+
+* replace dd07 select by RTTI ([#139](https://github.com/MagPasulke/abap-string-interpreter/issues/139)) ([84fa03e](https://github.com/MagPasulke/abap-string-interpreter/commit/84fa03e265847e9e35b3b89c459c79255c5637fc))
+* rewrite calcexport url, no cds types ([#143](https://github.com/MagPasulke/abap-string-interpreter/issues/143)) ([28b7e93](https://github.com/MagPasulke/abap-string-interpreter/commit/28b7e93c0eec34f243a59c93bf58caedb9f6f44e))
+
+
+### Development & Tooling
+
+* **build:** fix CI transpile, drop unused libs and update dev dependencies ([#147](https://github.com/MagPasulke/abap-string-interpreter/issues/147)) ([9308919](https://github.com/MagPasulke/abap-string-interpreter/commit/9308919ccd3a89d4e3d793fbc3bb9e059a92ccbd))
+* deps ([820e658](https://github.com/MagPasulke/abap-string-interpreter/commit/820e658488cda57c1ee5f0b283ad067dfbc36daf))
+* deps ([c451439](https://github.com/MagPasulke/abap-string-interpreter/commit/c451439dba97dd0accf9cc122ba42a5ed6e7a057))
+* **deps-dev:** bump fast-xml-parser ([#146](https://github.com/MagPasulke/abap-string-interpreter/issues/146)) ([c2d5d2c](https://github.com/MagPasulke/abap-string-interpreter/commit/c2d5d2ce9497e311ba0c38d49572b978d16e4917))
+
 ## [1.0.0](https://github.com/MagPasulke/abap-string-interpreter/compare/abap-string-interpreter-v0.8.1...abap-string-interpreter-v1.0.0) (2026-07-05)
 
 
