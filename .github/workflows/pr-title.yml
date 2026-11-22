@@ -1,0 +1,37 @@
+name: pr-title
+
+on:
+  pull_request:
+    types:
+      - opened
+      - edited
+      - reopened
+      - synchronize
+
+permissions:
+  pull-requests: read
+
+jobs:
+  conventional-commit-title:
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      # Squash merges use the PR title as commit message, which drives release-please versioning.
+      # Keep types in sync with changelog-sections in release-please-config.json.
+      - uses: amannn/action-semantic-pull-request@c5e23b7e584519ee15caa684cf60d056aa9f035f # v6.1.3
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          types: |
+            feat
+            fix
+            docs
+            chore
+            build
+            ci
+            test
+            perf
+            revert
+            style
+            refactor
+          requireScope: false
