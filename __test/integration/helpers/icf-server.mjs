@@ -6,7 +6,7 @@ import express from 'express';
 import dbPkg from '@abaplint/database-sqlite';
 const {SQLiteDatabaseClient} = dbPkg;
 import {initializeABAP} from "../../../output/init.mjs";
-import {cl_express_icf_shim} from "../../../output/cl_express_icf_shim.clas.mjs";
+import {cl_express_icf_shim} from "../../../output/express-icf-shim/cl_express_icf_shim.clas.mjs";
 
 await initializeABAP();
 
@@ -100,7 +100,7 @@ export async function startServer(quiet) {
   app.set('etag', false);
   app.use(express.raw({type: "*/*"}));
 
-  app.all("/zasis/*", async function (req, res) {
+  app.all("/zasis/{*path}", async function (req, res) {
     await cl_express_icf_shim.run({
       req,
       res,
