@@ -8,11 +8,11 @@ provider contract transactional_query as projection on ZASIS_I_RULESET
     key RuleSetUUID,
     @Search.defaultSearchElement: true
     RuleSetId,
-    @Semantics.largeObject: { mimeType: 'MimeType',   
-                       fileName: 'FileName', 
+    @Semantics.largeObject: { mimeType: 'MimeType',
+                       fileName: 'FileName',
                        acceptableMimeTypes: ['pdf'],
                        contentDispositionPreference: #ATTACHMENT }
-    
+
     Attachment,
     @Semantics.mimeType: true
     MimeType,

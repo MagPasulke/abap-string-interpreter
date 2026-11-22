@@ -43,16 +43,14 @@
     },
     "chain_mainly_declarations": true,
     "check_abstract": {
+      // RAP behavior pools must be declared ABSTRACT FINAL FOR BEHAVIOR OF.
       "exclude": [
-        "ZBP*",
-        "zasis_constants"
+        "ZBP*"
       ],
       "severity": "Error"
     },
     "check_comments": {
-      "exclude": [
-        "zasis_if_version"
-      ],
+      "exclude": [],
       "allowEndOfLine": false
     },
     "no_prefixes": {
@@ -120,7 +118,7 @@
     "use_line_exists": true,
     "use_new": true,
     "when_others_last": true,
-    "whitespace_end": false,
+    "whitespace_end": true,
     "xml_consistency": true,
     "use_bool_expression": true,
     "use_class_based_exceptions": {
@@ -128,9 +126,8 @@
     },
     "unnecessary_return": true,
     "unreachable_code": true,
-    // Disabled: abaplint cannot trace table references from CDS views (.asddls)
-    // or BDEF files (.asbdef) — only from ABAP source. Every table used solely
-    // via CDS or BDEF would require an exclusion entry, defeating the purpose.
+    // Disabled: abaplint does not register BDEF "draft table" statements as
+    // DDIC references, so every draft table (zasisdr_*) is reported as unused.
     "unused_ddic": false,
     "unused_methods": true,
     "unused_types": true,
@@ -150,7 +147,7 @@
     "sicf_consistency": true,
     "sy_modification": true,
     "tabl_enhancement_category": true,
-    "superclass_final": false,
+    "superclass_final": true,
     "superfluous_value": true,
     "static_call_via_instance": true,
     "sql_escape_host_variables": true,
@@ -206,8 +203,9 @@
       "ignoreExceptions": true,
       "ignoreGlobalDefinition": true
     },
-    // RAP behavior handler locals use CDS entity aliases (CamelCase) which
-    // cannot be lowercased — they must match the BDEF/CDS definition exactly.
+    // RAP behavior handler locals keep CDS entity aliases and field names in
+    // CamelCase for readability and consistency with the BDEF/CDS definitions.
+    // EML itself is case-insensitive.
     "keyword_case": {
       "style": "upper",
       "severity": "Info",

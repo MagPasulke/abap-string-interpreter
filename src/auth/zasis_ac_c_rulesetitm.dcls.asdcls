@@ -7,5 +7,5 @@ define role ZASIS_AC_C_RULESETITM {
                 ZASIS_C_RULESETITEM
                     where
                         inheriting conditions from entity ZASIS_I_RULESETITEM;
-                        
+
 }
