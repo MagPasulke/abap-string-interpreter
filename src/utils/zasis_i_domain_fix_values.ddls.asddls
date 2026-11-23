@@ -5,7 +5,7 @@ define custom entity ZASIS_I_DOMAIN_FIX_VALUES
 {
       @EndUserText.label     : 'domain name'
       @UI.hidden  : true
-  key domain_name : sxco_ad_object_name;
+  key domain_name : abap.char( 30 );
       @UI.hidden  : true
   key pos         : abap.numc( 4 );
       @EndUserText.label: 'Key'
