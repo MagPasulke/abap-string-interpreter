@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.0](https://github.com/MagPasulke/abap-string-interpreter/compare/abap-string-interpreter-v1.0.3...abap-string-interpreter-v1.1.0) (2026-11-23)
+
+
+### Features
+
+* **adt:** support custom CA certificate for ADT scripts ([#156](https://github.com/MagPasulke/abap-string-interpreter/issues/156)) ([c4d166a](https://github.com/MagPasulke/abap-string-interpreter/commit/c4d166af4d110384fde197b8a42682db749153ae))
+
 ## [1.0.3](https://github.com/MagPasulke/abap-string-interpreter/compare/abap-string-interpreter-v1.0.2...abap-string-interpreter-v1.0.3) (2026-11-23)
 
 
