@@ -6,6 +6,7 @@
     "esModuleInterop": true,
     "strict": true,
     "noEmit": true,
+    "allowImportingTsExtensions": true,
     "types": ["node"]
   },
   "include": ["./**/*.ts"]
