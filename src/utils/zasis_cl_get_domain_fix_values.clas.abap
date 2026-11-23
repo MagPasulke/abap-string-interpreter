@@ -23,6 +23,7 @@ CLASS zasis_cl_get_domain_fix_values IMPLEMENTATION.
   METHOD if_rap_query_provider~select.
 
     DATA result TYPE TABLE OF zasis_i_domain_fix_values.
+    DATA domain_name TYPE zasis_i_domain_fix_values-domain_name.
     DATA(top)              = io_request->get_paging( )->get_page_size( ).
     DATA(skip)             = io_request->get_paging( )->get_offset( ).
     DATA(requested_fields) = io_request->get_requested_elements( ) ##NEEDED.
@@ -40,7 +41,7 @@ CLASS zasis_cl_get_domain_fix_values IMPLEMENTATION.
           EXIT.
         ENDIF.
 
-        DATA(domain_name) = CONV sxco_ad_object_name( domain_name_filter-range[ 1 ]-low ).
+        domain_name = domain_name_filter-range[ 1 ]-low.
 
         cl_abap_typedescr=>describe_by_name(
           EXPORTING  p_name         = domain_name
