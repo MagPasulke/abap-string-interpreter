@@ -43,5 +43,7 @@ This tool (and `adt_gitpull`, `adt_rununit`) must **only be used in interactive 
   SAP_ADT_USER=DEVELOPER
   SAP_ADT_PASSWORD=secret
   SAP_ROOT_PACKAGE=$ZASIS
+  # optional, if the system's TLS certificate is not trusted by Node.js
+  SAP_ADT_CA_FILE=/path/to/ca.pem
   ```
 - ATC check variant `SYNTAX_CHECK` must exist on the target SAP system

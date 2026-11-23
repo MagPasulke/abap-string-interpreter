@@ -47,5 +47,8 @@ This tool (and `adt_rununit`) must **only be used in interactive chat mode** —
   SAP_ADT_URL=https://your-sap-system:44300
   SAP_ADT_USER=DEVELOPER
   SAP_ADT_PASSWORD=secret
+  # optional, if the system's TLS certificate is not trusted by Node.js
+  SAP_ADT_CA_FILE=/path/to/ca.pem
   ```
+- The abapGit **ADT backend** must be installed on the SAP system (`/sap/bc/adt/abapgit/repos`); the abapGit standalone report alone is not enough
 
