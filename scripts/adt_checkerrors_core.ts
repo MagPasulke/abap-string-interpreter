@@ -1,4 +1,5 @@
-import { ADTClient, AtcWorkList } from "abap-adt-api"
+import type { ADTClient, AtcWorkList } from "abap-adt-api"
+import { createAdtClient } from "./adt_client.ts"
 
 export interface AdtCheckErrorsOptions {
   /** SAP system base URL (e.g. https://host:44300) */
@@ -9,6 +10,8 @@ export interface AdtCheckErrorsOptions {
   password: string
   /** SAP package to check (e.g. "$ZASIS"). Uses SAP_ROOT_PACKAGE from env if omitted. */
   package?: string
+  /** PEM file with the CA certificate of the SAP system (optional) */
+  caFile?: string
 }
 
 export interface SyntaxFinding {
@@ -59,7 +62,7 @@ export async function adtCheckErrors(options: AdtCheckErrorsOptions): Promise<Ad
   // 1. Connect to SAP system
   let client: ADTClient
   try {
-    client = new ADTClient(url, user, password)
+    client = createAdtClient(url, user, password, options.caFile)
   } catch (e: any) {
     return { ok: false, error: `Failed to create ADT client: ${e.message || e}` }
   }
