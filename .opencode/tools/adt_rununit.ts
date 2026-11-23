@@ -48,6 +48,7 @@ export default tool({
     const url = process.env.SAP_ADT_URL || env.SAP_ADT_URL
     const user = process.env.SAP_ADT_USER || env.SAP_ADT_USER
     const password = process.env.SAP_ADT_PASSWORD || env.SAP_ADT_PASSWORD
+    const caFile = process.env.SAP_ADT_CA_FILE || env.SAP_ADT_CA_FILE
 
     if (!url || !user || !password) {
       return (
@@ -84,6 +85,7 @@ export default tool({
       password,
       objectType,
       objectName,
+      caFile,
     })
 
     if (!result.ok) {

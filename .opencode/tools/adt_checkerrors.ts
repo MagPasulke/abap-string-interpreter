@@ -34,6 +34,7 @@ export default tool({
     const url = process.env.SAP_ADT_URL || env.SAP_ADT_URL
     const user = process.env.SAP_ADT_USER || env.SAP_ADT_USER
     const password = process.env.SAP_ADT_PASSWORD || env.SAP_ADT_PASSWORD
+    const caFile = process.env.SAP_ADT_CA_FILE || env.SAP_ADT_CA_FILE
     const pkg = process.env.SAP_ROOT_PACKAGE || env.SAP_ROOT_PACKAGE
 
     if (!url || !user || !password) {
@@ -45,7 +46,7 @@ export default tool({
       )
     }
 
-    const result = await adtCheckErrors({ url, user, password, package: pkg })
+    const result = await adtCheckErrors({ url, user, password, package: pkg, caFile })
 
     if (!result.ok) {
       return `ERROR: ${result.error}`

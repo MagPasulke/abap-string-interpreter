@@ -29,7 +29,7 @@ The CI workflow intentionally does not connect to a SAP system. Off-stack testin
 
 1. **Verify CI** — checks the GitHub Actions API to confirm that the exact commit SHA on `main` has a completed, successful `ci.yml` push run. If no such run exists, or if it did not succeed, the workflow fails immediately. This prevents deploying code that was never CI-validated.
 
-2. **Sync to SAP** — calls `scripts/adt-gitpull-ci.ts` using ADT API credentials stored as repository secrets (`SAP_ADT_URL`, `SAP_ADT_USER`, `SAP_ADT_PASSWORD`). This triggers an abapGit pull on the target SAP system, synchronising the `main` branch.
+2. **Sync to SAP** — calls `scripts/adt-gitpull-ci.ts` using ADT API credentials stored as repository secrets (`SAP_ADT_URL`, `SAP_ADT_USER`, `SAP_ADT_PASSWORD`; optional `SAP_ADT_CA_FILE` for a CA certificate file not trusted by Node.js). Requires the abapGit ADT backend (`/sap/bc/adt/abapgit/repos`) on the SAP system. This triggers an abapGit pull on the target SAP system, synchronising the `main` branch.
 
 **Why manual?** SAP system access is treated as a controlled environment. Automatic deployment on every merge would risk introducing breaking changes to a shared system before they have been manually verified. The deploy step is a deliberate gate that a developer runs when they are ready to validate on-stack.
 

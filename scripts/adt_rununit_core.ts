@@ -1,4 +1,5 @@
-import { ADTClient, UnitTestClass, UnitTestAlert, UnitTestAlertKind } from "abap-adt-api"
+import { type ADTClient, type UnitTestClass, type UnitTestAlert, UnitTestAlertKind } from "abap-adt-api"
+import { createAdtClient } from "./adt_client.ts"
 
 export interface AdtRunUnitOptions {
   /** SAP system base URL (e.g. https://host:44300) */
@@ -11,6 +12,8 @@ export interface AdtRunUnitOptions {
   objectType: "CLAS" | "DEVC"
   /** Object name (e.g. ZASIS_CL_INTERPRETER or ZASIS) */
   objectName: string
+  /** PEM file with the CA certificate of the SAP system (optional) */
+  caFile?: string
 }
 
 export interface AdtRunUnitSuccess {
@@ -125,7 +128,7 @@ export async function adtRunUnit(options: AdtRunUnitOptions): Promise<AdtRunUnit
   // 1. Connect to SAP system
   let client: ADTClient
   try {
-    client = new ADTClient(url, user, password)
+    client = createAdtClient(url, user, password, options.caFile)
   } catch (e: any) {
     return { ok: false, error: `Failed to create ADT client: ${e.message || e}` }
   }

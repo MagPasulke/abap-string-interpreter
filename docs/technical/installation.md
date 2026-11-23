@@ -101,3 +101,15 @@ This handler adapts `IF_HTTP_REQUEST` / `IF_HTTP_RESPONSE` and delegates to the 
 Both handlers share identical business logic via `ZASIS_CL_HTTP_HANDLER_CORE`.
 
 > **Planned:** A clean separation between a cloud release (containing only cloud-compatible artifacts) and an on-premise release (containing only on-premise artifacts) is planned for a future version — see [issue #88](https://github.com/MagPasulke/abap-string-interpreter/issues/88). From that point on, each release variant will ship only the artifacts relevant to its target environment.
+
+---
+
+## Optional: Developer tooling via ADT
+
+The ADT scripts (`adt_gitpull`, `adt_checkerrors`, `adt_rununit`, CI `deploy-sap`) connect to the SAP system via the ADT REST API. Additional requirements:
+
+- **abapGit ADT backend** – `adt_gitpull` and `deploy-sap` call `/sap/bc/adt/abapgit/repos`. The abapGit standalone report (`ZABAPGIT_STANDALONE`) alone does not provide this endpoint; on-premise systems need the abapGit developer version plus the [ADT backend](https://github.com/abapGit/ADT_Backend).
+- **Package** – `SAP_ROOT_PACKAGE` in `.env` must match the package the repository is linked to, e.g. the local package `$ZASIS`.
+- **TLS certificate** – the host in `SAP_ADT_URL` must match the system's certificate. If the certificate is signed by a CA that Node.js does not trust (the ABAP Cloud Developer Trial uses `SAP Global Root CA`, host `A4H.wdf.sap.corp`), set `SAP_ADT_CA_FILE` to a PEM file of that CA. Do not disable certificate checks.
+
+See `.env.example` for all variables.

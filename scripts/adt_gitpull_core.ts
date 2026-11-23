@@ -1,6 +1,7 @@
-import { ADTClient, GitRepo } from "abap-adt-api"
+import type { ADTClient, GitRepo } from "abap-adt-api"
 import { execSync } from "node:child_process"
-import { adtCheckErrors, AdtCheckErrorsResult } from "./adt_checkerrors_core"
+import { adtCheckErrors, type AdtCheckErrorsResult } from "./adt_checkerrors_core.ts"
+import { createAdtClient } from "./adt_client.ts"
 
 export interface AdtGitPullOptions {
   /** SAP system base URL (e.g. https://host:44300) */
@@ -15,6 +16,8 @@ export interface AdtGitPullOptions {
   branch?: string
   /** If true, checks for inactive objects (syntax errors) after pull. Default: false. */
   checkErrors?: boolean
+  /** PEM file with the CA certificate of the SAP system (optional) */
+  caFile?: string
 }
 
 export interface AdtGitPullSuccess {
@@ -90,7 +93,7 @@ export async function adtGitPull(options: AdtGitPullOptions): Promise<AdtGitPull
   // 3. Connect to SAP system
   let client: ADTClient
   try {
-    client = new ADTClient(url, user, password)
+    client = createAdtClient(url, user, password, options.caFile)
   } catch (e: any) {
     return { ok: false, error: `Failed to create ADT client: ${e.message || e}` }
   }
@@ -133,7 +136,7 @@ export async function adtGitPull(options: AdtGitPullOptions): Promise<AdtGitPull
   // 6. Optionally check for syntax errors
   let checkResult: AdtCheckErrorsResult | undefined
   if (options.checkErrors) {
-    checkResult = await adtCheckErrors({ url, user, password, package: matchingRepo.sapPackage })
+    checkResult = await adtCheckErrors({ url, user, password, package: matchingRepo.sapPackage, caFile: options.caFile })
   }
 
   // 7. Success

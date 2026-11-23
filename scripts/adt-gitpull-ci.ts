@@ -5,6 +5,7 @@
  *   SAP_ADT_URL      – base URL of the SAP system (e.g. https://host:44300)
  *   SAP_ADT_USER     – SAP user
  *   SAP_ADT_PASSWORD – SAP password
+ *   SAP_ADT_CA_FILE  – optional, PEM file with the CA certificate of the SAP system
  *
  * Usage:
  *   npx tsx scripts/adt-gitpull-ci.ts
@@ -22,7 +23,7 @@ if (!url || !user || !password) {
 }
 
 void (async () => {
-  const result = await adtGitPull({ url, user, password, cwd: process.cwd() })
+  const result = await adtGitPull({ url, user, password, cwd: process.cwd(), caFile: process.env.SAP_ADT_CA_FILE })
 
   if (!result.ok) {
     console.error("abapGit pull failed:", result.error)
