@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.0.3](https://github.com/MagPasulke/abap-string-interpreter/compare/abap-string-interpreter-v1.0.2...abap-string-interpreter-v1.0.3) (2026-11-23)
+
+
+### Development & Tooling
+
+* add ponytail skills ([#154](https://github.com/MagPasulke/abap-string-interpreter/issues/154)) ([2c7b876](https://github.com/MagPasulke/abap-string-interpreter/commit/2c7b8764814fad916a8759f112bf963f1e24cf74))
+* **deps-dev:** update abaplint packages ([#155](https://github.com/MagPasulke/abap-string-interpreter/issues/155)) ([0901b4f](https://github.com/MagPasulke/abap-string-interpreter/commit/0901b4f5baad8b731d4c6c384840e16b6780cb1a))
+* reduce abaplint and transpiler excludes ([#151](https://github.com/MagPasulke/abap-string-interpreter/issues/151)) ([bd324a6](https://github.com/MagPasulke/abap-string-interpreter/commit/bd324a6b82c968d274651e994fbbcca43728b544))
+
 ## [1.0.2](https://github.com/MagPasulke/abap-string-interpreter/compare/abap-string-interpreter-v1.0.1...abap-string-interpreter-v1.0.2) (2026-11-22)
 
 
