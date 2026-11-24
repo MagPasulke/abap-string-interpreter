@@ -56,6 +56,19 @@ ZASIS_CL_HTTP_HANDLER_CLD    (implements IF_HTTP_SERVICE_EXTENSION — cloud HTT
 
 The two entry-point handlers each adapt their respective SAP HTTP object model to the custom interfaces `ZASIS_IF_HTTP_REQUEST` and `ZASIS_IF_HTTP_RESPONSE`, then call the shared core. This makes the core independently testable — it can be exercised in Node.js via the ICF shim without any SAP runtime present.
 
+#### Routing
+
+`ZASIS_CL_HTTP_REQU_VALIDATOR` extracts the RuleSet ID from the path; the core dispatches on HTTP method and resource:
+
+| Method | Path | Core method |
+|---|---|---|
+| `GET` | `/ruleSet/{id}` | `handle_get` |
+| `GET` | `/ruleSetExport/{id}` | `handle_export` |
+| `POST` | `/ruleSetExecution/{id}` | `handle_post` |
+| `POST` | `/ruleSetExecution/{id}/bulk` | `handle_bulk` |
+
+A trailing `bulk` element (constant `ZASIS_CONSTANTS=>BULK-RESOURCE_PATH`) sets the validator's `IS_BULK` flag and is stripped before the RuleSet ID is read; it is only valid under `ruleSetExecution`. `handle_bulk` loads the RuleSet once via `ZASIS_CL_RULESET_FACTORY` and calls `ZASIS_CL_INTERPRETER` once per item in input order; authorization is enforced by the interpreter's per-call execute check, not by the handler.
+
 ---
 
 ## Data Model
