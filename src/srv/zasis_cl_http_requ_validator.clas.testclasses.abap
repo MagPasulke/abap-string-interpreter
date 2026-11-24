@@ -54,6 +54,7 @@ CLASS ltcl_validator DEFINITION FOR TESTING
     METHODS test_bulk_route FOR TESTING RAISING zasis_cx_exc.
     METHODS test_non_bulk_route FOR TESTING RAISING zasis_cx_exc.
     METHODS test_bulk_wrong_res_raises FOR TESTING.
+    METHODS test_ruleset_named_bulk FOR TESTING RAISING zasis_cx_exc.
 ENDCLASS.
 
 CLASS ltcl_validator IMPLEMENTATION.
@@ -93,6 +94,16 @@ CLASS ltcl_validator IMPLEMENTATION.
 
   METHOD test_non_bulk_route.
     cut->extract_ruleset_id( ).
+    cl_abap_unit_assert=>assert_false( cut->is_bulk ).
+  ENDMETHOD.
+
+  METHOD test_ruleset_named_bulk.
+    mock->mock_path = '/sap/bc/zasis/ruleSetExecution/bulk'.
+    cut = NEW zasis_cl_http_requ_validator( request = mock ).
+    DATA(id) = cut->extract_ruleset_id( ).
+    cl_abap_unit_assert=>assert_equals(
+      act = id
+      exp = 'bulk' ).
     cl_abap_unit_assert=>assert_false( cut->is_bulk ).
   ENDMETHOD.
 

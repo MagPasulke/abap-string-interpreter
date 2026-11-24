@@ -58,7 +58,9 @@ CLASS zasis_cl_http_requ_validator IMPLEMENTATION.
     num_path_elements = lines( path_elements ).
 
     is_bulk = abap_false.
-    IF num_path_elements > 2 AND path_elements[ num_path_elements ] = zasis_constants=>bulk-resource_path.
+    IF num_path_elements > 2
+       AND path_elements[ num_path_elements ] = zasis_constants=>bulk-resource_path
+       AND path_elements[ num_path_elements - 2 ] = |ruleSetExecution|.
       is_bulk = abap_true.
       DELETE path_elements INDEX num_path_elements.
       num_path_elements = num_path_elements - 1.
@@ -98,11 +100,6 @@ CLASS zasis_cl_http_requ_validator IMPLEMENTATION.
     IF ( path_elements[ num_path_elements - 1 ] <> |ruleSetExecution| AND
          path_elements[ num_path_elements - 1 ] <> |ruleSet| AND
          path_elements[ num_path_elements - 1 ] <> |ruleSetExport| ).
-      RAISE EXCEPTION NEW zasis_cx_exc( textid = zasis_cx_exc=>invalid_api_route
-                                        route  = path ).
-    ENDIF.
-
-    IF is_bulk = abap_true AND path_elements[ num_path_elements - 1 ] <> |ruleSetExecution|.
       RAISE EXCEPTION NEW zasis_cx_exc( textid = zasis_cx_exc=>invalid_api_route
                                         route  = path ).
     ENDIF.
