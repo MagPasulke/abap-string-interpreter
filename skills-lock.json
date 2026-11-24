@@ -104,26 +104,12 @@
       "skillPath": "skills/ponytail-review/SKILL.md",
       "computedHash": "fe7b781db99ce79d931cdc798b3fbccd84b82538de4a3fc5f6d9d466946d1458"
     },
-    "pr": {
-      "source": "mattpocock/skills",
-      "commit": "d65391149dbb5fe76478e76fa8d5122b2aa5a70e",
-      "sourceType": "github",
-      "skillPath": "skills/engineering/pr/SKILL.md",
-      "computedHash": "a66195583d0f9323004cdd4da169f93449071f29023671f3e31a916e740f6861"
-    },
     "prototype": {
       "source": "mattpocock/skills",
       "commit": "d65391149dbb5fe76478e76fa8d5122b2aa5a70e",
       "sourceType": "github",
       "skillPath": "skills/engineering/prototype/SKILL.md",
       "computedHash": "1e3ba2202a5b77b8aa50bc4447432331d6e42590e53ec0935689662cfed199ca"
-    },
-    "research": {
-      "source": "mattpocock/skills",
-      "commit": "d65391149dbb5fe76478e76fa8d5122b2aa5a70e",
-      "sourceType": "github",
-      "skillPath": "skills/engineering/research/SKILL.md",
-      "computedHash": "7662666af51f8b1672ed7d88360d4b82656da21bb7b11c49e956eeb3036b85d5"
     },
     "retro": {
       "source": "mattpocock/skills",
@@ -138,13 +124,6 @@
       "sourceType": "github",
       "skillPath": "skills/engineering/setup-matt-pocock-skills/SKILL.md",
       "computedHash": "9659e7025d4cf1c0a0b40ddff32ed4b8debb87a4b20d7a52ff89c506a638df69"
-    },
-    "tdd": {
-      "source": "mattpocock/skills",
-      "commit": "d65391149dbb5fe76478e76fa8d5122b2aa5a70e",
-      "sourceType": "github",
-      "skillPath": "skills/engineering/tdd/SKILL.md",
-      "computedHash": "e3e0f78ff1c2d52ffefa0378baa1e80e129d359288cf9a56f4e59afcd2aac86c"
     },
     "to-spec": {
       "source": "mattpocock/skills",
