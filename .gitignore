@@ -18,6 +18,7 @@ __test/http/http-client.env.json
 
 # Artefacts
 node_modules/
+/tmp/
 zabapgit.abap
 lint_deps
 output
