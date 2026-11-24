@@ -51,6 +51,9 @@ CLASS ltcl_validator DEFINITION FOR TESTING
     METHODS test_validate_content_type_ok FOR TESTING RAISING zasis_cx_exc.
     METHODS test_content_type_wrong_raises FOR TESTING.
     METHODS test_content_type_empty_raises FOR TESTING.
+    METHODS test_bulk_route FOR TESTING RAISING zasis_cx_exc.
+    METHODS test_non_bulk_route FOR TESTING RAISING zasis_cx_exc.
+    METHODS test_bulk_wrong_res_raises FOR TESTING.
 ENDCLASS.
 
 CLASS ltcl_validator IMPLEMENTATION.
@@ -76,6 +79,34 @@ CLASS ltcl_validator IMPLEMENTATION.
     cl_abap_unit_assert=>assert_equals(
       act = id
       exp = 'DeepRS' ).
+  ENDMETHOD.
+
+  METHOD test_bulk_route.
+    mock->mock_path = '/sap/bc/zasis/ruleSetExecution/MyRuleSet/bulk'.
+    cut = NEW zasis_cl_http_requ_validator( request = mock ).
+    DATA(id) = cut->extract_ruleset_id( ).
+    cl_abap_unit_assert=>assert_equals(
+      act = id
+      exp = 'MyRuleSet' ).
+    cl_abap_unit_assert=>assert_true( cut->is_bulk ).
+  ENDMETHOD.
+
+  METHOD test_non_bulk_route.
+    cut->extract_ruleset_id( ).
+    cl_abap_unit_assert=>assert_false( cut->is_bulk ).
+  ENDMETHOD.
+
+  METHOD test_bulk_wrong_res_raises.
+    mock->mock_path = '/ruleSet/MyRuleSet/bulk'.
+    cut = NEW zasis_cl_http_requ_validator( request = mock ).
+    TRY.
+        cut->extract_ruleset_id( ).
+        cl_abap_unit_assert=>fail( msg = 'Expected exception' ).
+      CATCH zasis_cx_exc INTO DATA(exc).
+        cl_abap_unit_assert=>assert_equals(
+          act = exc->if_t100_message~t100key-msgno
+          exp = '005' ).
+    ENDTRY.
   ENDMETHOD.
 
   METHOD test_empty_path_raises.
