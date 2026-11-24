@@ -27,11 +27,11 @@ The project version is maintained in two places, both updated automatically by R
 
 Only enter this workflow when the user signals intent to **implement something** (feature, fix, refactor, config change). Do NOT enter for general questions, Q&A, or exploratory discussions.
 
-**As soon as intent is detected**, load the `grill-me` skill and begin interviewing — before creating the branch. Skip grilling only for trivial tasks (typos, renames, small fixes), or when the user explicitly opts out ("just do it").
+**As soon as intent is detected**, load the `grilling` skill and begin interviewing — before creating the branch. Skip grilling only for trivial tasks (typos, renames, small fixes), or when the user explicitly opts out ("just do it").
 
 ### Implementation Workflow
 
-1. **Grill** — load `grill-me` skill and clarify intent (see above). Skip if trivial or user opts out.
+1. **Grill** — load `grilling` skill and clarify intent (see above). Skip if trivial or user opts out.
 2. **Create feature branch** from `main` (infer name from user's request, e.g., `feat/add-empty-regex-validation`)
 3. **Push with empty commit** (`git commit --allow-empty -m "chore: initialize feature branch"` && `git push`)
 4. **Open draft PR** against `main`
