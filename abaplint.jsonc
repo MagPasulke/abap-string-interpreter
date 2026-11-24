@@ -126,9 +126,13 @@
     },
     "unnecessary_return": true,
     "unreachable_code": true,
-    // Disabled: abaplint does not register BDEF "draft table" statements as
-    // DDIC references, so every draft table (zasisdr_*) is reported as unused.
-    "unused_ddic": false,
+    // Draft tables (zasisdr_*) are excluded: abaplint does not register BDEF
+    // "draft table" statements as DDIC references, so they are reported as unused.
+    "unused_ddic": {
+      "exclude": [
+        "zasisdr_"
+      ]
+    },
     "unused_methods": true,
     "unused_types": true,
     "unused_variables": {
