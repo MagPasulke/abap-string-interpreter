@@ -60,11 +60,7 @@ ZASIS provides two HTTP handler entry points. Choose the one that matches your s
 
 This option uses the cloud-native HTTP service framework (`IF_HTTP_SERVICE_EXTENSION`).
 
-1. In ADT, locate the HTTP Service object `ZASIS_EXT_API_CLD`.
-2. Activate it.
-3. The service is reachable below `/sap/bc/http/sap/`; ADT shows the exact URL in the HTTP Service object.
-
-> **On-premise ABAP Platform:** the parent ICF nodes `/sap/bc/http` and `/sap/bc/http/sap` must be active, and the ICF node for the service is not always generated when the object is imported via abapGit. Use [Option B](#option-b-classic-sicf-node-on-premise--abap-platform) on on-premise systems.
+Activate the HTTP Service object `ZASIS_EXT_API_CLD` following the activation procedure for your target system, as described in the ADT help ("Working with the HTTP Service Editor") or the [SAP documentation](https://help.sap.com/docs/ABAP_PLATFORM_NEW/753088fc00704d0a80e7fbd6803c8adb/59842b6f9d6d4a8cbdcca4456a10e0b2.html). The procedure differs between ABAP Cloud and on-premise systems. ADT shows the service URL in the HTTP Service object.
 
 Handler class: **`ZASIS_CL_HTTP_HANDLER_CLD`**
 
