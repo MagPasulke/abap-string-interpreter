@@ -16,12 +16,12 @@
   "author": "Philipp Doelker",
   "license": "MIT",
   "devDependencies": {
-    "@abaplint/cli": "^2.120.118",
+    "@abaplint/cli": "^2.120.122",
     "@abaplint/database-sqlite": "^2.14.35",
-    "@abaplint/runtime": "^2.14.37",
-    "@abaplint/transpiler-cli": "^2.14.37",
+    "@abaplint/runtime": "^2.14.41",
+    "@abaplint/transpiler-cli": "^2.14.41",
     "@opencode-ai/plugin": "^1.19.6",
-    "@types/node": "^26.6.7",
+    "@types/node": "^26.6.11",
     "abap-adt-api": "^10.0.0",
     "express": "^5.3.0",
     "typescript": "^7.0.2"
