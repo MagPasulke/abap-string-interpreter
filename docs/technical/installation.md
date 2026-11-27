@@ -52,7 +52,14 @@ The service definition `ZASIS_UI_EVTPRODCATALOG` is installed via abapGit. The s
 
 **Configuration UI** (for maintaining technical configuration such as `BULK_MAX_ITEMS`):
 
-The service definition `ZASIS_UI_CONFIG` and the OData V4 UI service binding `ZASIS_UI_CONFIG_O4` are both installed via abapGit. If the binding is not published after the pull, open `ZASIS_UI_CONFIG_O4` in ADT and click **Publish**. Entries can then be maintained in the service binding preview. Maintaining configuration requires `ZASIS_GRL` (see [Authorization](authorization.md#configuration-maintenance)).
+The service definition `ZASIS_UI_CONFIG` is installed via abapGit. The service binding must be created manually:
+
+1. In ADT, create a new **OData V4 UI** service binding bound to the service definition `ZASIS_UI_CONFIG`.
+2. Give it a name of your choice (e.g. `ZASIS_UI_CONFIG_O4`).
+3. Click **Publish** to activate it.
+4. Entries can now be maintained via the service binding preview.
+
+Maintaining configuration requires `ZASIS_GRL` (see [Authorization](authorization.md#configuration-maintenance)).
 
 ---
 
