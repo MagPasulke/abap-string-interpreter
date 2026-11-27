@@ -99,7 +99,7 @@ CLASS zasis_cl_get_domain_fix_values IMPLEMENTATION.
         io_response->set_total_number_of_records( lines( result ) ).
         io_response->set_data( result ).
 
-      CATCH cx_rap_query_response_set_twic.
+      CATCH cx_rap_query_response_set_twic ##NO_HANDLER.
         "response already set : ignore
       CATCH cx_rap_query_filter_no_range cx_sy_move_cast_error.
         respond_empty( io_response ).
@@ -114,7 +114,7 @@ CLASS zasis_cl_get_domain_fix_values IMPLEMENTATION.
     TRY.
         response->set_total_number_of_records( 0 ).
         response->set_data( empty ).
-      CATCH cx_rap_query_response_set_twic.
+      CATCH cx_rap_query_response_set_twic ##NO_HANDLER.
         "response already set : ignore
     ENDTRY.
 
