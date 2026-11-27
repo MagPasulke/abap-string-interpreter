@@ -74,12 +74,21 @@ This handler adapts `IF_WEB_HTTP_REQUEST` / `IF_WEB_HTTP_RESPONSE` and delegates
 
 This option uses the classic Internet Communication Framework (`IF_HTTP_EXTENSION`).
 
+Recommended ICF hierarchy — a customer node directly under `default_host`, outside SAP's `/sap` tree:
+
+```
+default_host
+└── zasis          (no handler)
+    └── api        (handler ZASIS_CL_HTTP_HANDLER)
+```
+
 1. Open transaction `SICF`.
-2. Navigate to `default_host` (or a sub-path of your choice).
-3. Create a new service node — for example, `zasis_ext_api`.
-4. In the service node properties, assign the handler class **`ZASIS_CL_HTTP_HANDLER`**.
-5. Activate the service node.
-6. The HTTP API is now reachable at the configured ICF path (e.g. `/sap/bc/zasis_ext_api`).
+2. On `default_host`, create the service node `zasis` without a handler.
+3. Under `zasis`, create the service node `api` and assign the handler class **`ZASIS_CL_HTTP_HANDLER`**.
+4. Activate both nodes.
+5. The HTTP API is now reachable at `/zasis/api`, e.g. `https://<host>:<port>/zasis/api/ruleSetExecution/<ruleSetId>`.
+
+Keep custom nodes out of `/sap/...`: that subtree belongs to SAP and can change with upgrades. The handler only evaluates the path below its node, so a different location works too.
 
 Handler class: **`ZASIS_CL_HTTP_HANDLER`**
 
