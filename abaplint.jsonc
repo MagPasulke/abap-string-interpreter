@@ -92,7 +92,9 @@
     "nesting": true,
     "identical_conditions": true,
     "identical_contents": true,
-    "empty_structure": true,
+    "empty_structure": {
+      "catch": true
+    },
     "empty_statement": true,
     "description_empty": true,
     "empty_event": true,

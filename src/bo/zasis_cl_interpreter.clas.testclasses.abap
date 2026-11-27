@@ -261,7 +261,7 @@ CLASS ltcl_zasis_cl_interpreter IMPLEMENTATION.
           ruleset                  = ruleset
         ).
         cl_abap_unit_assert=>fail( msg = |Expected zasis_cx_no_auth| ).
-      CATCH zasis_cx_no_auth.
+      CATCH zasis_cx_no_auth ##NO_HANDLER.
         " expected
       CATCH zasis_cx_exc INTO DATA(exc).
         cl_abap_unit_assert=>fail( msg = |Unexpected zasis_cx_exc: { exc->get_text( ) }| ).
@@ -321,7 +321,7 @@ CLASS ltcl_zasis_cl_interpreter IMPLEMENTATION.
           ruleset                  = ruleset
         ).
         cl_abap_unit_assert=>fail( msg = |Expected zasis_cx_exc for invalid type| ).
-      CATCH zasis_cx_exc.
+      CATCH zasis_cx_exc ##NO_HANDLER.
         " expected
       CATCH zasis_cx_no_auth INTO DATA(exc).
         cl_abap_unit_assert=>fail( msg = |Unexpected zasis_cx_no_auth: { exc->get_text( ) }| ).
@@ -680,7 +680,7 @@ CLASS ltcl_zasis_cl_interpreter IMPLEMENTATION.
           ruleset                  = ruleset
         ).
         cl_abap_unit_assert=>fail( msg = |Expected zasis_cx_exc for missing custom logic class| ).
-      CATCH zasis_cx_exc.
+      CATCH zasis_cx_exc ##NO_HANDLER.
         " expected
       CATCH zasis_cx_no_auth INTO DATA(exc).
         cl_abap_unit_assert=>fail( msg = |Unexpected zasis_cx_no_auth: { exc->get_text( ) }| ).
