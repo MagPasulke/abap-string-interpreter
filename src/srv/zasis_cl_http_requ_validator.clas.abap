@@ -12,9 +12,12 @@ CLASS zasis_cl_http_requ_validator DEFINITION
     DATA is_bulk           TYPE abap_bool     READ-ONLY.
 
     "! Creates a request validator from the adapter interface
+    "! @parameter request | HTTP request adapter
+    "! @parameter config  | Configuration reader (default: DB implementation zasis_cl_config)
     METHODS constructor
       IMPORTING
-        request TYPE REF TO zasis_if_http_request.
+        request TYPE REF TO zasis_if_http_request
+        config  TYPE REF TO zasis_if_config OPTIONAL.
 
     "! Validates the content-type header is application/json
     METHODS validate_content_type
@@ -28,7 +31,7 @@ CLASS zasis_cl_http_requ_validator DEFINITION
       RAISING
         zasis_cx_exc.
 
-    "! Validates the number of bulk items: at least one, at most zasis_constants=>bulk-max_items
+    "! Validates the number of bulk items: at least one, at most the configured bulk max items
     METHODS validate_bulk_item_count
       IMPORTING
         item_count TYPE i
@@ -47,6 +50,7 @@ CLASS zasis_cl_http_requ_validator DEFINITION
   PRIVATE SECTION.
 
     DATA _request TYPE REF TO zasis_if_http_request.
+    DATA _config  TYPE REF TO zasis_if_config.
 
     METHODS determine_path_elements
       RAISING
@@ -64,6 +68,7 @@ CLASS zasis_cl_http_requ_validator IMPLEMENTATION.
 
   METHOD constructor.
     _request = request.
+    _config = COND #( WHEN config IS BOUND THEN config ELSE NEW zasis_cl_config( ) ).
   ENDMETHOD.
 
   METHOD determine_path_elements.
@@ -106,9 +111,10 @@ CLASS zasis_cl_http_requ_validator IMPLEMENTATION.
       RAISE EXCEPTION NEW zasis_cx_exc( textid = zasis_cx_exc=>bulk_items_empty ).
     ENDIF.
 
-    IF item_count > zasis_constants=>bulk-max_items.
+    DATA(max_items) = _config->get_bulk_max_items( ).
+    IF item_count > max_items.
       RAISE EXCEPTION NEW zasis_cx_exc( textid    = zasis_cx_exc=>bulk_too_many_items
-                                        max_items = zasis_constants=>bulk-max_items ).
+                                        max_items = max_items ).
     ENDIF.
   ENDMETHOD.
 
