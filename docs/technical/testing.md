@@ -131,8 +131,23 @@ npm run icf-server
 
 **Prerequisites:**
 
-- A SAP system with ZASIS installed and the HTTP service or SICF node active
-- Credentials in `__test/http/http-client.env.json` (gitignored — never committed)
+- A SAP system with ZASIS installed and the HTTP service or SICF node active (recommended: `/zasis/api`, see [Installation](installation.md))
+- The RuleSet `MySample` in the target client, with two MATCH rules: `MaterialNo` = `<A7X>([^<]*)` (offset pre 5) and `DeliveryNo` = `<B52H>([^<]*)` (offset pre 6)
+- Connection config in `__test/http/http-client.env.json` (gitignored — never committed):
+
+  ```json
+  {
+    "sap": {
+      "baseUrl": "https://<host>:<port>/zasis/api",
+      "client": "001",
+      "auth_b64": "<base64 of user:password>",
+      "ruleSetId": "MySample"
+    }
+  }
+  ```
+
+  `ruleSetId` is optional (default `MySample`). Additional `sap*` keys run the scenarios against further systems.
+- If the system's TLS certificate is not trusted by Node.js, point `NODE_EXTRA_CA_CERTS` to its CA file, e.g. `NODE_EXTRA_CA_CERTS=/path/to/ca.pem npm run sap-test`
 
 **What only this layer covers:**
 

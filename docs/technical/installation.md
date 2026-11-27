@@ -62,7 +62,9 @@ This option uses the cloud-native HTTP service framework (`IF_HTTP_SERVICE_EXTEN
 
 1. In ADT, locate the HTTP Service object `ZASIS_EXT_API_CLD`.
 2. Activate it.
-3. The service is now reachable at the path configured in the service definition.
+3. The service is reachable below `/sap/bc/http/sap/`; ADT shows the exact URL in the HTTP Service object.
+
+> **On-premise ABAP Platform:** the parent ICF nodes `/sap/bc/http` and `/sap/bc/http/sap` must be active, and the ICF node for the service is not always generated when the object is imported via abapGit. Use [Option B](#option-b-classic-sicf-node-on-premise--abap-platform) on on-premise systems.
 
 Handler class: **`ZASIS_CL_HTTP_HANDLER_CLD`**
 

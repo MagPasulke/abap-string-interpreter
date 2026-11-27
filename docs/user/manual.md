@@ -294,7 +294,7 @@ ZASIS exposes the same HTTP API through two service variants:
 - classic SAP ICF service (traditional ABAP HTTP exposure)
 - ABAP Cloud HTTP service binding (ABAP Cloud environments)
 
-All routes documented below are **relative to service root**. Exact URL prefix depends on deployed service variant and system configuration — contact your system administrator for concrete host, port, and service root. Example: route `/ruleSetExecution/BARCODE_01` could be exposed as `https://host.example/sap/bc/http/sap/zasis/ruleSetExecution/BARCODE_01` in one system and under a different prefix in another.
+All routes documented below are **relative to service root**. Exact URL prefix depends on deployed service variant and system configuration — contact your system administrator for concrete host, port, and service root. Example: with the recommended classic SICF node `/zasis/api` (see [Installation](../technical/installation.md)), route `/ruleSetExecution/BARCODE_01` is exposed as `https://host.example/zasis/api/ruleSetExecution/BARCODE_01`.
 
 `POST` callers must send `Content-Type: application/json`. All responses are returned as JSON.
 
