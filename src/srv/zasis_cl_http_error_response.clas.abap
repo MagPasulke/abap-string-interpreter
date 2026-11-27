@@ -16,6 +16,12 @@ CLASS zasis_cl_http_error_response DEFINITION PUBLIC.
       IMPORTING exception     TYPE REF TO cx_root
                 http_status   TYPE string
       RETURNING VALUE(result) TYPE REF TO zasis_cl_http_error_response.
+    "! Builds the error code (T100 message class/number, e.g. ZASIS_MSGS/015) of an exception.
+    "! @parameter exception | Exception implementing IF_T100_MESSAGE
+    "! @parameter result    | Error code
+    CLASS-METHODS code_of
+      IMPORTING exception     TYPE REF TO cx_root
+      RETURNING VALUE(result) TYPE string.
     "! Serializes the error envelope to a JSON string.
     "! @parameter json | JSON representation of the error envelope
     METHODS to_json RETURNING VALUE(json) TYPE /ui2/cl_json=>json.
@@ -30,8 +36,13 @@ CLASS zasis_cl_http_error_response IMPLEMENTATION.
     result->_envelope-error-message = exception->get_text( ).
     result->_envelope-error-status  = http_status.
 
-    DATA(t100_msg) = CAST if_t100_message( exception ).
-    result->_envelope-error-code = |{ t100_msg->t100key-msgid }/{ t100_msg->t100key-msgno }|.
+    result->_envelope-error-code = code_of( exception ).
+
+  ENDMETHOD.
+  METHOD code_of.
+
+    DATA(t100_key) = CAST if_t100_message( exception )->t100key.
+    result = |{ t100_key-msgid }/{ t100_key-msgno }|.
 
   ENDMETHOD.
   METHOD to_json.

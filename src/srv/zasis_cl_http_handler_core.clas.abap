@@ -222,10 +222,10 @@ CLASS zasis_cl_http_handler_core IMPLEMENTATION.
     DATA(interpreter) = NEW zasis_cl_interpreter( ).
 
     DATA(head) = VALUE ty_bulk_response_head( rulesetid = ruleset_id ).
-    DATA(stop) = abap_false.
+    DATA(skip_remaining) = abap_false.
 
     LOOP AT request_body-items INTO DATA(item).
-      IF stop = abap_true.
+      IF skip_remaining = abap_true.
         APPEND /ui2/cl_json=>serialize( data = VALUE ty_bulk_skipped_item(
                                           id     = item-id
                                           status = zasis_constants=>bulk-item_status-skipped_on_prev_error ) )
@@ -246,20 +246,22 @@ CLASS zasis_cl_http_handler_core IMPLEMENTATION.
           head-summary-ok = head-summary-ok + 1.
 
         CATCH zasis_cx_exc INTO DATA(item_exception).
-          DATA(t100_key) = CAST if_t100_message( item_exception )->t100key.
           APPEND /ui2/cl_json=>serialize( data = VALUE ty_bulk_error_item(
                                             id     = item-id
                                             status = zasis_constants=>bulk-item_status-error
-                                            error  = VALUE #( code    = |{ t100_key-msgid }/{ t100_key-msgno }|
+                                            error  = VALUE #( code    = zasis_cl_http_error_response=>code_of( item_exception )
                                                               message = item_exception->get_text( ) ) ) )
                  TO item_jsons.
           head-summary-failed = head-summary-failed + 1.
-          stop = request_body-options-stoponfirsterror.
+          skip_remaining = request_body-options-stoponfirsterror.
       ENDTRY.
     ENDLOOP.
 
     head-summary-total = lines( request_body-items ).
 
+    " Items have status-specific shapes, so ITEMS is spliced into the serialized head
+    " (a flat object ending in '}'). Key casing matches the default serializer (UPPERCASE).
+    " compress = abap_true is not an option: it would drop zero counters and empty CONTEXT.
     DATA(head_json) = /ui2/cl_json=>serialize( data = head ).
     DATA(items_json) = concat_lines_of( table = item_jsons
                                         sep   = `,` ).
