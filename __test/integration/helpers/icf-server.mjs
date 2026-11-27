@@ -15,6 +15,7 @@ const db = new SQLiteDatabaseClient();
 await db.connect();
 await db.execute(`CREATE TABLE 'zasis_rulesethd' ('client' NCHAR(3) COLLATE RTRIM, 'rulesetuuid' NCHAR(32), 'rulesetid' NCHAR(12) COLLATE RTRIM, 'attachment' TEXT, 'mimetype' NCHAR(128) COLLATE RTRIM, 'filename' NCHAR(128) COLLATE RTRIM, 'last_changed_by' NCHAR(12) COLLATE RTRIM, 'last_changed_at' DECIMAL(21,7), 'local_last_changed_at' DECIMAL(21,7), PRIMARY KEY('client','rulesetuuid'));`);
 await db.execute(`CREATE TABLE 'zasis_rulesetitm' ('client' NCHAR(3) COLLATE RTRIM, 'rulesetuuid' NCHAR(32), 'interpretationitm' NCHAR(32), 'intpretationtarget' NCHAR(12) COLLATE RTRIM, 'interpretationrule' NCHAR(1000) COLLATE RTRIM, 'interpretation_type' NCHAR(1) COLLATE RTRIM, 'offset_pre' INT, 'offset_post' INT, 'replacement_string' NCHAR(15) COLLATE RTRIM, 'custom_logic' NCHAR(30) COLLATE RTRIM, 'event_producer' NCHAR(30) COLLATE RTRIM, 'last_changed_by' NCHAR(12) COLLATE RTRIM, 'last_changed_at' DECIMAL(21,7), 'local_last_changed_at' DECIMAL(21,7), PRIMARY KEY('client','rulesetuuid','interpretationitm'));`);
+await db.execute(`CREATE TABLE 'zasis_config' ('client' NCHAR(3) COLLATE RTRIM, 'config_key' NCHAR(30) COLLATE RTRIM, 'config_value' NCHAR(255) COLLATE RTRIM, 'description' NCHAR(255) COLLATE RTRIM, 'last_changed_by' NCHAR(12) COLLATE RTRIM, 'last_changed_at' DECIMAL(21,7), 'local_last_changed_at' DECIMAL(21,7), PRIMARY KEY('client','config_key'));`);
 abap.context.databaseConnections["DEFAULT"] = db;
 
 // Seed test fixture data into in-memory transparent tables
