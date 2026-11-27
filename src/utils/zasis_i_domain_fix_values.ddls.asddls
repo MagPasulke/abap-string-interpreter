@@ -9,7 +9,7 @@ define custom entity ZASIS_I_DOMAIN_FIX_VALUES
       @UI.hidden  : true
   key pos         : abap.numc( 4 );
       @EndUserText.label: 'Key'
-      low         : abap.char( 10 );
+      low         : abap.char( 30 );
       @EndUserText.label: 'upper_limit'
       @UI.hidden  : true
       high        : abap.char(10);
