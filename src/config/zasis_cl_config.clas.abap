@@ -11,7 +11,7 @@ CLASS zasis_cl_config DEFINITION
 
     CONSTANTS:
       BEGIN OF config_key,
-        bulk_max_items TYPE zasis_config_key VALUE 'BULK_MAX_ITEMS',
+        bulk_max_items TYPE zasis_config_key VALUE 'BULK_MAX',
       END OF config_key.
 
     "! Reads a config value by key; returns an initial value if no row exists

@@ -16,7 +16,7 @@
     <DD07V>
      <VALPOS>0001</VALPOS>
      <DDLANGUAGE>E</DDLANGUAGE>
-     <DOMVALUE_L>BULK_MAX_ITEMS</DOMVALUE_L>
+     <DOMVALUE_L>BULK_MAX</DOMVALUE_L>
      <DDTEXT>Max. number of items per bulk request</DDTEXT>
     </DD07V>
    </DD07V_TAB>

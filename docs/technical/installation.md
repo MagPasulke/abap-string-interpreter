@@ -50,7 +50,7 @@ The service definition `ZASIS_UI_EVTPRODCATALOG` is installed via abapGit. The s
 3. Click **Publish** to activate it.
 4. The Event Producer Catalog UI is now available via the published service URL.
 
-**Configuration UI** (for maintaining technical configuration such as `BULK_MAX_ITEMS`):
+**Configuration UI** (for maintaining technical configuration such as `BULK_MAX`):
 
 The service definition `ZASIS_UI_CONFIG` is installed via abapGit. The service binding must be created manually:
 

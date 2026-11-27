@@ -78,9 +78,9 @@ To maintain configuration entries via `ZASIS_UI_CONFIG` (or F4579 *Custom Busine
 |---|---|---|
 | `ACTVT` | `03` | Display entries (DCL). Without it, the list is empty. |
 | `ACTVT` | `01`, `02`, `06` | Create, change, delete entries (as required) |
-| `ZASIS_RULE` | `*` or the config keys, e.g. `BULK_MAX_ITEMS` | Checked by the DCL against `ConfigKey`; ignored (`DUMMY`) for create/change/delete |
+| `ZASIS_RULE` | `*` or the config keys, e.g. `BULK_MAX` | Checked by the DCL against `ConfigKey`; ignored (`DUMMY`) for create/change/delete |
 
-Recommended: a dedicated admin role with `ZASIS_RULE = BULK_MAX_ITEMS` (or `*` for all current and future keys) and `ACTVT = 01, 02, 03, 06`. Because `ZASIS_RULE` is shared with RuleSet IDs, `*` also grants these activities on all RuleSets and catalogs; use explicit key values where this must be avoided. Note that `01`/`02`/`06` are checked without `ZASIS_RULE`, so any user with those activities for any RuleSet can also create, change, and delete config entries; they only need display access (`03`) on the key to see the entry.
+Recommended: a dedicated admin role with `ZASIS_RULE = BULK_MAX` (or `*` for all current and future keys) and `ACTVT = 01, 02, 03, 06`. Because `ZASIS_RULE` is shared with RuleSet IDs, `*` also grants these activities on all RuleSets and catalogs; use explicit key values where this must be avoided. Note that `01`/`02`/`06` are checked without `ZASIS_RULE`, so any user with those activities for any RuleSet can also create, change, and delete config entries; they only need display access (`03`) on the key to see the entry.
 
 ### General
 

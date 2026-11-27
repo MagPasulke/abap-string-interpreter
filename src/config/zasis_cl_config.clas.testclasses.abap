@@ -46,7 +46,7 @@ CLASS ltcl_config IMPLEMENTATION.
 
   METHOD given_bulk_max_items.
     DATA config_rows TYPE STANDARD TABLE OF zasis_config WITH EMPTY KEY.
-    config_rows = VALUE #( ( config_key   = 'BULK_MAX_ITEMS'
+    config_rows = VALUE #( ( config_key   = 'BULK_MAX'
                              config_value = value ) ).
     sql_environment->insert_test_data( config_rows ).
   ENDMETHOD.

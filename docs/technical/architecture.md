@@ -85,7 +85,7 @@ A trailing `bulk` element (constant `ZASIS_CONSTANTS=>BULK-RESOURCE_PATH`) sets 
 | `ZASIS_EVTPRODCAT` | Active records for event producer class registrations |
 | `ZASISDR_CLCAT` | Draft table for custom logic catalog RAP BO |
 | `ZASISDR_EPCAT` | Draft table for event producer catalog RAP BO |
-| `ZASIS_CONFIG` | Key-value configuration (e.g. `BULK_MAX_ITEMS`); allowed keys are the fixed values of domain `ZASIS_CONFIG_KEY` |
+| `ZASIS_CONFIG` | Key-value configuration (e.g. `BULK_MAX`); allowed keys are the fixed values of domain `ZASIS_CONFIG_KEY` (max. 10 characters – DDIC limit for fixed values) |
 | `ZASISDR_CONFIG` | Draft table for configuration RAP BO |
 
 ### Rule Types
