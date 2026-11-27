@@ -4,7 +4,7 @@
   "description": "ZASIS - ABAP String Interpreter",
   "scripts": {
     "unit": "node -e \"fs=require('fs');fs.rmSync('output',{recursive:true,force:true})\" && abap_transpile && echo RUNNING && node output/index.mjs",
-    "typecheck": "tsc --ignoreConfig --noEmit --esModuleInterop --module nodenext --moduleResolution nodenext --target esnext --types node --allowImportingTsExtensions scripts/*.ts .opencode/tools/*.ts",
+    "typecheck": "tsc --ignoreConfig --noEmit --esModuleInterop --module nodenext --moduleResolution nodenext --target esnext --types node --allowImportingTsExtensions --skipLibCheck scripts/*.ts .opencode/plugins/adt/*.ts",
     "typecheck:ci": "tsc --project tsconfig.ci.json",
     "lint": "abaplint abaplint.jsonc",
     "test": "npm run lint && npm run typecheck:ci && npm run unit",
@@ -20,16 +20,10 @@
     "@abaplint/database-sqlite": "^2.14.35",
     "@abaplint/runtime": "^2.14.41",
     "@abaplint/transpiler-cli": "^2.14.41",
-    "@opencode-ai/plugin": "^1.19.6",
+    "@opencode/plugin": "^2.4.2",
     "@types/node": "^26.6.11",
     "abap-adt-api": "^10.0.0",
     "express": "^5.3.0",
     "typescript": "^7.0.2"
-  },
-  "overrides": {
-    "@opencode-ai/plugin": {
-      "effect": "4.0.0-beta.107",
-      "zod": "^4.6.6"
-    }
   }
 }
