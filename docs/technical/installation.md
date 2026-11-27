@@ -60,9 +60,7 @@ ZASIS provides two HTTP handler entry points. Choose the one that matches your s
 
 This option uses the cloud-native HTTP service framework (`IF_HTTP_SERVICE_EXTENSION`).
 
-1. In ADT, locate the HTTP Service object `ZASIS_EXT_API_CLD`.
-2. Activate it.
-3. The service is now reachable at the path configured in the service definition.
+Activate the HTTP Service object `ZASIS_EXT_API_CLD` following the activation procedure for your target system, as described in the ADT help ("Working with the HTTP Service Editor") or the [SAP documentation](https://help.sap.com/docs/ABAP_PLATFORM_NEW/753088fc00704d0a80e7fbd6803c8adb/59842b6f9d6d4a8cbdcca4456a10e0b2.html). The procedure differs between ABAP Cloud and on-premise systems. ADT shows the service URL in the HTTP Service object.
 
 Handler class: **`ZASIS_CL_HTTP_HANDLER_CLD`**
 
@@ -74,12 +72,21 @@ This handler adapts `IF_WEB_HTTP_REQUEST` / `IF_WEB_HTTP_RESPONSE` and delegates
 
 This option uses the classic Internet Communication Framework (`IF_HTTP_EXTENSION`).
 
+Recommended ICF hierarchy — a customer node directly under `default_host`, outside SAP's `/sap` tree:
+
+```
+default_host
+└── zasis          (no handler)
+    └── api        (handler ZASIS_CL_HTTP_HANDLER)
+```
+
 1. Open transaction `SICF`.
-2. Navigate to `default_host` (or a sub-path of your choice).
-3. Create a new service node — for example, `zasis_ext_api`.
-4. In the service node properties, assign the handler class **`ZASIS_CL_HTTP_HANDLER`**.
-5. Activate the service node.
-6. The HTTP API is now reachable at the configured ICF path (e.g. `/sap/bc/zasis_ext_api`).
+2. On `default_host`, create the service node `zasis` without a handler.
+3. Under `zasis`, create the service node `api` and assign the handler class **`ZASIS_CL_HTTP_HANDLER`**.
+4. Activate both nodes.
+5. The HTTP API is now reachable at `/zasis/api`, e.g. `https://<host>:<port>/zasis/api/ruleSetExecution/<ruleSetId>`.
+
+Keep custom nodes out of `/sap/...`: that subtree belongs to SAP and can change with upgrades. The handler only evaluates the path below its node, so a different location works too.
 
 Handler class: **`ZASIS_CL_HTTP_HANDLER`**
 

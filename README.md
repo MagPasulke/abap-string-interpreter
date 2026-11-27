@@ -47,7 +47,7 @@ ZASIS lets you define a **RuleSet** once and reuse it everywhere. A RuleSet is a
 | Target Field | Regex | Offset |
 | --- | --- | --- |
 | `MaterialNo` | `<A7X>([^<]*)` | 5 |
-| `DeliveryNote` | `<B52H>([^<]*)` | 6 |
+| `DeliveryNo` | `<B52H>([^<]*)` | 6 |
 
 **Call via HTTP POST** with an optional context:
 
@@ -56,10 +56,10 @@ POST /ruleSetExecution/MySample
 Content-Type: application/json
 
 {
-  "string": "<Start><A7X>MyMaterialNumber<B52H>MyDeliveryNote<End>",
+  "string_to_be_interpreted": "<Start><A7X>MyMaterialNumber<B52H>MyDeliveryNote<End>",
   "context": [
-    { "key": "Source",    "value": "Scanner01" },
-    { "key": "SessionId", "value": "A3F9" }
+    { "ctx_key": "Source",    "value": "Scanner01" },
+    { "ctx_key": "SessionId", "value": "A3F9" }
   ]
 }
 ```
@@ -70,11 +70,11 @@ Content-Type: application/json
 {
   "RESULTS": [
     { "TARGETFIELD": "MaterialNo",   "INTERPRETATIONRESULT": "MyMaterialNumber" },
-    { "TARGETFIELD": "DeliveryNote", "INTERPRETATIONRESULT": "MyDeliveryNote"   }
+    { "TARGETFIELD": "DeliveryNo",   "INTERPRETATIONRESULT": "MyDeliveryNote"   }
   ],
   "CONTEXT": [
-    { "KEY": "Source",    "VALUE": "Scanner01" },
-    { "KEY": "SessionId", "VALUE": "A3F9" }
+    { "CTX_KEY": "Source",    "VALUE": "Scanner01" },
+    { "CTX_KEY": "SessionId", "VALUE": "A3F9" }
   ]
 }
 ```
