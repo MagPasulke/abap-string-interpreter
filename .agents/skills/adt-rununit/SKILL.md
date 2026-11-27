@@ -5,7 +5,7 @@ description: Run ABAP Unit tests on the remote SAP system via ADT.
 
 ## Tool
 
-Use the built-in `adt_rununit` custom tool.
+Use the built-in `adt_rununit` custom tool (provided by the local OpenCode V2 plugin `.opencode/plugins/adt/`).
 
 ### Parameters (all optional)
 
