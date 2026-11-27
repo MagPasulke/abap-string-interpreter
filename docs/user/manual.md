@@ -412,7 +412,8 @@ Interprets many input strings against the same RuleSet in one request. The RuleS
     { "id": "scan-001", "string_to_be_interpreted": "<Start><A7X>MatA<End>" },
     { "id": "scan-002", "string_to_be_interpreted": "<Start><A7X>MatB<End>",
       "context": [ { "ctx_key": "plant", "value": "1000" } ] }
-  ]
+  ],
+  "options": { "stopOnFirstError": false }
 }
 ```
 
@@ -422,6 +423,7 @@ Interprets many input strings against the same RuleSet in one request. The RuleS
 | `items[].id`                       | `string`        | Yes      | Client-chosen ID, echoed back to map results to inputs  |
 | `items[].string_to_be_interpreted` | `string`        | Yes      | Raw input string, same as single call                   |
 | `items[].context`                  | `array<object>` | No       | Per-item context, same as single call                   |
+| `options.stopOnFirstError`         | `boolean`       | No       | Stop after the first failing item (default `false`)     |
 
 Field names are matched case-insensitively. Unknown fields (e.g. `options.includeTrace`) are ignored. `Content-Type: application/json` is required.
 
@@ -442,7 +444,7 @@ Field names are matched case-insensitively. Unknown fields (e.g. `options.includ
 ```
 
 - `ITEMS` — one entry per input item, in input order.
-- `STATUS` — `ok` when the item was interpreted.
+- `STATUS` — `ok` when the item was interpreted, `error` when it failed, `skippedOnPrevError` when it was not interpreted because of `stopOnFirstError`.
 - `OUTPUT` — identical in shape to the single [Execute RuleSet](#execute-ruleset) response. `no match` is a regular value inside an `ok` item, not an error.
 
 #### Errors
@@ -463,6 +465,31 @@ The envelope is validated before the RuleSet is loaded; the whole request is rej
 | An `id` occurs more than once (case-sensitive)          | `ZASIS_MSGS/023` | the first duplicate  |
 
 Items are checked in input order; the first offending item is reported. An empty `string_to_be_interpreted` is not an envelope error.
+
+#### Item errors
+
+A failing item does not fail the request: the response is still **200**. Errors raised as ZASIS service errors (e.g. empty `string_to_be_interpreted` → `ZASIS_MSGS/015`, invalid interpretation type, or a custom logic / event producer raising `ZASIS_CX_EXC`) are reported on the item itself. Error items carry `ERROR` and no `OUTPUT`; ok items carry `OUTPUT` and no `ERROR`; skipped items carry neither:
+
+```json
+{
+  "RULESETID": "BARCODE_01",
+  "SUMMARY": { "TOTAL": 3, "OK": 1, "FAILED": 1, "SKIPPEDONPREVERROR": 1 },
+  "ITEMS": [
+    { "ID": "scan-001", "STATUS": "ok", "OUTPUT": { "RESULTS": [ ... ], "CONTEXT": [] } },
+    { "ID": "scan-002", "STATUS": "error",
+      "ERROR": { "CODE": "ZASIS_MSGS/015", "MESSAGE": "String to be interpreted must not be empty" } },
+    { "ID": "scan-003", "STATUS": "skippedOnPrevError" }
+  ]
+}
+```
+
+`CODE` is the T100 message class/number, as in the [error format](#error-responses). `TOTAL = OK + FAILED + SKIPPEDONPREVERROR` always holds and items keep their input order.
+
+**`stopOnFirstError`** — when `true`, processing stops after the first failing item. All remaining items are returned with `STATUS = skippedOnPrevError` without being interpreted. When `false` or absent, every item is processed.
+
+> **Not transactional.** Items are interpreted one after another. Events fired by event producers for items that were already processed are **not** rolled back when a later item fails, with or without `stopOnFirstError`.
+
+> **Unexpected errors fail the whole request.** Only ZASIS service errors are caught per item. Authorization errors (**403**) and any other exception, e.g. an unexpected error raised by your custom logic, are not caught and fail the whole request, exactly like the single call.
 
 ---
 

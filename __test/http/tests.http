@@ -351,6 +351,36 @@ Accept: application/json
   ]
 }
 
+### Bulk - mixed ok/error items (expect 200, item b error ZASIS_MSGS/015)
+POST {{baseUrl}}/ruleSetExecution/{{ruleSetId}}/bulk{{queryParams}}
+Authorization: {{auth}}
+Content-Type: application/json
+Accept: application/json
+
+{
+  "items": [
+    { "id": "a", "string_to_be_interpreted": "<Start><A7X>MatA<End>" },
+    { "id": "b", "string_to_be_interpreted": "" },
+    { "id": "c", "string_to_be_interpreted": "<Start><A7X>MatC<End>" }
+  ]
+}
+
+### Bulk - stopOnFirstError (expect 200, c and d skippedOnPrevError)
+POST {{baseUrl}}/ruleSetExecution/{{ruleSetId}}/bulk{{queryParams}}
+Authorization: {{auth}}
+Content-Type: application/json
+Accept: application/json
+
+{
+  "items": [
+    { "id": "a", "string_to_be_interpreted": "<Start><A7X>MatA<End>" },
+    { "id": "b", "string_to_be_interpreted": "" },
+    { "id": "c", "string_to_be_interpreted": "<Start><A7X>MatC<End>" },
+    { "id": "d", "string_to_be_interpreted": "" }
+  ],
+  "options": { "stopOnFirstError": true }
+}
+
 # ─────────────────────────────────────────────
 # Unsupported HTTP methods
 # ─────────────────────────────────────────────

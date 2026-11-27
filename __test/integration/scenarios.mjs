@@ -277,6 +277,88 @@ export function bulkTests(describe, it, assert, request, ruleSetId) {
       assert.ok(error.message.includes('dup-1'), 'Message should name the duplicate id');
     });
 
+    const errItem = (id) => ({ id, string_to_be_interpreted: '' });
+    const assertSummaryInvariant = (summary) => {
+      assert.equal(pick(summary, 'TOTAL'),
+        pick(summary, 'OK') + pick(summary, 'FAILED') + pick(summary, 'SKIPPEDONPREVERROR'));
+    };
+    const assertErrorItem = (item, id) => {
+      assert.equal(pick(item, 'ID'), id);
+      assert.equal(pick(item, 'STATUS'), 'error');
+      assert.equal(pick(item, 'OUTPUT'), undefined, 'Error item must not carry OUTPUT');
+      const error = pick(item, 'ERROR');
+      assert.equal(pick(error, 'CODE'), 'ZASIS_MSGS/015');
+      assert.ok(pick(error, 'MESSAGE'), 'Error item must carry a message');
+    };
+
+    it('Mixed ok/error items return 200 with per-item errors', async () => {
+      const { status, body } = await request('POST', bulkUrl, {
+        body: { items: [okItem('a'), errItem('b'), okItem('c')] },
+      });
+      assert.equal(status, 200);
+      const summary = pick(body, 'SUMMARY');
+      assert.equal(pick(summary, 'TOTAL'), 3);
+      assert.equal(pick(summary, 'OK'), 2);
+      assert.equal(pick(summary, 'FAILED'), 1);
+      assert.equal(pick(summary, 'SKIPPEDONPREVERROR'), 0);
+      assertSummaryInvariant(summary);
+      const items = pick(body, 'ITEMS');
+      assert.deepEqual(items.map(i => pick(i, 'ID')), ['a', 'b', 'c']);
+      assertErrorItem(items[1], 'b');
+      for (const okResult of [items[0], items[2]]) {
+        assert.equal(pick(okResult, 'STATUS'), 'ok');
+        assert.equal(pick(okResult, 'ERROR'), undefined, 'Ok item must not carry ERROR');
+        assert.ok(pick(okResult, 'OUTPUT'));
+      }
+    });
+
+    it('stopOnFirstError skips items after the first error', async () => {
+      const { status, body } = await request('POST', bulkUrl, {
+        body: {
+          items: [okItem('a'), errItem('b'), okItem('c'), errItem('d')],
+          options: { stopOnFirstError: true },
+        },
+      });
+      assert.equal(status, 200);
+      const summary = pick(body, 'SUMMARY');
+      assert.equal(pick(summary, 'TOTAL'), 4);
+      assert.equal(pick(summary, 'OK'), 1);
+      assert.equal(pick(summary, 'FAILED'), 1);
+      assert.equal(pick(summary, 'SKIPPEDONPREVERROR'), 2);
+      assertSummaryInvariant(summary);
+      const items = pick(body, 'ITEMS');
+      assert.deepEqual(items.map(i => pick(i, 'ID')), ['a', 'b', 'c', 'd']);
+      assert.deepEqual(items.map(i => pick(i, 'STATUS')), ['ok', 'error', 'skippedOnPrevError', 'skippedOnPrevError']);
+      assertErrorItem(items[1], 'b');
+      for (const skipped of items.slice(2)) {
+        assert.equal(pick(skipped, 'OUTPUT'), undefined);
+        assert.equal(pick(skipped, 'ERROR'), undefined);
+      }
+    });
+
+    it('stopOnFirstError false processes all items (case-insensitive key)', async () => {
+      const { status, body } = await request('POST', bulkUrl, {
+        body: { items: [errItem('a'), okItem('b'), errItem('c')], OPTIONS: { STOPONFIRSTERROR: false } },
+      });
+      assert.equal(status, 200);
+      const summary = pick(body, 'SUMMARY');
+      assert.equal(pick(summary, 'OK'), 1);
+      assert.equal(pick(summary, 'FAILED'), 2);
+      assert.equal(pick(summary, 'SKIPPEDONPREVERROR'), 0);
+      assertSummaryInvariant(summary);
+      assert.deepEqual(pick(body, 'ITEMS').map(i => pick(i, 'STATUS')), ['error', 'ok', 'error']);
+    });
+
+    it('stopOnFirstError with all items ok skips nothing', async () => {
+      const { status, body } = await request('POST', bulkUrl, {
+        body: { items: [okItem('a'), okItem('b')], options: { stopOnFirstError: true } },
+      });
+      assert.equal(status, 200);
+      const summary = pick(body, 'SUMMARY');
+      assert.equal(pick(summary, 'OK'), 2);
+      assertSummaryInvariant(summary);
+    });
+
   });
 }
 
