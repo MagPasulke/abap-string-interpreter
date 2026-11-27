@@ -54,8 +54,8 @@ CLASS zasis_cl_config IMPLEMENTATION.
 
     DATA(condensed) = condense( value ).
     " max. 9 digits always fits into type i, no overflow possible
-    IF NOT matches( val   = condensed
-                    regex = `^\d{1,9}$` ).
+    IF NOT matches( val  = condensed
+                    pcre = `^\d{1,9}$` ).
       RETURN.
     ENDIF.
 
