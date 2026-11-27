@@ -67,7 +67,7 @@ The two entry-point handlers each adapt their respective SAP HTTP object model t
 | `POST` | `/ruleSetExecution/{id}` | `handle_post` |
 | `POST` | `/ruleSetExecution/{id}/bulk` | `handle_bulk` |
 
-A trailing `bulk` element (constant `ZASIS_CONSTANTS=>BULK-RESOURCE_PATH`) sets the validator's `IS_BULK` flag and is stripped before the RuleSet ID is read; it is only recognised directly after `ruleSetExecution/{id}` and rejected for `GET`. `handle_bulk` loads the RuleSet once via `ZASIS_CL_RULESET_FACTORY` and calls `ZASIS_CL_INTERPRETER` once per item in input order; authorization is enforced by the interpreter's per-call execute check, not by the handler.
+A trailing `bulk` element (constant `ZASIS_CONSTANTS=>BULK-RESOURCE_PATH`) sets the validator's `IS_BULK` flag and is stripped before the RuleSet ID is read; it is only recognised directly after `ruleSetExecution/{id}`, and `GET` on it returns `405` (`ZASIS_MSGS/016`). `handle_bulk` loads the RuleSet once via `ZASIS_CL_RULESET_FACTORY` and calls `ZASIS_CL_INTERPRETER` once per item in input order; authorization is enforced by the interpreter's per-call execute check, not by the handler.
 
 ---
 

@@ -188,10 +188,13 @@ export function bulkTests(describe, it, assert, request, ruleSetId) {
       assert.equal(getError(body).code, 'ZASIS_MSGS/007');
     });
 
-    it('GET on bulk URL returns 400 invalid route', async () => {
+    it('GET on bulk URL returns 405 method not supported', async () => {
       const { status, body } = await request('GET', `/ruleSetExecution/${ruleSetId}/bulk`);
-      assert.equal(status, 400);
-      assert.equal(getError(body).code, 'ZASIS_MSGS/005');
+      assert.equal(status, 405);
+      const error = getError(body);
+      assert.equal(error.code, 'ZASIS_MSGS/016');
+      assert.equal(error.status, '405');
+      assert.ok(error.message.includes('GET'), 'Message should include the HTTP method');
     });
 
     it('Wrong Content-Type returns 400 with ZASIS_MSGS/006 (same as single POST)', async () => {

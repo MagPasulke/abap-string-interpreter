@@ -450,6 +450,7 @@ Field names are matched case-insensitively. Unknown fields (e.g. `options.includ
 Request-level errors use the standard [error format](#error-responses) and behave like the single call:
 
 - **400** — unknown `ruleSetId` (`ZASIS_MSGS/007`), `Content-Type` not `application/json` (`ZASIS_MSGS/006`), malformed path
+- **405** — any method other than `POST` on the bulk URL (`ZASIS_MSGS/016`)
 - **403** — calling user lacks execute authorization for the RuleSet
 
 ---

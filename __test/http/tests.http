@@ -165,7 +165,7 @@ Accept: application/json
 
 some plain text
 
-### Bulk - GET on bulk URL (expect 400 ZASIS_MSGS/005)
+### Bulk - GET on bulk URL (expect 405 ZASIS_MSGS/016)
 GET {{baseUrl}}/ruleSetExecution/{{ruleSetId}}/bulk{{queryParams}}
 Authorization: {{auth}}
 Accept: application/json

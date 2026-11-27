@@ -99,8 +99,9 @@ CLASS zasis_cl_http_handler_core IMPLEMENTATION.
           WHEN zasis_constants=>http_method-get.
             _validator->extract_ruleset_id( ).
             IF _validator->is_bulk = abap_true.
-              RAISE EXCEPTION NEW zasis_cx_exc( textid = zasis_cx_exc=>invalid_api_route
-                                                route  = _validator->path ).
+              RAISE EXCEPTION NEW zasis_cx_exc( textid      = zasis_cx_exc=>method_not_supported
+                                                method      = _request->get_method( )
+                                                http_status = '405' ).
             ENDIF.
             DATA(resource) = _validator->path_elements[ _validator->num_path_elements - 1 ].
             IF resource = zasis_constants=>export-resource_path.
