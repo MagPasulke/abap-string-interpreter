@@ -221,7 +221,8 @@
       "exclude": [
         "zbp_asis_i_ruleset.clas.locals_imp.abap",
         "zbp_asis_i_custlogcat.clas.locals_imp.abap",
-        "zbp_asis_i_evtprodcat.clas.locals_imp.abap"
+        "zbp_asis_i_evtprodcat.clas.locals_imp.abap",
+        "zbp_asis_i_config.clas.locals_imp.abap"
       ]
     },
     "method_parameter_names": {
