@@ -459,7 +459,7 @@ The envelope is validated before the RuleSet is loaded; the whole request is rej
 |---------------------------------------------------------|------------------|----------------------|
 | `items` missing or empty                                | `ZASIS_MSGS/020` | –                    |
 | More than 50 items (exactly 50 is accepted)             | `ZASIS_MSGS/021` | the maximum (50)     |
-| An item's `id` is missing or empty                      | `ZASIS_MSGS/022` | the 1-based position |
+| An item's `id` is missing, empty or blank             | `ZASIS_MSGS/022` | the 1-based position |
 | An `id` occurs more than once (case-sensitive)          | `ZASIS_MSGS/023` | the first duplicate  |
 
 Items are checked in input order; the first offending item is reported. An empty `string_to_be_interpreted` is not an envelope error.

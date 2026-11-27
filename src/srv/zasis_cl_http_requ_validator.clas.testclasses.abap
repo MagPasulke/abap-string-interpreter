@@ -61,6 +61,7 @@ CLASS ltcl_validator DEFINITION FOR TESTING
     METHODS test_bulk_ids_ok FOR TESTING RAISING zasis_cx_exc.
     METHODS test_bulk_id_empty_raises FOR TESTING.
     METHODS test_bulk_id_duplicate_raises FOR TESTING.
+    METHODS test_bulk_id_blank_raises FOR TESTING.
     METHODS test_bulk_id_first_offender FOR TESTING.
 
     METHODS assert_raises_bulk_count
@@ -251,12 +252,12 @@ CLASS ltcl_validator IMPLEMENTATION.
 
   METHOD test_bulk_count_empty_raises.
     assert_raises_bulk_count( item_count = 0
-                              exp_msgno  = '020' ).
+                              exp_msgno  = zasis_cx_exc=>bulk_items_empty-msgno ).
   ENDMETHOD.
 
   METHOD test_bulk_count_over_max.
     DATA(exc) = assert_raises_bulk_count( item_count = zasis_constants=>bulk-max_items + 1
-                                          exp_msgno  = '021' ).
+                                          exp_msgno  = zasis_cx_exc=>bulk_too_many_items-msgno ).
     cl_abap_unit_assert=>assert_equals(
       act = exc->max_items
       exp = zasis_constants=>bulk-max_items ).
@@ -273,7 +274,7 @@ CLASS ltcl_validator IMPLEMENTATION.
 
   METHOD test_bulk_id_empty_raises.
     DATA(exc) = assert_raises_bulk_ids( item_ids  = VALUE #( ( `a` ) ( `` ) ( `c` ) )
-                                        exp_msgno = '022' ).
+                                        exp_msgno = zasis_cx_exc=>bulk_item_id_missing-msgno ).
     cl_abap_unit_assert=>assert_equals(
       act = exc->item_position
       exp = 2 ).
@@ -281,15 +282,23 @@ CLASS ltcl_validator IMPLEMENTATION.
 
   METHOD test_bulk_id_duplicate_raises.
     DATA(exc) = assert_raises_bulk_ids( item_ids  = VALUE #( ( `a` ) ( `b` ) ( `a` ) )
-                                        exp_msgno = '023' ).
+                                        exp_msgno = zasis_cx_exc=>bulk_item_id_duplicate-msgno ).
     cl_abap_unit_assert=>assert_equals(
       act = exc->item_id
       exp = `a` ).
   ENDMETHOD.
 
+  METHOD test_bulk_id_blank_raises.
+    DATA(exc) = assert_raises_bulk_ids( item_ids  = VALUE #( ( `a` ) ( `  ` ) )
+                                        exp_msgno = zasis_cx_exc=>bulk_item_id_missing-msgno ).
+    cl_abap_unit_assert=>assert_equals(
+      act = exc->item_position
+      exp = 2 ).
+  ENDMETHOD.
+
   METHOD test_bulk_id_first_offender.
     DATA(exc) = assert_raises_bulk_ids( item_ids  = VALUE #( ( `a` ) ( `b` ) ( `b` ) ( `a` ) ( `` ) )
-                                        exp_msgno = '023' ).
+                                        exp_msgno = zasis_cx_exc=>bulk_item_id_duplicate-msgno ).
     cl_abap_unit_assert=>assert_equals(
       act = exc->item_id
       exp = `b` ).

@@ -262,6 +262,13 @@ export function bulkTests(describe, it, assert, request, ruleSetId) {
       assertEnvelopeError(status, body, 'ZASIS_MSGS/022');
     });
 
+    it('Blank (whitespace-only) id returns 400 with ZASIS_MSGS/022', async () => {
+      const { status, body } = await request('POST', bulkUrl, {
+        body: { items: [okItem('a'), okItem('   ')] },
+      });
+      assertEnvelopeError(status, body, 'ZASIS_MSGS/022');
+    });
+
     it('Duplicate id returns 400 with ZASIS_MSGS/023 naming the first duplicate', async () => {
       const { status, body } = await request('POST', bulkUrl, {
         body: { items: [okItem('a'), okItem('dup-1'), okItem('dup-1'), okItem('a')] },

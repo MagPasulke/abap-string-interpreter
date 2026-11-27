@@ -117,7 +117,8 @@ CLASS zasis_cl_http_requ_validator IMPLEMENTATION.
 
     LOOP AT item_ids INTO DATA(item_id).
       DATA(position) = sy-tabix.
-      IF item_id IS INITIAL.
+      DATA(condensed_id) = condense( item_id ).
+      IF condensed_id IS INITIAL.
         RAISE EXCEPTION NEW zasis_cx_exc( textid        = zasis_cx_exc=>bulk_item_id_missing
                                           item_position = position ).
       ENDIF.
