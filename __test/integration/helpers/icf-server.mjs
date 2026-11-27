@@ -91,6 +91,32 @@ async function seedTestData() {
   await abap.statements.insertDatabase("zasis_rulesetitm", {values: item2});
 }
 
+function configRow(key, value) {
+  const row = new abap.types.Structure({
+    client: new abap.types.Character(3, {qualifiedName: "MANDT"}),
+    config_key: new abap.types.Character(30),
+    config_value: new abap.types.Character(255),
+    description: new abap.types.Character(255),
+    last_changed_by: new abap.types.Character(12),
+    last_changed_at: new abap.types.Packed({length: 11, decimals: 7}),
+    local_last_changed_at: new abap.types.Packed({length: 11, decimals: 7}),
+  });
+  row.get().client.set("000");
+  row.get().config_key.set(key);
+  row.get().config_value.set(value);
+  return row;
+}
+
+// Maintain a row in zasis_config (insert or replace)
+export async function setConfig(key, value) {
+  await abap.statements.modifyDatabase("zasis_config", {values: configRow(key, value)});
+}
+
+// Remove a row from zasis_config
+export async function deleteConfig(key) {
+  await abap.statements.deleteDatabase("zasis_config", {values: configRow(key, "")});
+}
+
 export async function startServer(quiet) {
   const PORT = 3040;
 

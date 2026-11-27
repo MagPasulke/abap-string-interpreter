@@ -5,7 +5,7 @@ description: Run ATC syntax check on the SAP system to detect syntax errors afte
 
 ## Tool
 
-Use the built-in `adt_checkerrors` custom tool.
+Use the built-in `adt_checkerrors` custom tool (provided by the local OpenCode V2 plugin `.opencode/plugins/adt/`).
 
 ### Parameters
 

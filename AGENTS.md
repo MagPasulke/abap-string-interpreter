@@ -137,7 +137,7 @@ The project has three test layers, each covering different concerns. For a full 
 | Script | Command | Description |
 |--------|---------|-------------|
 | `npm run lint` | `abaplint` | Static analysis using abaplint (rules in `abaplint.json`) |
-| `npm run typecheck` | `tsc --noEmit` | TypeScript type-checking for scripts/*.ts and .opencode/tools/*.ts |
+| `npm run typecheck` | `tsc --noEmit` | TypeScript type-checking for scripts/*.ts and .opencode/plugins/adt/*.ts |
 | `npm run typecheck:ci` | `tsc --noEmit` | TypeScript type-checking for scripts/*.ts only (used in CI, no OpenCode plugin dependency) |
 | `npm run unit` | Transpile + run in Node.js | Transpiles ABAP to JS via `abap_transpile.json` and runs unit tests |
 | `npm test` | `lint` + `typecheck` + `unit` | Runs all three checks |

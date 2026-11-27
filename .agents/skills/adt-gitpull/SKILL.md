@@ -5,7 +5,7 @@ description: Trigger an abapGit repository pull on the SAP system to sync the cu
 
 ## Tool
 
-Use the built-in `adt_gitpull` custom tool.
+Use the built-in `adt_gitpull` custom tool (provided by the local OpenCode V2 plugin `.opencode/plugins/adt/`).
 
 ### Parameters
 
