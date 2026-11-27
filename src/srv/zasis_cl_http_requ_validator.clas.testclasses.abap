@@ -55,6 +55,27 @@ CLASS ltcl_validator DEFINITION FOR TESTING
     METHODS test_non_bulk_route FOR TESTING RAISING zasis_cx_exc.
     METHODS test_bulk_wrong_res_raises FOR TESTING.
     METHODS test_ruleset_named_bulk FOR TESTING RAISING zasis_cx_exc.
+    METHODS test_bulk_count_empty_raises FOR TESTING.
+    METHODS test_bulk_count_over_max FOR TESTING.
+    METHODS test_bulk_count_max_ok FOR TESTING RAISING zasis_cx_exc.
+    METHODS test_bulk_ids_ok FOR TESTING RAISING zasis_cx_exc.
+    METHODS test_bulk_id_empty_raises FOR TESTING.
+    METHODS test_bulk_id_duplicate_raises FOR TESTING.
+    METHODS test_bulk_id_first_offender FOR TESTING.
+
+    METHODS assert_raises_bulk_count
+      IMPORTING
+        item_count TYPE i
+        exp_msgno  TYPE symsgno
+      RETURNING
+        VALUE(exc) TYPE REF TO zasis_cx_exc.
+
+    METHODS assert_raises_bulk_ids
+      IMPORTING
+        item_ids   TYPE string_table
+        exp_msgno  TYPE symsgno
+      RETURNING
+        VALUE(exc) TYPE REF TO zasis_cx_exc.
 ENDCLASS.
 
 CLASS ltcl_validator IMPLEMENTATION.
@@ -198,6 +219,80 @@ CLASS ltcl_validator IMPLEMENTATION.
           act = exc->if_t100_message~t100key-msgno
           exp = '006' ).
     ENDTRY.
+  ENDMETHOD.
+
+  METHOD assert_raises_bulk_count.
+    TRY.
+        cut->validate_bulk_item_count( item_count ).
+        cl_abap_unit_assert=>fail( msg = 'Expected exception' ).
+      CATCH zasis_cx_exc INTO exc.
+        cl_abap_unit_assert=>assert_equals(
+          act = exc->if_t100_message~t100key-msgno
+          exp = exp_msgno ).
+        cl_abap_unit_assert=>assert_equals(
+          act = exc->http_status
+          exp = '400' ).
+    ENDTRY.
+  ENDMETHOD.
+
+  METHOD assert_raises_bulk_ids.
+    TRY.
+        cut->validate_bulk_item_ids( item_ids ).
+        cl_abap_unit_assert=>fail( msg = 'Expected exception' ).
+      CATCH zasis_cx_exc INTO exc.
+        cl_abap_unit_assert=>assert_equals(
+          act = exc->if_t100_message~t100key-msgno
+          exp = exp_msgno ).
+        cl_abap_unit_assert=>assert_equals(
+          act = exc->http_status
+          exp = '400' ).
+    ENDTRY.
+  ENDMETHOD.
+
+  METHOD test_bulk_count_empty_raises.
+    assert_raises_bulk_count( item_count = 0
+                              exp_msgno  = '020' ).
+  ENDMETHOD.
+
+  METHOD test_bulk_count_over_max.
+    DATA(exc) = assert_raises_bulk_count( item_count = zasis_constants=>bulk-max_items + 1
+                                          exp_msgno  = '021' ).
+    cl_abap_unit_assert=>assert_equals(
+      act = exc->max_items
+      exp = zasis_constants=>bulk-max_items ).
+  ENDMETHOD.
+
+  METHOD test_bulk_count_max_ok.
+    cut->validate_bulk_item_count( zasis_constants=>bulk-max_items ).
+    cut->validate_bulk_item_count( 1 ).
+  ENDMETHOD.
+
+  METHOD test_bulk_ids_ok.
+    cut->validate_bulk_item_ids( VALUE #( ( `a` ) ( `b` ) ( `c` ) ) ).
+  ENDMETHOD.
+
+  METHOD test_bulk_id_empty_raises.
+    DATA(exc) = assert_raises_bulk_ids( item_ids  = VALUE #( ( `a` ) ( `` ) ( `c` ) )
+                                        exp_msgno = '022' ).
+    cl_abap_unit_assert=>assert_equals(
+      act = exc->item_position
+      exp = 2 ).
+  ENDMETHOD.
+
+  METHOD test_bulk_id_duplicate_raises.
+    DATA(exc) = assert_raises_bulk_ids( item_ids  = VALUE #( ( `a` ) ( `b` ) ( `a` ) )
+                                        exp_msgno = '023' ).
+    cl_abap_unit_assert=>assert_equals(
+      act = exc->item_id
+      exp = `a` ).
+  ENDMETHOD.
+
+  METHOD test_bulk_id_first_offender.
+    DATA(exc) = assert_raises_bulk_ids( item_ids  = VALUE #( ( `a` ) ( `b` ) ( `b` ) ( `a` ) ( `` ) )
+                                        exp_msgno = '023' ).
+    cl_abap_unit_assert=>assert_equals(
+      act = exc->item_id
+      exp = `b` ).
   ENDMETHOD.
 
 ENDCLASS.
