@@ -1,0 +1,11 @@
+@EndUserText.label: 'ASIS - Access Control for Configuration'
+@MappingRole: true
+define role ZASIS_AC_CONFIG {
+    grant
+        select
+            on
+                ZASIS_I_CONFIG
+                    where
+                        (ConfigKey) = aspect pfcg_auth(ZASIS_GRL, ZASIS_RULE, ACTVT = '03');
+
+}

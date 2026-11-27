@@ -1,0 +1,47 @@
+@Metadata.layer: #CUSTOMER
+
+@UI.headerInfo: {
+  typeName: 'Configuration Entry',
+  typeNamePlural: 'Configuration',
+  description.value: 'ConfigKey'
+}
+annotate entity ZASIS_C_CONFIG with
+{
+  @UI.facet: [{
+    id: 'ConfigEntry',
+    purpose: #STANDARD,
+    type: #IDENTIFICATION_REFERENCE,
+    label: 'Configuration Entry',
+    position: 10
+  }]
+
+  @UI.selectionField: [{ position: 10 }]
+  @UI.lineItem: [{ position: 10 }]
+  @UI.identification: [{ position: 10 }]
+  @Consumption.valueHelpDefinition:
+  [{ entity: { name: 'ZASIS_I_DOMAIN_FIX_VALUES', element: 'low' },
+     additionalBinding: [{ element: 'domain_name',
+                           localConstant: 'ZASIS_CONFIG_KEY', usage: #FILTER }],
+     distinctValues: true }]
+  ConfigKey;
+
+  @UI.hidden: true
+  ConfigKeyText;
+
+  @UI.lineItem: [{ position: 20 }]
+  @UI.identification: [{ position: 20 }]
+  ConfigValue;
+
+  @UI.lineItem: [{ position: 30 }]
+  @UI.identification: [{ position: 30 }]
+  Description;
+
+  @UI.hidden: true
+  LastChangedBy;
+
+  @UI.hidden: true
+  LastChangedAt;
+
+  @UI.hidden: true
+  LocalLastChangedAt;
+}

@@ -1,0 +1,11 @@
+@EndUserText.label: 'ASIS - Access Control for Configuration (C)'
+@MappingRole: true
+define role ZASIS_AC_C_CONFIG {
+    grant
+        select
+            on
+                ZASIS_C_CONFIG
+                    where
+                        inheriting conditions from entity ZASIS_I_CONFIG;
+
+}

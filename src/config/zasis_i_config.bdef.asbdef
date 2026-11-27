@@ -1,0 +1,41 @@
+managed implementation in class zbp_asis_i_config unique;
+strict ( 2 );
+with draft;
+
+define behavior for ZASIS_I_CONFIG alias Config
+persistent table zasis_config
+draft table zasisdr_config
+etag master LocalLastChangedAt
+lock master total etag LastChangedAt
+authorization master ( global )
+{
+  field ( mandatory : create, readonly : update )
+    ConfigKey;
+  field ( readonly )
+    LastChangedBy, LastChangedAt, LocalLastChangedAt;
+
+  create;
+  update;
+  delete;
+
+  draft action Edit;
+  draft action Activate optimized;
+  draft action Discard;
+  draft action Resume;
+  draft determine action Prepare
+  {
+    validation checkConfigKey;
+  }
+
+  validation checkConfigKey on save { field ConfigKey; create; }
+
+  mapping for zasis_config
+  {
+    ConfigKey          = config_key;
+    ConfigValue        = config_value;
+    Description        = description;
+    LastChangedBy      = last_changed_by;
+    LastChangedAt      = last_changed_at;
+    LocalLastChangedAt = local_last_changed_at;
+  }
+}
