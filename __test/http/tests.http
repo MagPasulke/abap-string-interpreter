@@ -170,6 +170,187 @@ GET {{baseUrl}}/ruleSetExecution/{{ruleSetId}}/bulk{{queryParams}}
 Authorization: {{auth}}
 Accept: application/json
 
+### Bulk - missing items (expect 400 ZASIS_MSGS/020)
+POST {{baseUrl}}/ruleSetExecution/{{ruleSetId}}/bulk{{queryParams}}
+Authorization: {{auth}}
+Content-Type: application/json
+Accept: application/json
+
+{}
+
+### Bulk - empty items (expect 400 ZASIS_MSGS/020)
+POST {{baseUrl}}/ruleSetExecution/{{ruleSetId}}/bulk{{queryParams}}
+Authorization: {{auth}}
+Content-Type: application/json
+Accept: application/json
+
+{
+  "items": []
+}
+
+### Bulk - 51 items, over max (expect 400 ZASIS_MSGS/021)
+POST {{baseUrl}}/ruleSetExecution/{{ruleSetId}}/bulk{{queryParams}}
+Authorization: {{auth}}
+Content-Type: application/json
+Accept: application/json
+
+{
+  "items": [
+    { "id": "id-1", "string_to_be_interpreted": "<Start><A7X>MatA<End>" },
+    { "id": "id-2", "string_to_be_interpreted": "<Start><A7X>MatA<End>" },
+    { "id": "id-3", "string_to_be_interpreted": "<Start><A7X>MatA<End>" },
+    { "id": "id-4", "string_to_be_interpreted": "<Start><A7X>MatA<End>" },
+    { "id": "id-5", "string_to_be_interpreted": "<Start><A7X>MatA<End>" },
+    { "id": "id-6", "string_to_be_interpreted": "<Start><A7X>MatA<End>" },
+    { "id": "id-7", "string_to_be_interpreted": "<Start><A7X>MatA<End>" },
+    { "id": "id-8", "string_to_be_interpreted": "<Start><A7X>MatA<End>" },
+    { "id": "id-9", "string_to_be_interpreted": "<Start><A7X>MatA<End>" },
+    { "id": "id-10", "string_to_be_interpreted": "<Start><A7X>MatA<End>" },
+    { "id": "id-11", "string_to_be_interpreted": "<Start><A7X>MatA<End>" },
+    { "id": "id-12", "string_to_be_interpreted": "<Start><A7X>MatA<End>" },
+    { "id": "id-13", "string_to_be_interpreted": "<Start><A7X>MatA<End>" },
+    { "id": "id-14", "string_to_be_interpreted": "<Start><A7X>MatA<End>" },
+    { "id": "id-15", "string_to_be_interpreted": "<Start><A7X>MatA<End>" },
+    { "id": "id-16", "string_to_be_interpreted": "<Start><A7X>MatA<End>" },
+    { "id": "id-17", "string_to_be_interpreted": "<Start><A7X>MatA<End>" },
+    { "id": "id-18", "string_to_be_interpreted": "<Start><A7X>MatA<End>" },
+    { "id": "id-19", "string_to_be_interpreted": "<Start><A7X>MatA<End>" },
+    { "id": "id-20", "string_to_be_interpreted": "<Start><A7X>MatA<End>" },
+    { "id": "id-21", "string_to_be_interpreted": "<Start><A7X>MatA<End>" },
+    { "id": "id-22", "string_to_be_interpreted": "<Start><A7X>MatA<End>" },
+    { "id": "id-23", "string_to_be_interpreted": "<Start><A7X>MatA<End>" },
+    { "id": "id-24", "string_to_be_interpreted": "<Start><A7X>MatA<End>" },
+    { "id": "id-25", "string_to_be_interpreted": "<Start><A7X>MatA<End>" },
+    { "id": "id-26", "string_to_be_interpreted": "<Start><A7X>MatA<End>" },
+    { "id": "id-27", "string_to_be_interpreted": "<Start><A7X>MatA<End>" },
+    { "id": "id-28", "string_to_be_interpreted": "<Start><A7X>MatA<End>" },
+    { "id": "id-29", "string_to_be_interpreted": "<Start><A7X>MatA<End>" },
+    { "id": "id-30", "string_to_be_interpreted": "<Start><A7X>MatA<End>" },
+    { "id": "id-31", "string_to_be_interpreted": "<Start><A7X>MatA<End>" },
+    { "id": "id-32", "string_to_be_interpreted": "<Start><A7X>MatA<End>" },
+    { "id": "id-33", "string_to_be_interpreted": "<Start><A7X>MatA<End>" },
+    { "id": "id-34", "string_to_be_interpreted": "<Start><A7X>MatA<End>" },
+    { "id": "id-35", "string_to_be_interpreted": "<Start><A7X>MatA<End>" },
+    { "id": "id-36", "string_to_be_interpreted": "<Start><A7X>MatA<End>" },
+    { "id": "id-37", "string_to_be_interpreted": "<Start><A7X>MatA<End>" },
+    { "id": "id-38", "string_to_be_interpreted": "<Start><A7X>MatA<End>" },
+    { "id": "id-39", "string_to_be_interpreted": "<Start><A7X>MatA<End>" },
+    { "id": "id-40", "string_to_be_interpreted": "<Start><A7X>MatA<End>" },
+    { "id": "id-41", "string_to_be_interpreted": "<Start><A7X>MatA<End>" },
+    { "id": "id-42", "string_to_be_interpreted": "<Start><A7X>MatA<End>" },
+    { "id": "id-43", "string_to_be_interpreted": "<Start><A7X>MatA<End>" },
+    { "id": "id-44", "string_to_be_interpreted": "<Start><A7X>MatA<End>" },
+    { "id": "id-45", "string_to_be_interpreted": "<Start><A7X>MatA<End>" },
+    { "id": "id-46", "string_to_be_interpreted": "<Start><A7X>MatA<End>" },
+    { "id": "id-47", "string_to_be_interpreted": "<Start><A7X>MatA<End>" },
+    { "id": "id-48", "string_to_be_interpreted": "<Start><A7X>MatA<End>" },
+    { "id": "id-49", "string_to_be_interpreted": "<Start><A7X>MatA<End>" },
+    { "id": "id-50", "string_to_be_interpreted": "<Start><A7X>MatA<End>" },
+    { "id": "id-51", "string_to_be_interpreted": "<Start><A7X>MatA<End>" }
+  ]
+}
+
+### Bulk - exactly 50 items (expect 200, SUMMARY.TOTAL = 50)
+POST {{baseUrl}}/ruleSetExecution/{{ruleSetId}}/bulk{{queryParams}}
+Authorization: {{auth}}
+Content-Type: application/json
+Accept: application/json
+
+{
+  "items": [
+    { "id": "id-1", "string_to_be_interpreted": "<Start><A7X>MatA<End>" },
+    { "id": "id-2", "string_to_be_interpreted": "<Start><A7X>MatA<End>" },
+    { "id": "id-3", "string_to_be_interpreted": "<Start><A7X>MatA<End>" },
+    { "id": "id-4", "string_to_be_interpreted": "<Start><A7X>MatA<End>" },
+    { "id": "id-5", "string_to_be_interpreted": "<Start><A7X>MatA<End>" },
+    { "id": "id-6", "string_to_be_interpreted": "<Start><A7X>MatA<End>" },
+    { "id": "id-7", "string_to_be_interpreted": "<Start><A7X>MatA<End>" },
+    { "id": "id-8", "string_to_be_interpreted": "<Start><A7X>MatA<End>" },
+    { "id": "id-9", "string_to_be_interpreted": "<Start><A7X>MatA<End>" },
+    { "id": "id-10", "string_to_be_interpreted": "<Start><A7X>MatA<End>" },
+    { "id": "id-11", "string_to_be_interpreted": "<Start><A7X>MatA<End>" },
+    { "id": "id-12", "string_to_be_interpreted": "<Start><A7X>MatA<End>" },
+    { "id": "id-13", "string_to_be_interpreted": "<Start><A7X>MatA<End>" },
+    { "id": "id-14", "string_to_be_interpreted": "<Start><A7X>MatA<End>" },
+    { "id": "id-15", "string_to_be_interpreted": "<Start><A7X>MatA<End>" },
+    { "id": "id-16", "string_to_be_interpreted": "<Start><A7X>MatA<End>" },
+    { "id": "id-17", "string_to_be_interpreted": "<Start><A7X>MatA<End>" },
+    { "id": "id-18", "string_to_be_interpreted": "<Start><A7X>MatA<End>" },
+    { "id": "id-19", "string_to_be_interpreted": "<Start><A7X>MatA<End>" },
+    { "id": "id-20", "string_to_be_interpreted": "<Start><A7X>MatA<End>" },
+    { "id": "id-21", "string_to_be_interpreted": "<Start><A7X>MatA<End>" },
+    { "id": "id-22", "string_to_be_interpreted": "<Start><A7X>MatA<End>" },
+    { "id": "id-23", "string_to_be_interpreted": "<Start><A7X>MatA<End>" },
+    { "id": "id-24", "string_to_be_interpreted": "<Start><A7X>MatA<End>" },
+    { "id": "id-25", "string_to_be_interpreted": "<Start><A7X>MatA<End>" },
+    { "id": "id-26", "string_to_be_interpreted": "<Start><A7X>MatA<End>" },
+    { "id": "id-27", "string_to_be_interpreted": "<Start><A7X>MatA<End>" },
+    { "id": "id-28", "string_to_be_interpreted": "<Start><A7X>MatA<End>" },
+    { "id": "id-29", "string_to_be_interpreted": "<Start><A7X>MatA<End>" },
+    { "id": "id-30", "string_to_be_interpreted": "<Start><A7X>MatA<End>" },
+    { "id": "id-31", "string_to_be_interpreted": "<Start><A7X>MatA<End>" },
+    { "id": "id-32", "string_to_be_interpreted": "<Start><A7X>MatA<End>" },
+    { "id": "id-33", "string_to_be_interpreted": "<Start><A7X>MatA<End>" },
+    { "id": "id-34", "string_to_be_interpreted": "<Start><A7X>MatA<End>" },
+    { "id": "id-35", "string_to_be_interpreted": "<Start><A7X>MatA<End>" },
+    { "id": "id-36", "string_to_be_interpreted": "<Start><A7X>MatA<End>" },
+    { "id": "id-37", "string_to_be_interpreted": "<Start><A7X>MatA<End>" },
+    { "id": "id-38", "string_to_be_interpreted": "<Start><A7X>MatA<End>" },
+    { "id": "id-39", "string_to_be_interpreted": "<Start><A7X>MatA<End>" },
+    { "id": "id-40", "string_to_be_interpreted": "<Start><A7X>MatA<End>" },
+    { "id": "id-41", "string_to_be_interpreted": "<Start><A7X>MatA<End>" },
+    { "id": "id-42", "string_to_be_interpreted": "<Start><A7X>MatA<End>" },
+    { "id": "id-43", "string_to_be_interpreted": "<Start><A7X>MatA<End>" },
+    { "id": "id-44", "string_to_be_interpreted": "<Start><A7X>MatA<End>" },
+    { "id": "id-45", "string_to_be_interpreted": "<Start><A7X>MatA<End>" },
+    { "id": "id-46", "string_to_be_interpreted": "<Start><A7X>MatA<End>" },
+    { "id": "id-47", "string_to_be_interpreted": "<Start><A7X>MatA<End>" },
+    { "id": "id-48", "string_to_be_interpreted": "<Start><A7X>MatA<End>" },
+    { "id": "id-49", "string_to_be_interpreted": "<Start><A7X>MatA<End>" },
+    { "id": "id-50", "string_to_be_interpreted": "<Start><A7X>MatA<End>" }
+  ]
+}
+
+### Bulk - missing id at position 2 (expect 400 ZASIS_MSGS/022)
+POST {{baseUrl}}/ruleSetExecution/{{ruleSetId}}/bulk{{queryParams}}
+Authorization: {{auth}}
+Content-Type: application/json
+Accept: application/json
+
+{
+  "items": [
+    { "id": "a", "string_to_be_interpreted": "<Start><A7X>MatA<End>" },
+    { "string_to_be_interpreted": "<Start><A7X>MatB<End>" }
+  ]
+}
+
+### Bulk - empty id (expect 400 ZASIS_MSGS/022)
+POST {{baseUrl}}/ruleSetExecution/{{ruleSetId}}/bulk{{queryParams}}
+Authorization: {{auth}}
+Content-Type: application/json
+Accept: application/json
+
+{
+  "items": [
+    { "id": "", "string_to_be_interpreted": "<Start><A7X>MatA<End>" }
+  ]
+}
+
+### Bulk - duplicate id (expect 400 ZASIS_MSGS/023 naming dup-1)
+POST {{baseUrl}}/ruleSetExecution/{{ruleSetId}}/bulk{{queryParams}}
+Authorization: {{auth}}
+Content-Type: application/json
+Accept: application/json
+
+{
+  "items": [
+    { "id": "a", "string_to_be_interpreted": "<Start><A7X>MatA<End>" },
+    { "id": "dup-1", "string_to_be_interpreted": "<Start><A7X>MatB<End>" },
+    { "id": "dup-1", "string_to_be_interpreted": "<Start><A7X>MatC<End>" },
+    { "id": "a", "string_to_be_interpreted": "<Start><A7X>MatD<End>" }
+  ]
+}
+
 # ─────────────────────────────────────────────
 # Unsupported HTTP methods
 # ─────────────────────────────────────────────

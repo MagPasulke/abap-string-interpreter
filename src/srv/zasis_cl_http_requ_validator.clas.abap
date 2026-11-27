@@ -28,6 +28,21 @@ CLASS zasis_cl_http_requ_validator DEFINITION
       RAISING
         zasis_cx_exc.
 
+    "! Validates the number of bulk items: at least one, at most zasis_constants=>bulk-max_items
+    METHODS validate_bulk_item_count
+      IMPORTING
+        item_count TYPE i
+      RAISING
+        zasis_cx_exc.
+
+    "! Validates bulk item ids (in input order): each id must be non-empty and unique.
+    "! Raises for the first offending item.
+    METHODS validate_bulk_item_ids
+      IMPORTING
+        item_ids TYPE string_table
+      RAISING
+        zasis_cx_exc.
+
   PROTECTED SECTION.
   PRIVATE SECTION.
 
@@ -84,6 +99,36 @@ CLASS zasis_cl_http_requ_validator IMPLEMENTATION.
     IF request_content_type <> zasis_constants=>content_type-application_json.
       RAISE EXCEPTION NEW zasis_cx_exc( textid = zasis_cx_exc=>content_not_json ).
     ENDIF.
+  ENDMETHOD.
+
+  METHOD validate_bulk_item_count.
+    IF item_count = 0.
+      RAISE EXCEPTION NEW zasis_cx_exc( textid = zasis_cx_exc=>bulk_items_empty ).
+    ENDIF.
+
+    IF item_count > zasis_constants=>bulk-max_items.
+      RAISE EXCEPTION NEW zasis_cx_exc( textid    = zasis_cx_exc=>bulk_too_many_items
+                                        max_items = zasis_constants=>bulk-max_items ).
+    ENDIF.
+  ENDMETHOD.
+
+  METHOD validate_bulk_item_ids.
+    DATA seen_ids TYPE HASHED TABLE OF string WITH UNIQUE KEY table_line.
+
+    LOOP AT item_ids INTO DATA(item_id).
+      DATA(position) = sy-tabix.
+      DATA(condensed_id) = condense( item_id ).
+      IF condensed_id IS INITIAL.
+        RAISE EXCEPTION NEW zasis_cx_exc( textid        = zasis_cx_exc=>bulk_item_id_missing
+                                          item_position = position ).
+      ENDIF.
+
+      INSERT item_id INTO TABLE seen_ids.
+      IF sy-subrc <> 0.
+        RAISE EXCEPTION NEW zasis_cx_exc( textid  = zasis_cx_exc=>bulk_item_id_duplicate
+                                          item_id = item_id ).
+      ENDIF.
+    ENDLOOP.
   ENDMETHOD.
 
   METHOD validate_path.

@@ -197,6 +197,9 @@ CLASS zasis_cl_http_handler_core IMPLEMENTATION.
         data         = request_body
     ).
 
+    _validator->validate_bulk_item_count( lines( request_body-items ) ).
+    _validator->validate_bulk_item_ids( VALUE #( FOR request_item IN request_body-items ( request_item-id ) ) ).
+
     DATA(ruleset) = zasis_cl_ruleset_factory=>get_ruleset_by_rulesetid( ruleset_id ).
     DATA(interpreter) = NEW zasis_cl_interpreter( ).
 

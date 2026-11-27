@@ -116,6 +116,30 @@
      <MSGNR>019</MSGNR>
      <TEXT>Catalog entry &amp;1 is still referenced by RuleSet items</TEXT>
     </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZASIS_MSGS</ARBGB>
+     <MSGNR>020</MSGNR>
+     <TEXT>Bulk request must contain at least one item</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZASIS_MSGS</ARBGB>
+     <MSGNR>021</MSGNR>
+     <TEXT>Bulk request exceeds the maximum of &amp;1 items</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZASIS_MSGS</ARBGB>
+     <MSGNR>022</MSGNR>
+     <TEXT>Bulk item at position &amp;1 has no id</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZASIS_MSGS</ARBGB>
+     <MSGNR>023</MSGNR>
+     <TEXT>Bulk item id &amp;1 is not unique</TEXT>
+    </T100>
    </T100>
   </asx:values>
  </asx:abap>

@@ -18,6 +18,10 @@ CLASS ltcl_message_consistency DEFINITION FOR TESTING
     METHODS test_string_to_interpret_empty FOR TESTING.
     METHODS test_method_not_supported FOR TESTING.
     METHODS test_http_request_read_error FOR TESTING.
+    METHODS test_bulk_items_empty FOR TESTING.
+    METHODS test_bulk_too_many_items FOR TESTING.
+    METHODS test_bulk_item_id_missing FOR TESTING.
+    METHODS test_bulk_item_id_duplicate FOR TESTING.
     METHODS test_http_status_default FOR TESTING.
     METHODS test_http_status_custom FOR TESTING.
 ENDCLASS.
@@ -70,6 +74,22 @@ CLASS ltcl_message_consistency IMPLEMENTATION.
 
   METHOD test_http_request_read_error.
     assert_message_resolves( textid = zasis_cx_exc=>http_request_read_error ).
+  ENDMETHOD.
+
+  METHOD test_bulk_items_empty.
+    assert_message_resolves( textid = zasis_cx_exc=>bulk_items_empty ).
+  ENDMETHOD.
+
+  METHOD test_bulk_too_many_items.
+    assert_message_resolves( textid = zasis_cx_exc=>bulk_too_many_items ).
+  ENDMETHOD.
+
+  METHOD test_bulk_item_id_missing.
+    assert_message_resolves( textid = zasis_cx_exc=>bulk_item_id_missing ).
+  ENDMETHOD.
+
+  METHOD test_bulk_item_id_duplicate.
+    assert_message_resolves( textid = zasis_cx_exc=>bulk_item_id_duplicate ).
   ENDMETHOD.
 
   METHOD test_http_status_default.

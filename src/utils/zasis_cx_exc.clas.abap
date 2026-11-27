@@ -97,6 +97,42 @@ CLASS zasis_cx_exc DEFINITION
                  attr4 TYPE scx_attrname VALUE '',
                END OF http_request_read_error.
 
+    CONSTANTS: BEGIN OF bulk_items_empty,
+                 msgid TYPE symsgid      VALUE 'ZASIS_MSGS',
+                 msgno TYPE symsgno      VALUE '020',
+                 attr1 TYPE scx_attrname VALUE '',
+                 attr2 TYPE scx_attrname VALUE '',
+                 attr3 TYPE scx_attrname VALUE '',
+                 attr4 TYPE scx_attrname VALUE '',
+               END OF bulk_items_empty.
+
+    CONSTANTS: BEGIN OF bulk_too_many_items,
+                 msgid TYPE symsgid      VALUE 'ZASIS_MSGS',
+                 msgno TYPE symsgno      VALUE '021',
+                 attr1 TYPE scx_attrname VALUE 'MAX_ITEMS',
+                 attr2 TYPE scx_attrname VALUE '',
+                 attr3 TYPE scx_attrname VALUE '',
+                 attr4 TYPE scx_attrname VALUE '',
+               END OF bulk_too_many_items.
+
+    CONSTANTS: BEGIN OF bulk_item_id_missing,
+                 msgid TYPE symsgid      VALUE 'ZASIS_MSGS',
+                 msgno TYPE symsgno      VALUE '022',
+                 attr1 TYPE scx_attrname VALUE 'ITEM_POSITION',
+                 attr2 TYPE scx_attrname VALUE '',
+                 attr3 TYPE scx_attrname VALUE '',
+                 attr4 TYPE scx_attrname VALUE '',
+               END OF bulk_item_id_missing.
+
+    CONSTANTS: BEGIN OF bulk_item_id_duplicate,
+                 msgid TYPE symsgid      VALUE 'ZASIS_MSGS',
+                 msgno TYPE symsgno      VALUE '023',
+                 attr1 TYPE scx_attrname VALUE 'ITEM_ID',
+                 attr2 TYPE scx_attrname VALUE '',
+                 attr3 TYPE scx_attrname VALUE '',
+                 attr4 TYPE scx_attrname VALUE '',
+               END OF bulk_item_id_duplicate.
+
     "! Creates a general ZASIS exception with a T100 message and optional message variable attributes.
     "! @parameter textid      | T100 message key identifying the error text; uses the default text if omitted
     "! @parameter previous    | Previous exception that caused this one, for exception chaining
@@ -104,21 +140,30 @@ CLASS zasis_cx_exc DEFINITION
     "! @parameter ruleset     | RuleSet ID used as message variable &1 (e.g. for unknown_ruleset message)
     "! @parameter classname   | Class name used as message variable &1 (e.g. for class_not_exist or class_no_intf message)
     "! @parameter method      | HTTP method used as message variable &1 (e.g. for method_not_supported message)
+    "! @parameter max_items     | Maximum number of bulk items used as message variable &1 (bulk_too_many_items)
+    "! @parameter item_position | 1-based bulk item position used as message variable &1 (bulk_item_id_missing)
+    "! @parameter item_id       | Bulk item id used as message variable &1 (bulk_item_id_duplicate)
     "! @parameter http_status | HTTP status code for error responses (default '400')
     METHODS constructor
-      IMPORTING textid      LIKE if_t100_message=>t100key OPTIONAL
-                !previous   LIKE previous                 OPTIONAL
-                !route      TYPE string                   OPTIONAL
-                !ruleset    TYPE zasis_ruleset_id         OPTIONAL
-                classname   TYPE zasis_customlogic        OPTIONAL
-                method      TYPE string                   OPTIONAL
-                http_status TYPE string                   DEFAULT '400'.
+      IMPORTING textid        LIKE if_t100_message=>t100key OPTIONAL
+                !previous     LIKE previous                 OPTIONAL
+                !route        TYPE string                   OPTIONAL
+                !ruleset      TYPE zasis_ruleset_id         OPTIONAL
+                classname     TYPE zasis_customlogic        OPTIONAL
+                method        TYPE string                   OPTIONAL
+                max_items     TYPE i                        OPTIONAL
+                item_position TYPE i                        OPTIONAL
+                item_id       TYPE string                   OPTIONAL
+                http_status   TYPE string                   DEFAULT '400'.
 
-    DATA route       TYPE string           READ-ONLY.
-    DATA ruleset     TYPE zasis_ruleset_id  READ-ONLY.
-    DATA classname   TYPE zasis_customlogic READ-ONLY.
-    DATA method      TYPE string            READ-ONLY.
-    DATA http_status TYPE string            READ-ONLY.
+    DATA route         TYPE string            READ-ONLY.
+    DATA ruleset       TYPE zasis_ruleset_id  READ-ONLY.
+    DATA classname     TYPE zasis_customlogic READ-ONLY.
+    DATA method        TYPE string            READ-ONLY.
+    DATA max_items     TYPE i                 READ-ONLY.
+    DATA item_position TYPE i                 READ-ONLY.
+    DATA item_id       TYPE string            READ-ONLY.
+    DATA http_status   TYPE string            READ-ONLY.
 
   PROTECTED SECTION.
   PRIVATE SECTION.
@@ -144,6 +189,9 @@ CLASS zasis_cx_exc IMPLEMENTATION.
     me->ruleset = ruleset.
     me->classname = classname.
     me->method = method.
+    me->max_items = max_items.
+    me->item_position = item_position.
+    me->item_id = item_id.
     me->http_status = http_status.
 
   ENDMETHOD.

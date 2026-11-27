@@ -206,6 +206,77 @@ export function bulkTests(describe, it, assert, request, ruleSetId) {
       assert.equal(getError(body).code, 'ZASIS_MSGS/006');
     });
 
+    const bulkUrl = `/ruleSetExecution/${ruleSetId}/bulk`;
+    const okItem = (id) => ({ id, string_to_be_interpreted: '<Start><A7X>MatA<End>' });
+    const assertEnvelopeError = (status, body, code) => {
+      assert.equal(status, 400);
+      const error = getError(body);
+      assert.equal(error.code, code);
+      assert.equal(error.status, '400');
+      return error;
+    };
+
+    it('Missing items returns 400 with ZASIS_MSGS/020', async () => {
+      const { status, body } = await request('POST', bulkUrl, { body: {} });
+      assertEnvelopeError(status, body, 'ZASIS_MSGS/020');
+    });
+
+    it('Empty items returns 400 with ZASIS_MSGS/020', async () => {
+      const { status, body } = await request('POST', bulkUrl, { body: { items: [] } });
+      assertEnvelopeError(status, body, 'ZASIS_MSGS/020');
+    });
+
+    it('Envelope is validated before the RuleSet is loaded', async () => {
+      const { status, body } = await request('POST', '/ruleSetExecution/NO_SUCH_RS/bulk', {
+        body: { items: [] },
+      });
+      assertEnvelopeError(status, body, 'ZASIS_MSGS/020');
+    });
+
+    it('More than 50 items returns 400 with ZASIS_MSGS/021', async () => {
+      const items = Array.from({ length: 51 }, (_, i) => okItem(`id-${i + 1}`));
+      const { status, body } = await request('POST', bulkUrl, { body: { items } });
+      const error = assertEnvelopeError(status, body, 'ZASIS_MSGS/021');
+      assert.ok(error.message.includes('50'), 'Message should name the maximum');
+    });
+
+    it('Exactly 50 items is accepted', async () => {
+      const items = Array.from({ length: 50 }, (_, i) => okItem(`id-${i + 1}`));
+      const { status, body } = await request('POST', bulkUrl, { body: { items } });
+      assert.equal(status, 200);
+      assert.equal(pick(pick(body, 'SUMMARY'), 'TOTAL'), 50);
+    });
+
+    it('Missing id returns 400 with ZASIS_MSGS/022 naming the position', async () => {
+      const { status, body } = await request('POST', bulkUrl, {
+        body: { items: [okItem('a'), { string_to_be_interpreted: '<Start><A7X>MatB<End>' }] },
+      });
+      const error = assertEnvelopeError(status, body, 'ZASIS_MSGS/022');
+      assert.ok(error.message.includes('2'), 'Message should name the item position');
+    });
+
+    it('Empty id returns 400 with ZASIS_MSGS/022', async () => {
+      const { status, body } = await request('POST', bulkUrl, {
+        body: { items: [okItem('')] },
+      });
+      assertEnvelopeError(status, body, 'ZASIS_MSGS/022');
+    });
+
+    it('Blank (whitespace-only) id returns 400 with ZASIS_MSGS/022', async () => {
+      const { status, body } = await request('POST', bulkUrl, {
+        body: { items: [okItem('a'), okItem('   ')] },
+      });
+      assertEnvelopeError(status, body, 'ZASIS_MSGS/022');
+    });
+
+    it('Duplicate id returns 400 with ZASIS_MSGS/023 naming the first duplicate', async () => {
+      const { status, body } = await request('POST', bulkUrl, {
+        body: { items: [okItem('a'), okItem('dup-1'), okItem('dup-1'), okItem('a')] },
+      });
+      const error = assertEnvelopeError(status, body, 'ZASIS_MSGS/023');
+      assert.ok(error.message.includes('dup-1'), 'Message should name the duplicate id');
+    });
+
   });
 }
 
