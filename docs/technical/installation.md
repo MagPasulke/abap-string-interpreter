@@ -50,6 +50,10 @@ The service definition `ZASIS_UI_EVTPRODCATALOG` is installed via abapGit. The s
 3. Click **Publish** to activate it.
 4. The Event Producer Catalog UI is now available via the published service URL.
 
+**Configuration UI** (for maintaining technical configuration such as `BULK_MAX_ITEMS`):
+
+The service definition `ZASIS_UI_CONFIG` and the OData V4 UI service binding `ZASIS_UI_CONFIG_O4` are both installed via abapGit. If the binding is not published after the pull, open `ZASIS_UI_CONFIG_O4` in ADT and click **Publish**. Entries can then be maintained in the service binding preview. Maintaining configuration requires `ZASIS_GRL` (see [Authorization](authorization.md#configuration-maintenance)).
+
 ---
 
 ## Step 3: Activate the HTTP REST API

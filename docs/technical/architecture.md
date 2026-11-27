@@ -10,6 +10,7 @@ src/
 ├── auth/         Authorization — auth checker class, auth objects, DCL access control for CDS views
 ├── bo/           Business objects — interpreter engine, RuleSet container + factory, RAP managed BO, OData V4 service
 ├── catalogs/     Catalog package group — custom logic catalog, event producer catalog, and shared catalog objects
+├── config/       Technical configuration — key-value table, typed reader, RAP BO for maintenance
 ├── dm/           Data model — DB tables, CDS interface views, domains, data elements, table types
 ├── srv/          HTTP service — REST handler routing GET/POST for RuleSet retrieval and interpretation
 └── utils/        Shared utilities — constants, custom exception, domain value query provider, class validator
@@ -37,6 +38,7 @@ The package layout still enforces layering by separating interpreter/runtime cod
 | `ZBP_ASIS_I_RULESET` | RAP behavior — validations, authorization checks, `testRuleSet` action, draft handling |
 | `ZBP_ASIS_I_CUSTLOGCAT` | RAP behavior for custom logic catalog maintenance and class/interface validation |
 | `ZBP_ASIS_I_EVTPRODCAT` | RAP behavior for event producer catalog maintenance and class/interface validation |
+| `ZBP_ASIS_I_CONFIG` | RAP behavior for configuration maintenance (`ZASIS_UI_CONFIG`); validates the key against the fixed values of domain `ZASIS_CONFIG_KEY` |
 | `ZASIS_IF_CUSTOMLOGIC` | Interface for pluggable custom extraction logic per rule item |
 | `ZASIS_CL_AUTH_CHECKER` | Wraps `AUTHORITY-CHECK` for interpreter and HTTP handler authorization |
 
@@ -83,6 +85,8 @@ A trailing `bulk` element (constant `ZASIS_CONSTANTS=>BULK-RESOURCE_PATH`) sets 
 | `ZASIS_EVTPRODCAT` | Active records for event producer class registrations |
 | `ZASISDR_CLCAT` | Draft table for custom logic catalog RAP BO |
 | `ZASISDR_EPCAT` | Draft table for event producer catalog RAP BO |
+| `ZASIS_CONFIG` | Key-value configuration (e.g. `BULK_MAX_ITEMS`); allowed keys are the fixed values of domain `ZASIS_CONFIG_KEY` |
+| `ZASISDR_CONFIG` | Draft table for configuration RAP BO |
 
 ### Rule Types
 
