@@ -1,0 +1,3 @@
+# Gitignored files Orca copies into each new worktree (from the primary checkout)
+.env
+__test/http/http-client.env.json
