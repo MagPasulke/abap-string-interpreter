@@ -45,4 +45,14 @@ describe('Authorization (SAP-only)', () => {
     assert.ok([401, 403].includes(res.status), `Expected 401 or 403, got ${res.status}`);
   });
 
+  it('POST bulk without auth returns 401 or 403', async () => {
+    const url = `${env.baseUrl}/ruleSetExecution/${RULESET}/bulk?sap-client=${env.client}`;
+    const res = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ items: [{ id: 'a', string_to_be_interpreted: 'test' }] }),
+    });
+    assert.ok([401, 403].includes(res.status), `Expected 401 or 403, got ${res.status}`);
+  });
+
 });

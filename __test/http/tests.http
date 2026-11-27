@@ -102,6 +102,75 @@ Accept: application/json
 some plain text
 
 # ─────────────────────────────────────────────
+# POST /ruleSetExecution/{id}/bulk
+# ─────────────────────────────────────────────
+
+### Bulk - all items ok, order preserved (expect 200, SUMMARY.OK = 3)
+POST {{baseUrl}}/ruleSetExecution/{{ruleSetId}}/bulk{{queryParams}}
+Authorization: {{auth}}
+Content-Type: application/json
+Accept: application/json
+
+{
+  "items": [
+    { "id": "scan-002", "string_to_be_interpreted": "<Start><A7X>MatB<End>" },
+    { "id": "scan-001", "string_to_be_interpreted": "<Start><A7X>MatA<End>", "context": [{ "ctx_key": "plant", "value": "1000" }] },
+    { "id": "scan-003", "string_to_be_interpreted": "<Start><A7X>MatC<B52H>Del<End>" }
+  ]
+}
+
+### Bulk - no match item is ok (expect 200, STATUS = ok)
+POST {{baseUrl}}/ruleSetExecution/{{ruleSetId}}/bulk{{queryParams}}
+Authorization: {{auth}}
+Content-Type: application/json
+Accept: application/json
+
+{
+  "items": [
+    { "id": "nm", "string_to_be_interpreted": "<Start><UNKNOWN>Value<End>" }
+  ]
+}
+
+### Bulk - unknown fields and includeTrace ignored (expect 200)
+POST {{baseUrl}}/ruleSetExecution/{{ruleSetId}}/bulk{{queryParams}}
+Authorization: {{auth}}
+Content-Type: application/json
+Accept: application/json
+
+{
+  "items": [
+    { "id": "a", "string_to_be_interpreted": "<Start><A7X>MatA<End>", "foo": 1 }
+  ],
+  "options": { "includeTrace": true },
+  "unknownField": "x"
+}
+
+### Bulk - unknown RuleSet (expect 400 ZASIS_MSGS/007)
+POST {{baseUrl}}/ruleSetExecution/UNKNOWN_RULESET_XYZ/bulk{{queryParams}}
+Authorization: {{auth}}
+Content-Type: application/json
+Accept: application/json
+
+{
+  "items": [
+    { "id": "a", "string_to_be_interpreted": "x" }
+  ]
+}
+
+### Bulk - wrong Content-Type (expect 400 ZASIS_MSGS/006)
+POST {{baseUrl}}/ruleSetExecution/{{ruleSetId}}/bulk{{queryParams}}
+Authorization: {{auth}}
+Content-Type: text/plain
+Accept: application/json
+
+some plain text
+
+### Bulk - GET on bulk URL (expect 405 ZASIS_MSGS/016)
+GET {{baseUrl}}/ruleSetExecution/{{ruleSetId}}/bulk{{queryParams}}
+Authorization: {{auth}}
+Accept: application/json
+
+# ─────────────────────────────────────────────
 # Unsupported HTTP methods
 # ─────────────────────────────────────────────
 
@@ -136,3 +205,14 @@ Accept: application/json
 ### GET RuleSet without auth (expect 401/403 on SAP, 200 on local-icf)
 GET {{baseUrl}}/ruleSet/{{ruleSetId}}{{queryParams}}
 Accept: application/json
+
+### POST bulk without auth (expect 401/403 on SAP, 200 on local-icf)
+POST {{baseUrl}}/ruleSetExecution/{{ruleSetId}}/bulk{{queryParams}}
+Content-Type: application/json
+Accept: application/json
+
+{
+  "items": [
+    { "id": "a", "string_to_be_interpreted": "test" }
+  ]
+}

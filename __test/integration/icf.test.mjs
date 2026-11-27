@@ -5,7 +5,7 @@
 import { describe, it, before, after } from 'node:test';
 import assert from 'node:assert/strict';
 import { startServer } from './helpers/icf-server.mjs';
-import { postExecutionTests, getTests, methodTests, errorFormatTests, exportTests } from './scenarios.mjs';
+import { postExecutionTests, getTests, methodTests, errorFormatTests, exportTests, bulkTests } from './scenarios.mjs';
 
 const BASE_URL = 'http://localhost:3040/zasis';
 const RULESET = 'TestRS';
@@ -47,3 +47,4 @@ getTests(describe, it, assert, request, RULESET);
 exportTests(describe, it, assert, request, RULESET);
 methodTests(describe, it, assert, request, RULESET);
 errorFormatTests(describe, it, assert, request, RULESET);
+bulkTests(describe, it, assert, request, RULESET);

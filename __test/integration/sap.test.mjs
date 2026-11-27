@@ -8,7 +8,7 @@
 import { describe, it, before } from 'node:test';
 import assert from 'node:assert/strict';
 import { getAllSapEnvs, isSapAvailable } from './helpers/sap-client.mjs';
-import { postExecutionTests, getTests, methodTests } from './scenarios.mjs';
+import { postExecutionTests, getTests, methodTests, bulkTests } from './scenarios.mjs';
 
 before(() => {
   if (!isSapAvailable()) {
@@ -51,5 +51,6 @@ for (const [envName, env] of Object.entries(envs)) {
     postExecutionTests(describe, it, assert, makeRequest, ruleSetId);
     getTests(describe, it, assert, makeRequest, ruleSetId);
     methodTests(describe, it, assert, makeRequest, ruleSetId);
+    bulkTests(describe, it, assert, makeRequest, ruleSetId);
   });
 }

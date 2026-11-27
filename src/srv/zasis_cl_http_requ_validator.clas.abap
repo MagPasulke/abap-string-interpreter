@@ -8,6 +8,8 @@ CLASS zasis_cl_http_requ_validator DEFINITION
     DATA path              TYPE string        READ-ONLY.
     DATA num_path_elements TYPE i             READ-ONLY.
     DATA path_elements     TYPE string_table  READ-ONLY.
+    "! True if the last path element is the bulk sub-resource (it is removed from path_elements)
+    DATA is_bulk           TYPE abap_bool     READ-ONLY.
 
     "! Creates a request validator from the adapter interface
     METHODS constructor
@@ -54,6 +56,15 @@ CLASS zasis_cl_http_requ_validator IMPLEMENTATION.
     SHIFT path LEFT BY 1 PLACES.
     SPLIT path AT '/' INTO TABLE path_elements.
     num_path_elements = lines( path_elements ).
+
+    is_bulk = abap_false.
+    IF num_path_elements > 2
+       AND path_elements[ num_path_elements ] = zasis_constants=>bulk-resource_path
+       AND path_elements[ num_path_elements - 2 ] = |ruleSetExecution|.
+      is_bulk = abap_true.
+      DELETE path_elements INDEX num_path_elements.
+      num_path_elements = num_path_elements - 1.
+    ENDIF.
   ENDMETHOD.
 
   METHOD extract_ruleset_id.

@@ -120,6 +120,95 @@ export function postExecutionTests(describe, it, assert, request, ruleSetId) {
   });
 }
 
+export function bulkTests(describe, it, assert, request, ruleSetId) {
+  describe('POST /ruleSetExecution/{id}/bulk', () => {
+    const pick = (obj, key) => obj[key.toUpperCase()] ?? obj[key.toLowerCase()];
+    const resultFor = (output, field) =>
+      pick(output, 'RESULTS').find(r => pick(r, 'TARGETFIELD') === field);
+
+    it('All items ok, order preserved, summary correct', async () => {
+      const { status, body } = await request('POST', `/ruleSetExecution/${ruleSetId}/bulk`, {
+        body: {
+          items: [
+            { id: 'scan-002', string_to_be_interpreted: '<Start><A7X>MatB<End>' },
+            { id: 'scan-001', string_to_be_interpreted: '<Start><A7X>MatA<End>', context: [{ ctx_key: 'plant', value: '1000' }] },
+            { id: 'scan-003', string_to_be_interpreted: '<Start><A7X>MatC<B52H>Del<End>' },
+          ],
+        },
+      });
+      assert.equal(status, 200);
+      assert.equal(pick(body, 'RULESETID').trim(), ruleSetId);
+      const summary = pick(body, 'SUMMARY');
+      assert.equal(pick(summary, 'TOTAL'), 3);
+      assert.equal(pick(summary, 'OK'), 3);
+      assert.equal(pick(summary, 'FAILED'), 0);
+      assert.equal(pick(summary, 'SKIPPEDONPREVERROR'), 0);
+      const items = pick(body, 'ITEMS');
+      assert.deepEqual(items.map(i => pick(i, 'ID')), ['scan-002', 'scan-001', 'scan-003']);
+      assert.ok(items.every(i => pick(i, 'STATUS') === 'ok'));
+      const outputs = items.map(i => pick(i, 'OUTPUT'));
+      assert.equal(pick(resultFor(outputs[0], 'MaterialNo'), 'INTERPRETATIONRESULT'), 'MatB');
+      assert.equal(pick(resultFor(outputs[1], 'MaterialNo'), 'INTERPRETATIONRESULT'), 'MatA');
+      assert.equal(pick(resultFor(outputs[2], 'MaterialNo'), 'INTERPRETATIONRESULT'), 'MatC');
+      const context = pick(outputs[1], 'CONTEXT');
+      assert.equal(context.length, 1);
+      assert.equal(pick(context[0], 'VALUE'), '1000');
+    });
+
+    it('No match item is ok', async () => {
+      const { status, body } = await request('POST', `/ruleSetExecution/${ruleSetId}/bulk`, {
+        body: { items: [{ id: 'nm', string_to_be_interpreted: '<Start><UNKNOWN>Value<End>' }] },
+      });
+      assert.equal(status, 200);
+      const [item] = pick(body, 'ITEMS');
+      assert.equal(pick(item, 'STATUS'), 'ok');
+      assert.ok(pick(pick(item, 'OUTPUT'), 'RESULTS')
+        .every(r => pick(r, 'INTERPRETATIONRESULT') === 'no match'));
+    });
+
+    it('includeTrace and unknown fields are ignored', async () => {
+      const { status, body } = await request('POST', `/ruleSetExecution/${ruleSetId}/bulk`, {
+        body: {
+          items: [{ id: 'a', string_to_be_interpreted: '<Start><A7X>MatA<End>', foo: 1 }],
+          options: { includeTrace: true },
+          unknownField: 'x',
+        },
+      });
+      assert.equal(status, 200);
+      const [item] = pick(body, 'ITEMS');
+      assert.equal(pick(item, 'STATUS'), 'ok');
+      assert.equal(pick(body, 'TRACE'), undefined);
+    });
+
+    it('Unknown RuleSet returns 400 with ZASIS_MSGS/007 (same as single POST)', async () => {
+      const { status, body } = await request('POST', '/ruleSetExecution/NO_SUCH_RS/bulk', {
+        body: { items: [{ id: 'a', string_to_be_interpreted: 'x' }] },
+      });
+      assert.equal(status, 400);
+      assert.equal(getError(body).code, 'ZASIS_MSGS/007');
+    });
+
+    it('GET on bulk URL returns 405 method not supported', async () => {
+      const { status, body } = await request('GET', `/ruleSetExecution/${ruleSetId}/bulk`);
+      assert.equal(status, 405);
+      const error = getError(body);
+      assert.equal(error.code, 'ZASIS_MSGS/016');
+      assert.equal(error.status, '405');
+      assert.ok(error.message.includes('GET'), 'Message should include the HTTP method');
+    });
+
+    it('Wrong Content-Type returns 400 with ZASIS_MSGS/006 (same as single POST)', async () => {
+      const { status, body } = await request('POST', `/ruleSetExecution/${ruleSetId}/bulk`, {
+        body: 'not json',
+        contentType: 'text/plain',
+      });
+      assert.equal(status, 400);
+      assert.equal(getError(body).code, 'ZASIS_MSGS/006');
+    });
+
+  });
+}
+
 export function getTests(describe, it, assert, request, ruleSetId) {
   describe('GET /ruleSet', () => {
 

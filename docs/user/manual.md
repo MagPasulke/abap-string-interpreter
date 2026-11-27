@@ -21,6 +21,7 @@
 4. [ABAP API](#abap-api)
 5. [HTTP API Reference](#http-api-reference)
    - [Execute RuleSet — POST /ruleSetExecution/{ruleSetId}](#execute-ruleset)
+   - [Bulk interpretation — POST /ruleSetExecution/{ruleSetId}/bulk](#bulk-interpretation)
    - [Retrieve RuleSet — GET /ruleSet/{ruleSetId}](#retrieve-ruleset)
    - [Export RuleSet — GET /ruleSetExport/{ruleSetId}](#export-ruleset)
    - [Error Responses](#error-responses)
@@ -394,6 +395,63 @@ Returned when ZASIS cannot read HTTP request payload before validation or execut
   }
 }
 ```
+
+---
+
+### Bulk interpretation
+
+**`POST /ruleSetExecution/{ruleSetId}/bulk`**
+
+Interprets many input strings against the same RuleSet in one request. The RuleSet is loaded once and each item is interpreted exactly like a single [Execute RuleSet](#execute-ruleset) call, in input order.
+
+#### Request Body
+
+```json
+{
+  "items": [
+    { "id": "scan-001", "string_to_be_interpreted": "<Start><A7X>MatA<End>" },
+    { "id": "scan-002", "string_to_be_interpreted": "<Start><A7X>MatB<End>",
+      "context": [ { "ctx_key": "plant", "value": "1000" } ] }
+  ]
+}
+```
+
+| Field                              | Type            | Required | Description                                              |
+|-----------------------------------|-----------------|----------|----------------------------------------------------------|
+| `items`                            | `array<object>` | Yes      | Items to interpret, at most **50** per request          |
+| `items[].id`                       | `string`        | Yes      | Client-chosen ID, echoed back to map results to inputs  |
+| `items[].string_to_be_interpreted` | `string`        | Yes      | Raw input string, same as single call                   |
+| `items[].context`                  | `array<object>` | No       | Per-item context, same as single call                   |
+
+Field names are matched case-insensitively. Unknown fields (e.g. `options.includeTrace`) are ignored. `Content-Type: application/json` is required.
+
+#### Response — 200 OK
+
+```json
+{
+  "RULESETID": "BARCODE_01",
+  "SUMMARY": { "TOTAL": 2, "OK": 2, "FAILED": 0, "SKIPPEDONPREVERROR": 0 },
+  "ITEMS": [
+    { "ID": "scan-001", "STATUS": "ok",
+      "OUTPUT": { "RESULTS": [ { "TARGETFIELD": "MaterialNo", "INTERPRETATIONRESULT": "MatA" } ], "CONTEXT": [] } },
+    { "ID": "scan-002", "STATUS": "ok",
+      "OUTPUT": { "RESULTS": [ { "TARGETFIELD": "MaterialNo", "INTERPRETATIONRESULT": "MatB" } ],
+                  "CONTEXT": [ { "CTX_KEY": "plant", "VALUE": "1000" } ] } }
+  ]
+}
+```
+
+- `ITEMS` — one entry per input item, in input order.
+- `STATUS` — `ok` when the item was interpreted.
+- `OUTPUT` — identical in shape to the single [Execute RuleSet](#execute-ruleset) response. `no match` is a regular value inside an `ok` item, not an error.
+
+#### Errors
+
+Request-level errors use the standard [error format](#error-responses) and behave like the single call:
+
+- **400** — unknown `ruleSetId` (`ZASIS_MSGS/007`), `Content-Type` not `application/json` (`ZASIS_MSGS/006`), malformed path
+- **405** — any method other than `POST` on the bulk URL (`ZASIS_MSGS/016`)
+- **403** — calling user lacks execute authorization for the RuleSet
 
 ---
 

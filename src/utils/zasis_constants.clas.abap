@@ -72,6 +72,24 @@ CLASS zasis_constants DEFINITION
         resource_path  TYPE string VALUE 'ruleSetExport',
       END OF export.
 
+    CONSTANTS:
+      "! Bulk interpretation endpoint settings.
+      BEGIN OF bulk,
+        "! Sub-resource path (last path element) of the bulk endpoint.
+        resource_path TYPE string VALUE `bulk`,
+        "! Maximum number of items per bulk request.
+        max_items     TYPE i VALUE 50,
+        "! Item status values.
+        BEGIN OF item_status,
+          "! Item interpreted successfully.
+          ok                    TYPE string VALUE `ok`,
+          "! Item failed with a ZASIS error.
+          error                 TYPE string VALUE `error`,
+          "! Item skipped because a previous item failed (stopOnFirstError).
+          skipped_on_prev_error TYPE string VALUE `skippedOnPrevError`,
+        END OF item_status,
+      END OF bulk.
+
   PROTECTED SECTION.
   PRIVATE SECTION.
 ENDCLASS.
