@@ -2,11 +2,7 @@
   "input_folder": "src",
   "input_filter": [],
   "exclude_filter": [
-    "\\.dcls\\.",
-    "zasis_i_ruleset\\.",
-    "zasis_i_rulesetitem",
-    "zbp_",
-    "zasis_cl_interprettypetext"
+    "zbp_"
   ],
   "output_folder": "output",
   "libs": [

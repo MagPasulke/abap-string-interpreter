@@ -145,9 +145,7 @@
     "try_without_catch": true,
     "type_form_parameters": true,
     "types_naming": {
-      "exclude": [
-        "/json/"
-      ],
+      "exclude": [],
       "pattern": "^TY_.+$"
     },
     "sicf_consistency": true,
@@ -181,9 +179,7 @@
     "constructor_visibility_public": true,
     "modify_only_own_db_tables": true,
     "cyclic_oo": true,
-    // Disabled: experimental rule with false positives — does not recognize
-    // early RETURN as a valid FOR ALL ENTRIES emptiness guard.
-    "unsecure_fae": false,
+    "unsecure_fae": true,
     "call_transaction_authority_check": true,
     "dangerous_statement": {
       "exclude": [],
