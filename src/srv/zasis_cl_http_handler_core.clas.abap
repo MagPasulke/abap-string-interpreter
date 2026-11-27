@@ -16,8 +16,12 @@ CLASS zasis_cl_http_handler_core DEFINITION
              context                  TYPE zasis_tt_interpret_context,
            END OF ty_bulk_request_item,
            ty_bulk_request_items TYPE STANDARD TABLE OF ty_bulk_request_item WITH EMPTY KEY,
+           BEGIN OF ty_bulk_options,
+             stoponfirsterror TYPE abap_bool,
+           END OF ty_bulk_options,
            BEGIN OF ty_bulk_request,
-             items TYPE ty_bulk_request_items,
+             items   TYPE ty_bulk_request_items,
+             options TYPE ty_bulk_options,
            END OF ty_bulk_request.
 
     TYPES: BEGIN OF ty_bulk_summary,
@@ -26,17 +30,30 @@ CLASS zasis_cl_http_handler_core DEFINITION
              failed             TYPE i,
              skippedonpreverror TYPE i,
            END OF ty_bulk_summary,
-           BEGIN OF ty_bulk_response_item,
+           BEGIN OF ty_bulk_item_error,
+             code    TYPE string,
+             message TYPE string,
+           END OF ty_bulk_item_error,
+           "! Response item shapes; serialized separately so that each item
+           "! only carries the keys relevant for its status (no empty OUTPUT/ERROR)
+           BEGIN OF ty_bulk_ok_item,
              id     TYPE string,
              status TYPE string,
              output TYPE zasis_interpret_output,
-           END OF ty_bulk_response_item,
-           ty_bulk_response_items TYPE STANDARD TABLE OF ty_bulk_response_item WITH EMPTY KEY,
-           BEGIN OF ty_bulk_response,
+           END OF ty_bulk_ok_item,
+           BEGIN OF ty_bulk_error_item,
+             id     TYPE string,
+             status TYPE string,
+             error  TYPE ty_bulk_item_error,
+           END OF ty_bulk_error_item,
+           BEGIN OF ty_bulk_skipped_item,
+             id     TYPE string,
+             status TYPE string,
+           END OF ty_bulk_skipped_item,
+           BEGIN OF ty_bulk_response_head,
              rulesetid TYPE zasis_ruleset_id,
              summary   TYPE ty_bulk_summary,
-             items     TYPE ty_bulk_response_items,
-           END OF ty_bulk_response.
+           END OF ty_bulk_response_head.
 
     "! Creates the core handler with injected request and response adapters
     METHODS constructor
@@ -184,6 +201,7 @@ CLASS zasis_cl_http_handler_core IMPLEMENTATION.
 
   METHOD handle_bulk.
     DATA request_body TYPE ty_bulk_request.
+    DATA item_jsons TYPE string_table.
 
     DATA(ruleset_id) = _validator->extract_ruleset_id( ).
 
@@ -203,21 +221,50 @@ CLASS zasis_cl_http_handler_core IMPLEMENTATION.
     DATA(ruleset) = zasis_cl_ruleset_factory=>get_ruleset_by_rulesetid( ruleset_id ).
     DATA(interpreter) = NEW zasis_cl_interpreter( ).
 
-    DATA(response_body) = VALUE ty_bulk_response( rulesetid = ruleset_id ).
+    DATA(head) = VALUE ty_bulk_response_head( rulesetid = ruleset_id ).
+    DATA(stop) = abap_false.
 
     LOOP AT request_body-items INTO DATA(item).
-      APPEND VALUE #( id     = item-id
-                      status = zasis_constants=>bulk-item_status-ok
-                      output = interpreter->execute( ruleset                  = ruleset
-                                                     string_to_be_interpreted = item-string_to_be_interpreted
-                                                     context                  = item-context ) )
-             TO response_body-items.
-      response_body-summary-ok = response_body-summary-ok + 1.
+      IF stop = abap_true.
+        APPEND /ui2/cl_json=>serialize( data = VALUE ty_bulk_skipped_item(
+                                          id     = item-id
+                                          status = zasis_constants=>bulk-item_status-skipped_on_prev_error ) )
+               TO item_jsons.
+        head-summary-skippedonpreverror = head-summary-skippedonpreverror + 1.
+        CONTINUE.
+      ENDIF.
+
+      TRY.
+          DATA(output) = interpreter->execute( ruleset                  = ruleset
+                                               string_to_be_interpreted = item-string_to_be_interpreted
+                                               context                  = item-context ).
+          APPEND /ui2/cl_json=>serialize( data = VALUE ty_bulk_ok_item(
+                                            id     = item-id
+                                            status = zasis_constants=>bulk-item_status-ok
+                                            output = output ) )
+                 TO item_jsons.
+          head-summary-ok = head-summary-ok + 1.
+
+        CATCH zasis_cx_exc INTO DATA(item_exception).
+          DATA(t100_key) = CAST if_t100_message( item_exception )->t100key.
+          APPEND /ui2/cl_json=>serialize( data = VALUE ty_bulk_error_item(
+                                            id     = item-id
+                                            status = zasis_constants=>bulk-item_status-error
+                                            error  = VALUE #( code    = |{ t100_key-msgid }/{ t100_key-msgno }|
+                                                              message = item_exception->get_text( ) ) ) )
+                 TO item_jsons.
+          head-summary-failed = head-summary-failed + 1.
+          stop = request_body-options-stoponfirsterror.
+      ENDTRY.
     ENDLOOP.
 
-    response_body-summary-total = lines( request_body-items ).
+    head-summary-total = lines( request_body-items ).
 
-    result = /ui2/cl_json=>serialize( data = response_body ).
+    DATA(head_json) = /ui2/cl_json=>serialize( data = head ).
+    DATA(items_json) = concat_lines_of( table = item_jsons
+                                        sep   = `,` ).
+    result = |{ substring( val = head_json
+                           len = strlen( head_json ) - 1 ) },"ITEMS":[{ items_json }]\}|.
   ENDMETHOD.
 
   METHOD handle_get.
