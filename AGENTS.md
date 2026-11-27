@@ -6,7 +6,11 @@ ZASIS is an ABAP-based String Interpreter that allows configuring RuleSets to ex
 
 **This is an ABAP project without a live SAP system connection.** All source files are stored in the **abapGit serialized file format** so the repository can be synced to an ABAP system via [abapGit](https://docs.abapgit.org/). The workspace contains `.clas.abap`, `.intf.abap`, `.ddls.asddls`, `.tabl.xml`, `.doma.xml`, `.dtel.xml`, `.bdef.asbdef`, `.srvd.srvdsrv`, and other abapGit-standard file types. There are many agent skills available (prefixed `abapgit-*`) that help create files in the correct abapGit format for each object type (CLAS, INTF, TABL, DDLS, DOMA, DTEL, BDEF, SRVD, SRVB, FUGR, etc.). **Always use the appropriate skill when creating new ABAP repository objects** to ensure correct file structure and XML metadata.
 
-**Target System**: ABAP Cloud Developer Trial 2023 (ABAP Platform 2023 / SAP BASIS 758).
+**Target System**: ABAP Platform 2025 (SAP BASIS 816).
+
+### Language
+
+**All project artifacts must be written in English** — issues, pull requests, commit messages, code comments, ABAP Doc, message texts, and documentation.
 
 ### Versioning
 
@@ -96,7 +100,7 @@ For the full exception handling guide — class hierarchy, message class (`ZASIS
 Two MCP servers are configured in `.vscode/mcp.json` to assist development:
 
 1. **`abap-mcp`** (`mcp_abap-mcp_*` tools) — General ABAP development assistance:
-   - `mcp_abap-mcp_abap_feature_matrix` — Check ABAP feature availability across platform versions to ensure compatibility with the target release (758)
+   - `mcp_abap-mcp_abap_feature_matrix` — Check ABAP feature availability across platform versions to ensure compatibility with the target release (816)
    - `mcp_abap-mcp_abap_lint` — ABAP linting support
    - `mcp_abap-mcp_sap_community_search` / `mcp_abap-mcp_search` — Search SAP community and documentation
    - `mcp_abap-mcp_sap_get_object_details` / `mcp_abap-mcp_sap_search_objects` — Look up SAP standard object details
