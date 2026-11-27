@@ -69,6 +69,12 @@ This applies to ALL changes — code, documentation, skills, configuration. No e
 
 > **Future note:** This conservative approach (manual on-stack sync & test from feature branch + manual merge) may be replaced with automated pipeline sync and auto-merge on green in the future.
 
+### Issue Tracking
+
+- **Issue tracker:** GitHub Issues (MagPasulke/abap-string-interpreter) via the `gh` CLI, using sub-issues and native blocked-by dependencies. See [`docs/agents/issue-tracker.md`](docs/agents/issue-tracker.md).
+- **Triage labels:** default five-role vocabulary `needs-triage`, `needs-info`, `ready-for-agent`, `ready-for-human`, `wontfix`. See [`docs/agents/triage-labels.md`](docs/agents/triage-labels.md).
+- **Domain docs:** single-context — `GLOSSARY.md` and `docs/adr/` at the repo root, created lazily. See [`docs/agents/domain.md`](docs/agents/domain.md).
+
 ---
 
 ## Architecture & Package Structure
