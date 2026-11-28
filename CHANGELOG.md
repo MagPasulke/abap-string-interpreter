@@ -1,5 +1,47 @@
 # Changelog
 
+## [1.2.0](https://github.com/MagPasulke/abap-string-interpreter/compare/abap-string-interpreter-v1.1.0...abap-string-interpreter-v1.2.0) (2026-11-28)
+
+
+### Features
+
+* add bulk interpretation endpoint ([#163](https://github.com/MagPasulke/abap-string-interpreter/issues/163)) ([8a0214f](https://github.com/MagPasulke/abap-string-interpreter/commit/8a0214fec84f4a1b8fddae3c9c675170a19727c0))
+* add config table and key domain ([#183](https://github.com/MagPasulke/abap-string-interpreter/issues/183)) ([19d0d5f](https://github.com/MagPasulke/abap-string-interpreter/commit/19d0d5fe690be71cce1649026bb4d832895dfd88))
+* bulk envelope validation (ticket 02) ([#169](https://github.com/MagPasulke/abap-string-interpreter/issues/169)) ([524662d](https://github.com/MagPasulke/abap-string-interpreter/commit/524662d230e9991f0287e2cee94938f431420fe0))
+* bulk item errors and stopOnFirstError (ticket 03) ([#171](https://github.com/MagPasulke/abap-string-interpreter/issues/171)) ([6691628](https://github.com/MagPasulke/abap-string-interpreter/commit/6691628c4e6867044c964ead840036225ec8be1c))
+* business configuration for bulk max items ([#191](https://github.com/MagPasulke/abap-string-interpreter/issues/191)) ([8637210](https://github.com/MagPasulke/abap-string-interpreter/commit/8637210aebc176fb58201396a1240fdc54fe6c7d)), closes [#181](https://github.com/MagPasulke/abap-string-interpreter/issues/181)
+* maintain config via RAP service ([#187](https://github.com/MagPasulke/abap-string-interpreter/issues/187)) ([6b71016](https://github.com/MagPasulke/abap-string-interpreter/commit/6b710162e4f181db6a68ca743be765251dcb0f89))
+* read bulk max items from config ([#186](https://github.com/MagPasulke/abap-string-interpreter/issues/186)) ([f471234](https://github.com/MagPasulke/abap-string-interpreter/commit/f471234e1f69a1d8515a8bc4dfa593633fc5fb35))
+
+
+### Bug Fixes
+
+* flag empty CATCH blocks and mark intentional ones with ##NO_HANDLER ([#166](https://github.com/MagPasulke/abap-string-interpreter/issues/166)) ([f8db5d0](https://github.com/MagPasulke/abap-string-interpreter/commit/f8db5d0428f391924666d0c21b5e0e6760a01510))
+
+
+### Documentation
+
+* **agents:** restrict agent output to issues and skill-defined docs ([#190](https://github.com/MagPasulke/abap-string-interpreter/issues/190)) ([8d8e805](https://github.com/MagPasulke/abap-string-interpreter/commit/8d8e80527991a8ec15bf5eb0e65f59e6882f1f2f))
+* configure issue tracker, triage labels and domain docs for agent skills ([#182](https://github.com/MagPasulke/abap-string-interpreter/issues/182)) ([bb2b4ff](https://github.com/MagPasulke/abap-string-interpreter/commit/bb2b4ff4562ddd93ad3de6315bbd620e44293db9))
+* recommend /zasis/api ICF node and align related docs ([#167](https://github.com/MagPasulke/abap-string-interpreter/issues/167)) ([62f6786](https://github.com/MagPasulke/abap-string-interpreter/commit/62f6786170dec46983631e371a9881f5186393af))
+* require English for public artifacts and update target system to 2025 ([#177](https://github.com/MagPasulke/abap-string-interpreter/issues/177)) ([20975b7](https://github.com/MagPasulke/abap-string-interpreter/commit/20975b7ab18b331f1fdde4c097256ad98414079a))
+
+
+### Development & Tooling
+
+* add mattpocock engineering skills ([#165](https://github.com/MagPasulke/abap-string-interpreter/issues/165)) ([c994407](https://github.com/MagPasulke/abap-string-interpreter/commit/c9944073427761879f766bd92032af53195e6a39))
+* carry local config and node_modules into new Orca worktrees ([#168](https://github.com/MagPasulke/abap-string-interpreter/issues/168)) ([750b32a](https://github.com/MagPasulke/abap-string-interpreter/commit/750b32afb4c63a7e47ef33740fc285d70a3a7b23))
+* **deps-dev:** update abaplint packages and @types/node ([#158](https://github.com/MagPasulke/abap-string-interpreter/issues/158)) ([3c8faa3](https://github.com/MagPasulke/abap-string-interpreter/commit/3c8faa397fe13cbf44732cdb25dfb713625d4a4a))
+* **deps:** override vulnerable effect/zod of @opencode-ai/plugin ([#161](https://github.com/MagPasulke/abap-string-interpreter/issues/161)) ([b03350a](https://github.com/MagPasulke/abap-string-interpreter/commit/b03350a20d839791b41a077ebc0995191ac905b1))
+* **deps:** update abaplint tooling and drop obsolete excludes ([#172](https://github.com/MagPasulke/abap-string-interpreter/issues/172)) ([b08ae0e](https://github.com/MagPasulke/abap-string-interpreter/commit/b08ae0e1d0f168086f14ed821cce8572e63b32d0))
+* ensure new worktrees start from up-to-date state ([#195](https://github.com/MagPasulke/abap-string-interpreter/issues/195)) ([cf138e3](https://github.com/MagPasulke/abap-string-interpreter/commit/cf138e300d7078403c3f9bc14269034f6bfcaa45))
+* fix typecheck script and enable unused_ddic ([#159](https://github.com/MagPasulke/abap-string-interpreter/issues/159)) ([c6aceca](https://github.com/MagPasulke/abap-string-interpreter/commit/c6aceca2adf99d711991845c69f01eea1492d509))
+* ignore tmp/ folder ([#162](https://github.com/MagPasulke/abap-string-interpreter/issues/162)) ([8ff3425](https://github.com/MagPasulke/abap-string-interpreter/commit/8ff34253ed5d18a4c60b30849d6f2c7b0e737148))
+* **lint:** abaplint phase 2 – new rules, tightened thresholds, autofix rules ([#196](https://github.com/MagPasulke/abap-string-interpreter/issues/196)) ([8c4b2c6](https://github.com/MagPasulke/abap-string-interpreter/commit/8c4b2c6b2afdb91132b7ccef04237b82eae8922b))
+* **lint:** enable phase 1 abaplint rules ([#194](https://github.com/MagPasulke/abap-string-interpreter/issues/194)) ([f65cdef](https://github.com/MagPasulke/abap-string-interpreter/commit/f65cdefa37565bd4215b8ef4ccef5be8327c9d54))
+* port ADT custom tools to OpenCode V2 plugin API ([#185](https://github.com/MagPasulke/abap-string-interpreter/issues/185)) ([eba0330](https://github.com/MagPasulke/abap-string-interpreter/commit/eba0330375c48017a8227874609e56b57091b3a5))
+* update abaplint and outdated dependencies ([#193](https://github.com/MagPasulke/abap-string-interpreter/issues/193)) ([2d8b9ec](https://github.com/MagPasulke/abap-string-interpreter/commit/2d8b9ecc965799cb04900e3c51727fbeda2f7b83))
+
 ## [1.1.0](https://github.com/MagPasulke/abap-string-interpreter/compare/abap-string-interpreter-v1.0.3...abap-string-interpreter-v1.1.0) (2026-11-23)
 
 
