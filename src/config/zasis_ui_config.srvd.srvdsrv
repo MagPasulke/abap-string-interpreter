@@ -1,0 +1,4 @@
+@EndUserText.label: 'Configuration - UI Service'
+define service ZASIS_UI_CONFIG {
+  expose ZASIS_C_CONFIG as Config;
+}

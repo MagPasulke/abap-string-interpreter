@@ -15,6 +15,7 @@ CLASS ltcl_message_consistency DEFINITION FOR TESTING
     METHODS test_event_producer_no_intf FOR TESTING.
     METHODS test_custom_logic_not_exist FOR TESTING.
     METHODS test_custom_logic_no_intf FOR TESTING.
+    METHODS test_invalid_config_key FOR TESTING.
 ENDCLASS.
 
 CLASS ltcl_message_consistency IMPLEMENTATION.
@@ -53,6 +54,10 @@ CLASS ltcl_message_consistency IMPLEMENTATION.
 
   METHOD test_custom_logic_no_intf.
     assert_message_resolves( textid = zasis_cx_ruleset_ui=>custom_logic_no_intf ).
+  ENDMETHOD.
+
+  METHOD test_invalid_config_key.
+    assert_message_resolves( textid = zasis_cx_ruleset_ui=>invalid_config_key ).
   ENDMETHOD.
 
 ENDCLASS.

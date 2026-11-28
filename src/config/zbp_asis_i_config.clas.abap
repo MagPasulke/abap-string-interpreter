@@ -1,0 +1,7 @@
+CLASS zbp_asis_i_config DEFINITION PUBLIC ABSTRACT FINAL FOR BEHAVIOR OF zasis_i_config.
+"
+ENDCLASS.
+
+CLASS zbp_asis_i_config IMPLEMENTATION.
+"
+ENDCLASS.

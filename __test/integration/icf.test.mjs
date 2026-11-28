@@ -50,7 +50,7 @@ errorFormatTests(describe, it, assert, request, RULESET);
 bulkTests(describe, it, assert, request, RULESET);
 
 // ICF-only: bulk max items read from zasis_config
-describe('POST /ruleSetExecution/{id}/bulk with configured BULK_MAX_ITEMS', () => {
+describe('POST /ruleSetExecution/{id}/bulk with configured BULK_MAX', () => {
   const bulkUrl = `/ruleSetExecution/${RULESET}/bulk`;
   const items = (n) => Array.from({ length: n }, (_, i) => ({ id: `id-${i + 1}`, string_to_be_interpreted: '<Start><A7X>MatA<End>' }));
   const getError = (body) => {
@@ -59,11 +59,11 @@ describe('POST /ruleSetExecution/{id}/bulk with configured BULK_MAX_ITEMS', () =
   };
 
   after(async () => {
-    await deleteConfig('BULK_MAX_ITEMS');
+    await deleteConfig('BULK_MAX');
   });
 
   it('Custom limit rejects more items than configured', async () => {
-    await setConfig('BULK_MAX_ITEMS', '3');
+    await setConfig('BULK_MAX', '3');
     const { status, body } = await request('POST', bulkUrl, { body: { items: items(4) } });
     assert.equal(status, 400);
     const error = getError(body);
@@ -72,20 +72,20 @@ describe('POST /ruleSetExecution/{id}/bulk with configured BULK_MAX_ITEMS', () =
   });
 
   it('Custom limit above default accepts more than 50 items', async () => {
-    await setConfig('BULK_MAX_ITEMS', '60');
+    await setConfig('BULK_MAX', '60');
     const { status } = await request('POST', bulkUrl, { body: { items: items(60) } });
     assert.equal(status, 200);
   });
 
   it('Invalid value falls back to 50', async () => {
-    await setConfig('BULK_MAX_ITEMS', 'abc');
+    await setConfig('BULK_MAX', 'abc');
     const { status, body } = await request('POST', bulkUrl, { body: { items: items(51) } });
     assert.equal(status, 400);
     assert.ok(getError(body).message.includes('50'));
   });
 
   it('Without a row falls back to 50', async () => {
-    await deleteConfig('BULK_MAX_ITEMS');
+    await deleteConfig('BULK_MAX');
     const ok = await request('POST', bulkUrl, { body: { items: items(50) } });
     assert.equal(ok.status, 200);
     const tooMany = await request('POST', bulkUrl, { body: { items: items(51) } });

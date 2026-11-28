@@ -140,6 +140,12 @@
      <MSGNR>023</MSGNR>
      <TEXT>Bulk item id &amp;1 is not unique</TEXT>
     </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZASIS_MSGS</ARBGB>
+     <MSGNR>024</MSGNR>
+     <TEXT>Configuration key &amp;1 is not allowed</TEXT>
+    </T100>
    </T100>
   </asx:values>
  </asx:abap>

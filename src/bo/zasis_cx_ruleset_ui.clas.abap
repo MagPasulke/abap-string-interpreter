@@ -89,6 +89,15 @@ CLASS zasis_cx_ruleset_ui DEFINITION
                  attr4 TYPE scx_attrname VALUE '',
                END OF catalog_entry_in_use.
 
+    CONSTANTS: BEGIN OF invalid_config_key,
+                 msgid TYPE symsgid      VALUE 'ZASIS_MSGS',
+                 msgno TYPE symsgno      VALUE '024',
+                 attr1 TYPE scx_attrname VALUE 'CONFIGKEY',
+                 attr2 TYPE scx_attrname VALUE '',
+                 attr3 TYPE scx_attrname VALUE '',
+                 attr4 TYPE scx_attrname VALUE '',
+               END OF invalid_config_key.
+
     "! Creates a RAP behavior exception with a T100 message and optional message variable attributes.
     "! @parameter severity  | Message severity for the Fiori Elements UI (default: error)
     "! @parameter textid    | T100 message key identifying the error text; uses the default text if omitted
@@ -97,6 +106,7 @@ CLASS zasis_cx_ruleset_ui DEFINITION
     "! @parameter regex     | Regex pattern used as message variable (replaces &1 in the message text)
     "! @parameter classname | Class name used as message variable (replaces &1 in the message text)
     "! @parameter action    | Action name used as message variable (replaces &1 in the message text)
+    "! @parameter configkey | Configuration key used as message variable (replaces &1 in the message text)
     METHODS constructor
       IMPORTING severity  TYPE if_abap_behv_message=>t_severity DEFAULT if_abap_behv_message=>severity-error
                 textid    LIKE if_t100_message=>t100key         OPTIONAL
@@ -104,11 +114,13 @@ CLASS zasis_cx_ruleset_ui DEFINITION
                 rulesetid TYPE zasis_ruleset_id                 OPTIONAL
                 !regex    TYPE zasis_interpretrule              OPTIONAL
                 classname TYPE zasis_customlogic                OPTIONAL
-                !action   TYPE string                           OPTIONAL.
+                !action   TYPE string                           OPTIONAL
+                configkey TYPE zasis_config_key                 OPTIONAL.
 
     DATA rulesetid TYPE zasis_ruleset_id    READ-ONLY.
     DATA regex     TYPE zasis_interpretrule READ-ONLY.
     DATA action    TYPE string              READ-ONLY.
+    DATA configkey TYPE zasis_config_key    READ-ONLY.
 
   PROTECTED SECTION.
   PRIVATE SECTION.
@@ -132,5 +144,6 @@ CLASS zasis_cx_ruleset_ui IMPLEMENTATION.
     me->rulesetid = rulesetid.
     me->regex = regex.
     me->action = action.
+    me->configkey = configkey.
   ENDMETHOD.
 ENDCLASS.

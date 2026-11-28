@@ -88,6 +88,7 @@ src/                          Root package (ZASIS)
 │   ├── enhcatalog/           Custom Logic Catalog — RAP managed BO with draft for registering custom logic implementations (zasis_custlogcat), Fiori-annotated consumption view, OData V4 service (zasis_ui_custlogcatalog)
 │   ├── evtcatalog/           Event Producer Catalog — RAP managed BO with draft for registering event producer implementations (zasis_evtprodcat), Fiori-annotated consumption view, OData V4 service (zasis_ui_evtprodcatalog)
 │   └── sharedobjects/        Shared catalog objects reused by both catalogs — status domain/data element (ZASIS_CAT_STAT), description data element (ZASIS_CAT_DESCR), status-text virtual element (zasis_cl_catstattext)
+├── config/                   Technical configuration (package ZASIS_CONFIG) — key-value table zasis_config (key domain ZASIS_CONFIG_KEY fixed values), typed reader zasis_if_config / zasis_cl_config, RAP managed BO with draft (zbp_asis_i_config), OData V4 service (zasis_ui_config)
 ├── dm/                       Data Model — DB tables (rulesethd, rulesetitm, ruleset_refs), CDS interface views, domains/data elements, table types for interpreter results
 ├── srv/                      HTTP Service — REST handler (zasis_cl_http_handler) routing GET/POST for RuleSet retrieval and string interpretation, request validation
 └── utils/                    Shared utilities — constants (zasis_constants), custom exception (zasis_cx_exc / ZASIS_MSGS), domain fixed-value query provider, class validator

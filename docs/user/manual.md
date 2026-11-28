@@ -419,7 +419,7 @@ Interprets many input strings against the same RuleSet in one request. The RuleS
 
 | Field                              | Type            | Required | Description                                              |
 |-----------------------------------|-----------------|----------|----------------------------------------------------------|
-| `items`                            | `array<object>` | Yes      | Items to interpret, at most **50** per request          |
+| `items`                            | `array<object>` | Yes      | Items to interpret, at most **50** per request (configurable, see below) |
 | `items[].id`                       | `string`        | Yes      | Client-chosen ID, echoed back to map results to inputs  |
 | `items[].string_to_be_interpreted` | `string`        | Yes      | Raw input string, same as single call                   |
 | `items[].context`                  | `array<object>` | No       | Per-item context, same as single call                   |
@@ -463,6 +463,8 @@ The envelope is validated before the RuleSet is loaded; the whole request is rej
 | More than 50 items (exactly 50 is accepted)             | `ZASIS_MSGS/021` | the maximum (50)     |
 | An item's `id` is missing, empty or blank             | `ZASIS_MSGS/022` | the 1-based position |
 | An `id` occurs more than once (case-sensitive)          | `ZASIS_MSGS/023` | the first duplicate  |
+
+The maximum defaults to 50 and can be changed without code changes via config key `BULK_MAX` (Configuration UI `ZASIS_UI_CONFIG`). If no entry exists or the value is not a positive integer, 50 applies.
 
 Items are checked in input order; the first offending item is reported. An empty `string_to_be_interpreted` is not an envelope error.
 
@@ -737,6 +739,8 @@ ZASIS uses a dedicated authorization object (`ZASIS_GRL`) to control access to R
 | Maintain           | Saving changes via the Fiori application  |
 
 The same authorization object is also used for the **Custom Logic Catalog** and the **Event Producer Catalog**. Users who register, change, or retire custom logic or event producer catalog entries need the corresponding display/create/change/delete activities in addition to RuleSet permissions.
+
+Maintaining **configuration** entries (e.g. `BULK_MAX`) also uses `ZASIS_GRL`: display (`03`) with `ZASIS_RULE` covering the config key (or `*`), plus create/change/delete (`01`/`02`/`06`). See [Authorization](../technical/authorization.md#configuration-maintenance) for details.
 
 Users without the required authorization receive a `403 Forbidden` response on API calls, or see no data in the Fiori application.
 
