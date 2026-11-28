@@ -12,6 +12,10 @@ ZASIS is an ABAP-based String Interpreter that allows configuring RuleSets to ex
 
 **All project artifacts must be written in English** — issues, pull requests, commit messages, code comments, ABAP Doc, message texts, and documentation.
 
+### No Extra Files
+
+**Do not create extra files** such as research notes, reports, session summaries, or scratch documents in the repository. Results, findings, and decisions go into **GitHub issues** (or PR descriptions), or into the locations defined by the engineering skills: `GLOSSARY.md`, `docs/adr/`, and `docs/agents/`. Temporary files belong in the system temp directory and must not be committed.
+
 ### Versioning
 
 The project version is maintained in two places, both updated automatically by Release Please on merge of a Release PR:
