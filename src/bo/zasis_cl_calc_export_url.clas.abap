@@ -14,7 +14,9 @@ ENDCLASS.
 CLASS zasis_cl_calc_export_url IMPLEMENTATION.
 
   METHOD if_sadl_exit_calc_element_read~get_calculation_info.
-    CHECK iv_entity = 'ZASIS_C_RULESET'.
+    IF iv_entity <> 'ZASIS_C_RULESET'.
+      RETURN.
+    ENDIF.
 
     LOOP AT it_requested_calc_elements ASSIGNING FIELD-SYMBOL(<calc_element>).
       CASE <calc_element>.
@@ -25,16 +27,16 @@ CLASS zasis_cl_calc_export_url IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD if_sadl_exit_calc_element_read~calculate.
-  ct_calculated_data = CORRESPONDING #( it_original_data ).
+    ct_calculated_data = CORRESPONDING #( it_original_data ).
 
-  LOOP AT ct_calculated_data ASSIGNING FIELD-SYMBOL(<row>).
-    ASSIGN COMPONENT 'RULESETID' OF STRUCTURE <row> TO FIELD-SYMBOL(<rulesetid>).
-    CHECK sy-subrc = 0.
-    ASSIGN COMPONENT 'EXPORTURL' OF STRUCTURE <row> TO FIELD-SYMBOL(<exporturl>).
-    CHECK sy-subrc = 0.
+    LOOP AT ct_calculated_data ASSIGNING FIELD-SYMBOL(<row>).
+      ASSIGN COMPONENT 'RULESETID' OF STRUCTURE <row> TO FIELD-SYMBOL(<rulesetid>).
+      CHECK sy-subrc = 0.
+      ASSIGN COMPONENT 'EXPORTURL' OF STRUCTURE <row> TO FIELD-SYMBOL(<exporturl>).
+      CHECK sy-subrc = 0.
 
-    <exporturl> = |/sap/bc/http/sap/zasis_ext_api_cld/{ zasis_constants=>export-resource_path }/{ <rulesetid> }|.
-  ENDLOOP.
+      <exporturl> = |/sap/bc/http/sap/zasis_ext_api_cld/{ zasis_constants=>export-resource_path }/{ <rulesetid> }|.
+    ENDLOOP.
   ENDMETHOD.
 
 ENDCLASS.
