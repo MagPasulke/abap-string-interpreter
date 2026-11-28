@@ -153,6 +153,12 @@
     "use_new": true,
     "when_others_last": true,
     "whitespace_end": true,
+    "unit_test_assertions": true,
+    "stale_subrc": true,
+    "subrc_after_assign": true,
+    "field_symbol_never_assigned": true,
+    "constant_condition": true,
+    "loop_target_misuse": true,
     "xml_consistency": true,
     "use_bool_expression": true,
     "use_class_based_exceptions": {
