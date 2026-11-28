@@ -91,7 +91,7 @@
       "types": "^(?!TY_)[A-Z]{1,2}_",
       "methodParameters": "^[ICER].?_",
       "allowIsPrefixBoolean": true,
-      "maxIssuesPerFile": 10
+      "maxIssuesPerFile": 0
     },
     "unknown_types": true,
     "begin_end_names": true,
@@ -116,8 +116,12 @@
     "prefer_xsdbool": true,
     "prefer_pragmas": true,
     "prefix_is_current_class": true,
-    "cyclomatic_complexity": true,
-    "nesting": true,
+    "cyclomatic_complexity": {
+      "max": 10
+    },
+    "nesting": {
+      "depth": 4
+    },
     "identical_conditions": true,
     "identical_contents": true,
     "empty_structure": {
@@ -135,7 +139,7 @@
     "method_length": {
       "exclude": [],
       "severity": "Error",
-      "statements": 100,
+      "statements": 50,
       "errorWhenEmpty": false,
       "ignoreTestClasses": false,
       "checkForms": true,
@@ -167,7 +171,7 @@
     "unused_types": true,
     "unused_variables": {
       "exclude": [],
-      "skipAbstract": true
+      "skipAbstract": false
     },
     "uncaught_exception": true,
     "try_without_catch": true,
@@ -225,7 +229,7 @@
       "deleteDynpro": true,
       "exportDynpro": true,
       "dynamicSQL": true,
-      "ignoreRAPQueryProvider": true
+      "ignoreRAPQueryProvider": false
     },
     "smim_consistency": true,
     "space_before_colon": true,
@@ -238,7 +242,7 @@
     // EML itself is case-insensitive.
     "keyword_case": {
       "style": "upper",
-      "severity": "Info",
+      "severity": "Error",
       "ignoreExceptions": false,
       "ignoreLowerClassImplmentationStatement": true,
       "ignoreGlobalClassDefinition": false,
