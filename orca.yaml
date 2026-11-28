@@ -1,3 +1,7 @@
-worktree:
-  sharedDirectories:
-    - node_modules
+scripts:
+  setup: |
+    git fetch origin --prune
+    if git merge-base --is-ancestor HEAD origin/main && [ "$(git rev-parse HEAD)" != "$(git rev-parse origin/main)" ]; then
+      echo "WARNING: worktree is based on an outdated main – rebase onto origin/main"
+    fi
+    npm ci

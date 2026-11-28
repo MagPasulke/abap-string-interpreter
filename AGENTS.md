@@ -40,7 +40,7 @@ Only enter this workflow when the user signals intent to **implement something**
 ### Implementation Workflow
 
 1. **Grill** — load `grilling` skill and clarify intent (see above). Skip if trivial or user opts out.
-2. **Create feature branch** from `main` (infer name from user's request, e.g., `feat/add-empty-regex-validation`)
+2. **Create feature branch** from a fresh remote ref — `git fetch origin --prune`, then branch from `origin/main` (or `origin/<parent-branch>` for stacked PRs) (infer name from user's request, e.g., `feat/add-empty-regex-validation`)
 3. **Push with empty commit** (`git commit --allow-empty -m "chore: initialize feature branch"` && `git push`)
 4. **Open draft PR** against `main`
 5. **Implement** the changes
@@ -52,6 +52,14 @@ Only enter this workflow when the user signals intent to **implement something**
 9. **Ask user whether to sync to SAP and run ABAP Unit tests** — use `adt_gitpull` (optionally with `checkErrors=true`) + `adt_rununit`. Never run without explicit user confirmation.
 10. **Mark PR ready for review**
     - PR description includes: "⚠️ Please sync to SAP system via abapGit and run ABAP Unit tests before merging."
+
+### Keeping Branches and Worktrees Current
+
+- **Before creating a branch or worktree:** always run `git fetch origin --prune` and branch from the remote ref — `origin/main`, or `origin/<parent-branch>` for stacked PRs. Never branch from a possibly stale local `main`.
+- **Orca worktrees:** the `orca.yaml` setup script automatically runs `git fetch origin --prune`, warns if the worktree is based on an outdated `main`, and runs `npm ci` (worktrees do not share `node_modules`). The warning cannot verify freshness of stacked branches — hence the fetch rule above.
+- **Primary checkout:** after every merge, run `git pull` on `main` followed by `npm ci`.
+- **Dependencies:** before `npm test`, ensure installed dependencies match the lockfile — run `npm ci` if `package-lock.json` changed.
+- **Stacked PRs:** target the parent branch. After the parent is merged, update the child by merging `origin/main` into it (no rebase, no force-push), then retarget the PR to `main`.
 
 This applies to ALL changes — code, documentation, skills, configuration. No exceptions.
 
