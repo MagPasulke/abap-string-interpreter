@@ -14,8 +14,8 @@ CLASS zasis_cx_no_auth DEFINITION
     "! @parameter previous | Previous exception that caused this one, for exception chaining
     METHODS constructor
       IMPORTING
-        !textid   LIKE if_t100_message=>t100key OPTIONAL
-        !previous LIKE previous OPTIONAL .
+        textid   LIKE if_t100_message=>t100key OPTIONAL
+        previous LIKE previous OPTIONAL .
   PROTECTED SECTION.
   PRIVATE SECTION.
 ENDCLASS.

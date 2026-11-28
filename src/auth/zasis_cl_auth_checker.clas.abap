@@ -16,7 +16,7 @@ CLASS zasis_cl_auth_checker IMPLEMENTATION.
 
 
   METHOD zasis_if_auth_checker~check_execute.
-      ASSERT ruleset_id IS NOT INITIAL.
+    ASSERT ruleset_id IS NOT INITIAL.
 
     AUTHORITY-CHECK OBJECT 'ZASIS_GRL'
                     ID 'ZASIS_RULE' FIELD ruleset_id
@@ -40,7 +40,7 @@ CLASS zasis_cl_auth_checker IMPLEMENTATION.
 
   METHOD zasis_if_auth_checker~check_change.
 
-      ASSERT ruleset_id IS NOT INITIAL.
+    ASSERT ruleset_id IS NOT INITIAL.
 
     AUTHORITY-CHECK OBJECT 'ZASIS_GRL'
                     ID 'ZASIS_RULE' FIELD ruleset_id

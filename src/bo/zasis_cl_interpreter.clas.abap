@@ -74,11 +74,11 @@ CLASS zasis_cl_interpreter IMPLEMENTATION.
       "in case custom logic is assigned, no need for regular processing
       IF rulesetitem-custom_logic IS NOT INITIAL.
 
-        single_interpret_result = call_custom_logic(  custom_logic_class           = rulesetitem-custom_logic
-                                                          ruleset_ref              = ruleset
-                                                          current_rule_item        = rulesetitem
-                                                          string_to_be_interpreted = string_to_be_interpreted
-                                                          context                  = context ).
+        single_interpret_result = call_custom_logic( custom_logic_class       = rulesetitem-custom_logic
+                                                     ruleset_ref              = ruleset
+                                                     current_rule_item        = rulesetitem
+                                                     string_to_be_interpreted = string_to_be_interpreted
+                                                     context                  = context ).
 
       ELSE.
 
@@ -111,7 +111,7 @@ CLASS zasis_cl_interpreter IMPLEMENTATION.
             " So if result = original, we treat it as no-match.
             " Known limitation: if the replacement produces the same string as input
             " (e.g. regex = 'A' with = 'A' on 'ABC'), this is falsely treated as no-match.
-            IF result_replace NE string_to_be_interpreted.
+            IF result_replace <> string_to_be_interpreted.
               single_interpret_result = result_replace.
             ENDIF.
 

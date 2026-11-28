@@ -28,7 +28,7 @@ CLASS zasis_cl_class_validator IMPLEMENTATION.
     DATA(upper_class) = to_upper( class_name ).
 
     cl_abap_typedescr=>describe_by_name( EXPORTING  p_name         = upper_class
-                                         RECEIVING  p_descr_ref    = DATA(type_descr)
+                                         RECEIVING p_descr_ref     = DATA(type_descr)
                                          EXCEPTIONS type_not_found = 1
                                                     OTHERS         = 2 ).
 

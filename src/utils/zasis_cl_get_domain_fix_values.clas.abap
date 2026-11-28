@@ -38,21 +38,21 @@ CLASS zasis_cl_get_domain_fix_values IMPLEMENTATION.
         IF sy-subrc <> 0.
           "domain name filter not provided : return empty result
           respond_empty( io_response ).
-          EXIT.
+          RETURN.
         ENDIF.
 
         domain_name = domain_name_filter-range[ 1 ]-low.
 
         cl_abap_typedescr=>describe_by_name(
           EXPORTING  p_name         = domain_name
-          RECEIVING  p_descr_ref    = DATA(type_descr)
+          RECEIVING p_descr_ref     = DATA(type_descr)
           EXCEPTIONS type_not_found = 1
                      OTHERS         = 2 ).
 
         IF sy-subrc <> 0.
           "domain/type does not exist : return empty result instead of dumping
           respond_empty( io_response ).
-          EXIT.
+          RETURN.
         ENDIF.
 
         CAST cl_abap_elemdescr( type_descr )->get_ddic_fixed_values(
@@ -68,7 +68,7 @@ CLASS zasis_cl_get_domain_fix_values IMPLEMENTATION.
         IF sy-subrc > 0.
           "domain not found or not a DDIC type : return empty result
           respond_empty( io_response ).
-          EXIT.
+          RETURN.
         ENDIF.
 
         LOOP AT fixed_values INTO DATA(fixed_value).

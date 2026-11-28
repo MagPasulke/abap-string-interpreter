@@ -23,11 +23,11 @@ CLASS zasis_cl_configkeytext IMPLEMENTATION.
     original_data = CORRESPONDING #( it_original_data ).
 
     CAST cl_abap_elemdescr( cl_abap_typedescr=>describe_by_name( 'ZASIS_CONFIG_KEY' ) )->get_ddic_fixed_values(
-      EXPORTING  p_langu        = sy-langu
-      RECEIVING  p_fixed_values = DATA(fixed_values)
-      EXCEPTIONS not_found      = 1
-                 no_ddic_type   = 2
-                 OTHERS         = 3 ).
+      EXPORTING  p_langu       = sy-langu
+      RECEIVING p_fixed_values = DATA(fixed_values)
+      EXCEPTIONS not_found     = 1
+                 no_ddic_type  = 2
+                 OTHERS        = 3 ).
     IF sy-subrc <> 0.
       RETURN.
     ENDIF.

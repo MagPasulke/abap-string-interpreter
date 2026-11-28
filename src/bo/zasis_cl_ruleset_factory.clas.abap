@@ -80,7 +80,7 @@ CLASS zasis_cl_ruleset_factory IMPLEMENTATION.
 
 
     INSERT VALUE #( ruleset_id  = ruleset_ref->header-rulesetid
-                    ruleset_ref = ruleset_ref  ) INTO TABLE ruleset_refs.
+                    ruleset_ref = ruleset_ref ) INTO TABLE ruleset_refs.
 
   ENDMETHOD.
 

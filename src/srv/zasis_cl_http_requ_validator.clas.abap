@@ -148,9 +148,9 @@ CLASS zasis_cl_http_requ_validator IMPLEMENTATION.
                                         route  = path ).
     ENDIF.
 
-    IF ( path_elements[ num_path_elements - 1 ] <> |ruleSetExecution| AND
-         path_elements[ num_path_elements - 1 ] <> |ruleSet| AND
-         path_elements[ num_path_elements - 1 ] <> |ruleSetExport| ).
+    IF path_elements[ num_path_elements - 1 ] <> |ruleSetExecution|
+       AND path_elements[ num_path_elements - 1 ] <> |ruleSet|
+       AND path_elements[ num_path_elements - 1 ] <> |ruleSetExport|.
       RAISE EXCEPTION NEW zasis_cx_exc( textid = zasis_cx_exc=>invalid_api_route
                                         route  = path ).
     ENDIF.

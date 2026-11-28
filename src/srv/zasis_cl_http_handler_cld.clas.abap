@@ -2,11 +2,11 @@ CLASS zasis_cl_http_handler_cld DEFINITION
   PUBLIC
   CREATE PUBLIC .
 
-PUBLIC SECTION.
+  PUBLIC SECTION.
 
-  INTERFACES if_http_service_extension .
-PROTECTED SECTION.
-PRIVATE SECTION.
+    INTERFACES if_http_service_extension .
+  PROTECTED SECTION.
+  PRIVATE SECTION.
 ENDCLASS.
 
 

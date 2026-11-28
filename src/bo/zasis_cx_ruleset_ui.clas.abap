@@ -110,7 +110,7 @@ CLASS zasis_cx_ruleset_ui DEFINITION
     METHODS constructor
       IMPORTING severity  TYPE if_abap_behv_message=>t_severity DEFAULT if_abap_behv_message=>severity-error
                 textid    LIKE if_t100_message=>t100key         OPTIONAL
-                !previous LIKE previous                         OPTIONAL
+                previous  LIKE previous                         OPTIONAL
                 rulesetid TYPE zasis_ruleset_id                 OPTIONAL
                 !regex    TYPE zasis_interpretrule              OPTIONAL
                 classname TYPE zasis_customlogic                OPTIONAL
