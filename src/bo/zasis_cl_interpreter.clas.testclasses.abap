@@ -169,7 +169,7 @@ CLASS ltcl_zasis_cl_interpreter IMPLEMENTATION.
 
   METHOD test_execute_success.
     " Given
-    DATA: ruleset TYPE REF TO zasis_if_ruleset.
+    DATA ruleset TYPE REF TO zasis_if_ruleset.
 
     TRY.
         ruleset = NEW zasis_cl_ruleset(
@@ -240,7 +240,7 @@ CLASS ltcl_zasis_cl_interpreter IMPLEMENTATION.
 
   METHOD test_auth_denied.
     " Given
-    DATA: ruleset TYPE REF TO zasis_if_ruleset.
+    DATA ruleset TYPE REF TO zasis_if_ruleset.
 
     TRY.
         ruleset = NEW zasis_cl_ruleset(

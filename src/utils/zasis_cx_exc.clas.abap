@@ -146,9 +146,9 @@ CLASS zasis_cx_exc DEFINITION
     "! @parameter http_status | HTTP status code for error responses (default '400')
     METHODS constructor
       IMPORTING textid        LIKE if_t100_message=>t100key OPTIONAL
-                !previous     LIKE previous                 OPTIONAL
-                !route        TYPE string                   OPTIONAL
-                !ruleset      TYPE zasis_ruleset_id         OPTIONAL
+                previous      LIKE previous                 OPTIONAL
+                route         TYPE string                   OPTIONAL
+                ruleset       TYPE zasis_ruleset_id         OPTIONAL
                 classname     TYPE zasis_customlogic        OPTIONAL
                 method        TYPE string                   OPTIONAL
                 max_items     TYPE i                        OPTIONAL

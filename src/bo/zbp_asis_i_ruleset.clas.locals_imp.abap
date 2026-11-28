@@ -139,7 +139,7 @@ CLASS lhc_rulesetitem IMPLEMENTATION.
     LOOP AT entities INTO DATA(entity).
 
       " was updated, not deleted.
-      IF entity-%control-InterpretationRule EQ '01' AND entity-%control-InterpretationRule IS NOT INITIAL.
+      IF entity-%control-InterpretationRule = '01' AND entity-%control-InterpretationRule IS NOT INITIAL.
 
         TRY.
             DATA(regex) = cl_abap_regex=>create_pcre( pattern = entity-InterpretationRule ) ##NEEDED.
